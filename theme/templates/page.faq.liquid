@@ -1,0 +1,36 @@
+{%- comment -%} MiniAnglers — "FAQ" page template (handle "faq"). Accordion via <details>, no JS. {%- endcomment -%}
+<div class="page-wrap">
+  <div class="page-head">
+    <span class="eyebrow glow">Întrebări frecvente</span>
+    <h1>Ce trebuie să știi.</h1>
+  </div>
+
+  <div class="faq">
+    <details class="faq-item">
+      <summary>Cum funcționează personalizarea (gravarea)?</summary>
+      <p>Pe pagina fiecărui produs ai un câmp de gravare. Scrii numele, clubul sau codul echipei (max 16 caractere), vezi o previzualizare live, apoi adaugi în coș. Gravarea este gratuită.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Cât durează până primesc comanda?</summary>
+      <p>Fiecare cutie e imprimată 3D în casă la comandă. Termenul exact de producție și livrare apare la finalizarea comenzii și în emailul de confirmare.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Din ce sunt făcute cutiile?</summary>
+      <p>Sunt imprimate 3D din filamente alese pentru rezistență la umezeală, soare și manevrare pe mal. Detalii pe pagina <a href="/pages/procesul">Procesul</a>.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Pot cere o dimensiune sau o configurație specială?</summary>
+      <p>Da. Pentru cereri speciale (alt număr de compartimente, alt finisaj), scrie-ne pe pagina de <a href="/pages/contact">Contact</a> și găsim o soluție.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Pot returna un produs personalizat?</summary>
+      <p>Produsele gravate sunt făcute special pentru tine. Politica de retur completă este în secțiunea de politici, în subsolul site-ului.</p>
+    </details>
+  </div>
+
+  <div class="page-cta">
+    <a class="btn btn-ghost btn-lg" href="/pages/contact">Mai ai o întrebare? Scrie-ne</a>
+  </div>
+
+  {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
+</div>

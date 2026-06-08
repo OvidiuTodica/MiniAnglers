@@ -25,11 +25,11 @@
       {%- if section.blocks.size == 0 -%}
         <div class="footer-col">
           <h4 data-i18n="footer.shop">Magazin</h4>
-          <a href="#" data-i18n="footer.shop1">Cutii de Momeală</a><a href="#" data-i18n="footer.shop2">Suporturi Wafter</a><a href="#" data-i18n="footer.shop3">Sisteme Complete</a><a href="#" data-i18n="footer.shop4">Piese</a>
+          <a href="{{ routes.all_products_collection_url }}" data-i18n="footer.shop1">Cutii de Momeală</a><a href="{{ routes.all_products_collection_url }}" data-i18n="footer.shop2">Suporturi Wafter</a><a href="{{ routes.all_products_collection_url }}" data-i18n="footer.shop3">Sisteme Complete</a><a href="/pages/faq" data-i18n="footer.shop4">Întrebări frecvente</a>
         </div>
         <div class="footer-col">
           <h4 data-i18n="footer.company">Companie</h4>
-          <a href="#" data-i18n="footer.company1">Povestea Noastră</a><a href="#" data-i18n="footer.company2">Procesul</a><a href="#" data-i18n="footer.company3">Materiale</a><a href="#" data-i18n="footer.company4">Contact</a>
+          <a href="/pages/despre" data-i18n="footer.company1">Povestea Noastră</a><a href="/pages/procesul" data-i18n="footer.company2">Procesul</a><a href="/pages/procesul#materiale" data-i18n="footer.company3">Materiale</a><a href="/pages/contact" data-i18n="footer.company4">Contact</a>
         </div>
       {%- endif -%}
 
@@ -51,7 +51,14 @@
 
     <div class="footer-fine">
       <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}. <span data-i18n="footer.rights">Toate drepturile rezervate.</span></span>
-      <span data-i18n="footer.legal">Confidențialitate · Termeni · Retururi</span>
+      <span class="footer-legal">
+        {%- assign has_policy = false -%}
+        {%- if shop.privacy_policy != blank -%}<a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title }}</a>{%- assign has_policy = true -%}{%- endif -%}
+        {%- if shop.terms_of_service != blank -%}{% if has_policy %} · {% endif %}<a href="{{ shop.terms_of_service.url }}">{{ shop.terms_of_service.title }}</a>{%- assign has_policy = true -%}{%- endif -%}
+        {%- if shop.refund_policy != blank -%}{% if has_policy %} · {% endif %}<a href="{{ shop.refund_policy.url }}">{{ shop.refund_policy.title }}</a>{%- assign has_policy = true -%}{%- endif -%}
+        {%- if shop.shipping_policy != blank -%}{% if has_policy %} · {% endif %}<a href="{{ shop.shipping_policy.url }}">{{ shop.shipping_policy.title }}</a>{%- assign has_policy = true -%}{%- endif -%}
+        {%- unless has_policy -%}<span data-i18n="footer.legal">Confidențialitate · Termeni · Retururi</span>{%- endunless -%}
+      </span>
     </div>
   </div>
 </footer>

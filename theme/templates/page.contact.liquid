@@ -1,0 +1,34 @@
+{%- comment -%} MiniAnglers — "Contact" page template (handle "contact") {%- endcomment -%}
+<div class="page-wrap">
+  <div class="page-head">
+    <span class="eyebrow glow">Contact</span>
+    <h1>Hai să vorbim.</h1>
+    <p class="page-lead">Ai o întrebare despre o cutie, o personalizare specială sau o idee de modul? Scrie-ne și revenim cât putem de repede.</p>
+  </div>
+
+  <div class="contact-form">
+    {%- form 'contact' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="form-note ok">Mulțumim! Mesajul tău a fost trimis — revenim curând.</p>
+      {%- elsif form.errors -%}
+        <p class="form-note err">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+
+      <div class="form-field">
+        <label for="c-name">Nume</label>
+        <input class="cfg-input" id="c-name" type="text" name="contact[name]" value="{{ form.name }}" required>
+      </div>
+      <div class="form-field">
+        <label for="c-email">Email</label>
+        <input class="cfg-input" id="c-email" type="email" name="contact[email]" value="{{ form.email }}" required>
+      </div>
+      <div class="form-field">
+        <label for="c-body">Mesaj</label>
+        <textarea class="cfg-input" id="c-body" name="contact[body]" rows="5" required>{{ form.body }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-steel btn-lg">{% render 'ma-icon', icon: 'mail' %} Trimite mesajul</button>
+    {%- endform -%}
+  </div>
+
+  {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
+</div>

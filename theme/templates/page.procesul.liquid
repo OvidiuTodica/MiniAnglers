@@ -1,0 +1,37 @@
+{%- comment -%} MiniAnglers — "Procesul" page template (assign to a page with handle "procesul") {%- endcomment -%}
+<div class="page-wrap">
+  <div class="page-head">
+    <span class="eyebrow glow">Procesul</span>
+    <h1>De la idee la mal.</h1>
+    <p class="page-lead">Fiecare cutie MiniAnglers e gândită, imprimată și gravată în casă. Fără intermediari, fără compromisuri — doar piese făcute să țină pe teren.</p>
+  </div>
+
+  <div class="steps-grid" style="margin-top:8px">
+    <div class="step">
+      <div class="step-n">01</div>
+      <h3>Proiectare</h3>
+      <p>Fiecare modul e desenat în CAD (Fusion 360), optimizat pentru tava ta laterală și pentru rezistență reală pe mal.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <h3>Imprimare 3D în casă</h3>
+      <p>Imprimăm fiecare piesă la noi, cu control total al calității. Poți cere variante și ajustări fără bătăi de cap.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <h3>Gravare & control</h3>
+      <p>Numele sau codul tău e gravat pe ramă, apoi fiecare cutie e verificată manuală înainte să plece spre tine.</p>
+    </div>
+  </div>
+
+  <div class="page-block" id="materiale">
+    <h2>Materiale</h2>
+    <p>Folosim filamente alese pentru rezistență la umezeală, soare și manevrare dură pe mal. Scopul e simplu: o cutie care arată bine și ține sezon după sezon.</p>
+  </div>
+
+  <div class="page-cta">
+    <a class="btn btn-steel btn-lg" href="{{ routes.all_products_collection_url }}">{% render 'ma-icon', icon: 'sliders' %} Personalizează cutia ta</a>
+  </div>
+
+  {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
+</div>
