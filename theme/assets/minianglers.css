@@ -404,6 +404,43 @@ h1, h2, h3, h4 { font-family: var(--font-display); color: var(--steel-100); lett
 .form-field { display: flex; flex-direction: column; gap: 8px; margin: 18px 0; }
 .form-field label { font-family: var(--font-display); font-weight: 600; font-size: 14px; color: var(--steel-200); }
 
+/* ---------- product page ---------- */
+.product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px; align-items: start; }
+.product-media {
+  border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden;
+  aspect-ratio: 1 / 1; display: grid; place-items: center;
+  background: radial-gradient(120% 90% at 70% 10%, rgba(79,209,197,0.12), transparent 55%), linear-gradient(160deg, var(--green-2), var(--bg-1) 60%, var(--bg-0));
+}
+.product-media img { width: 100%; height: 100%; object-fit: cover; }
+.product-media-ph { display: grid; place-items: center; width: 100%; height: 100%; }
+.product-media-ph .mini-box { width: 150px; height: 100px; }
+.product-info h1 { font-size: clamp(28px, 3.4vw, 40px); margin-bottom: 10px; }
+.product-price { font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--steel-100); margin-bottom: 18px; }
+.product-desc { color: var(--steel-400); max-width: 520px; margin-bottom: 6px; line-height: 1.8; }
+.engrave {
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+  padding: 20px; margin: 22px 0; display: flex; flex-direction: column; gap: 14px;
+}
+.engrave-head { display: flex; align-items: baseline; justify-content: space-between; }
+.engrave-head .l { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--steel-100); }
+.engrave-head .v { font-family: var(--font-mono); font-size: 11px; color: var(--teal); letter-spacing: 0.06em; }
+.engrave-preview {
+  position: relative; border-radius: var(--r-sm); border: 1px solid var(--line);
+  background: radial-gradient(120% 80% at 70% 0%, rgba(79,209,197,0.10), transparent 55%), linear-gradient(165deg, var(--green-1), var(--bg-1));
+  padding: 30px 18px 22px; display: grid; place-items: center; min-height: 110px;
+}
+.engrave-preview .glass-tag { position: absolute; top: 12px; left: 12px; }
+.engrave-plate {
+  font-family: var(--font-mono); font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+  font-size: 18px; color: var(--steel-300); text-align: center; word-break: break-word;
+}
+.product-add { margin-top: 4px; }
+@media (max-width: 760px) {
+  .product-layout { grid-template-columns: 1fr; gap: 24px; }
+  .product-media { max-width: 440px; }
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 1024px) {
   .hero { gap: 40px; }

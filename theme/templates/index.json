@@ -1,8 +1,7 @@
 {
   "sections": {
     "hero": { "type": "ma-hero", "settings": {} },
-    "products": { "type": "ma-products", "settings": {} },
-    "configurator": { "type": "ma-configurator", "settings": {} }
+    "products": { "type": "ma-products", "settings": {} }
   },
-  "order": ["hero", "products", "configurator"]
+  "order": ["hero", "products"]
 }

@@ -52,6 +52,11 @@
       'config.add': 'Adaugă în Construcție',
       'config.namehere': 'NUMELE TĂU AICI',
       'config.compartments': 'compartimente',
+      // product page
+      'product.back': '← Toate produsele',
+      'product.preview': 'Previzualizare gravură',
+      'product.add': 'Adaugă în coș',
+      'product.soldout': 'Stoc epuizat',
       // footer
       'footer.tagline': 'Sigilat. Montat. Gravat.',
       'footer.blurb': 'Sisteme de pescuit de precizie pentru pescarul modern la method-feeder. Fabricat în UK.',
@@ -108,6 +113,10 @@
       'config.add': 'Add to Build',
       'config.namehere': 'YOUR NAME HERE',
       'config.compartments': 'compartments',
+      'product.back': '← All products',
+      'product.preview': 'Engraving preview',
+      'product.add': 'Add to cart',
+      'product.soldout': 'Sold out',
       'footer.tagline': 'Sealed. Mounted. Etched.',
       'footer.blurb': 'Precision tackle systems for the modern method-feeder angler. Machined in the UK.',
       'footer.shop': 'Shop',

@@ -21,7 +21,7 @@
         {%- endfor -%}
       {%- else -%}
         <a href="#products" data-i18n="nav.shop">Magazin</a>
-        <a href="#configure" data-i18n="nav.personalize">Personalizează</a>
+        <a href="{{ routes.all_products_collection_url }}" data-i18n="nav.personalize">Personalizează</a>
         <a href="#" data-i18n="nav.process">Procesul</a>
         <a href="#" data-i18n="nav.contact">Contact</a>
       {%- endif -%}
@@ -34,7 +34,7 @@
         {% render 'ma-icon', icon: 'cart' %}
         <span class="cart-count" id="cartCount">{{ cart.item_count }}</span>
       </a>
-      <a class="btn btn-glass btn-sm" href="#configure">{% render 'ma-icon', icon: 'sliders' %} <span data-i18n="nav.customize">Personalizează</span></a>
+      <a class="btn btn-glass btn-sm" href="{{ routes.all_products_collection_url }}">{% render 'ma-icon', icon: 'sliders' %} <span data-i18n="nav.customize">Personalizează</span></a>
     </div>
   </div>
 </nav>
