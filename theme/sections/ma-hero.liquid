@@ -1,0 +1,60 @@
+{%- comment -%} MiniAnglers hero {%- endcomment -%}
+{%- assign s = section.settings -%}
+<header class="hero">
+  <div class="hero-left reveal" style="animation-delay:.05s">
+    <span class="eyebrow">{{ s.eyebrow | default: 'Modular Tackle System' }}</span>
+    <h1>{{ s.line_1 | default: 'Organized.' }}<br>{{ s.line_2 | default: 'Precise.' }}<br><span class="muted">{{ s.line_3 | default: 'Personalized.' }}</span></h1>
+    <p class="hero-sub">{{ s.subtext | default: 'Put an end to side tray chaos. Precision-engineered bait boxes and wafter supports, custom-built to your exact setup and style.' }}</p>
+    <div class="hero-cta">
+      <a class="btn btn-glass btn-lg" href="{{ s.cta1_link | default: '#configure' }}">{% render 'ma-icon', icon: 'sliders' %} {{ s.cta1_label | default: 'Start Customizing' }}</a>
+      <a class="btn btn-ghost btn-lg" href="{{ s.cta2_link | default: '#products' }}">{{ s.cta2_label | default: 'Explore the system' }}</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-n">{{ s.stat1_n | default: '3D-Printed' }}</div><div class="stat-l">{{ s.stat1_l | default: 'In-house' }}</div></div>
+      <div><div class="stat-n">{{ s.stat2_n | default: 'Engraved' }}</div><div class="stat-l">{{ s.stat2_l | default: 'Your name' }}</div></div>
+      <div><div class="stat-n">{{ s.stat3_n | default: '∞' }}</div><div class="stat-l">{{ s.stat3_l | default: 'Configurations' }}</div></div>
+    </div>
+  </div>
+
+  <div class="showcase reveal" style="animation-delay:.18s">
+    {%- if s.image != blank -%}
+      <img class="showcase-photo" src="{{ s.image | image_url: width: 900 }}" alt="{{ s.image.alt | escape | default: 'MiniAnglers modular bait box' }}" loading="eager" width="900" height="990">
+    {%- else -%}
+      <div class="showcase-placeholder" aria-hidden="true">
+        <div class="ph-box"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+    {%- endif -%}
+    <div class="showcase-scrim"></div>
+    <div class="showcase-tag"><span class="glass-tag">{{ s.photo_tag | default: 'Field Build · On The Bank' }}</span></div>
+    <div class="showcase-spec">{{ s.spec_text | default: '3D-PRINTED · ENGRAVED<br>MODULAR COMPARTMENTS' }}</div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Modular Tackle System" },
+    { "type": "text", "id": "line_1", "label": "Headline line 1", "default": "Organized." },
+    { "type": "text", "id": "line_2", "label": "Headline line 2", "default": "Precise." },
+    { "type": "text", "id": "line_3", "label": "Headline line 3 (muted)", "default": "Personalized." },
+    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Put an end to side tray chaos. Precision-engineered bait boxes and wafter supports, custom-built to your exact setup and style." },
+    { "type": "text", "id": "cta1_label", "label": "Primary CTA label", "default": "Start Customizing" },
+    { "type": "text", "id": "cta1_link", "label": "Primary CTA link", "default": "#configure" },
+    { "type": "text", "id": "cta2_label", "label": "Secondary CTA label", "default": "Explore the system" },
+    { "type": "text", "id": "cta2_link", "label": "Secondary CTA link", "default": "#products" },
+    { "type": "header", "content": "Showcase" },
+    { "type": "image_picker", "id": "image", "label": "Product photo (optional)" },
+    { "type": "text", "id": "photo_tag", "label": "Photo tag", "default": "Field Build · On The Bank" },
+    { "type": "html", "id": "spec_text", "label": "Spec caption", "default": "3D-PRINTED · ENGRAVED<br>MODULAR COMPARTMENTS" },
+    { "type": "header", "content": "Stats" },
+    { "type": "text", "id": "stat1_n", "label": "Stat 1 value", "default": "3D-Printed" },
+    { "type": "text", "id": "stat1_l", "label": "Stat 1 label", "default": "In-house" },
+    { "type": "text", "id": "stat2_n", "label": "Stat 2 value", "default": "Engraved" },
+    { "type": "text", "id": "stat2_l", "label": "Stat 2 label", "default": "Your name" },
+    { "type": "text", "id": "stat3_n", "label": "Stat 3 value", "default": "∞" },
+    { "type": "text", "id": "stat3_l", "label": "Stat 3 label", "default": "Configurations" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

@@ -1,0 +1,19 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "MiniAnglers",
+    "theme_version": "0.1.0",
+    "theme_author": "MiniAnglers",
+    "theme_documentation_url": "https://www.minianglers.co.uk",
+    "theme_support_url": "https://www.minianglers.co.uk"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      { "type": "paragraph", "content": "Core palette. Section-level overrides live on the Header section." },
+      { "type": "color", "id": "color_bg", "label": "Background", "default": "#0A0A0B" },
+      { "type": "color", "id": "color_accent", "label": "Accent (teal)", "default": "#4FD1C5" },
+      { "type": "color", "id": "color_text", "label": "Body text", "default": "#d7d7db" }
+    ]
+  }
+]

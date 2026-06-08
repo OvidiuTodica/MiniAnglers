@@ -1,0 +1,51 @@
+{%- comment -%} MiniAnglers header / nav {%- endcomment -%}
+
+{%- if section.settings.brand_teal != blank
+   or section.settings.bg_0 != blank -%}
+  <style>
+    :root{
+      {%- if section.settings.bg_0 != blank %}--bg-0: {{ section.settings.bg_0 }};{% endif -%}
+      {%- if section.settings.brand_teal != blank %}--teal: {{ section.settings.brand_teal }};{% endif -%}
+    }
+  </style>
+{%- endif -%}
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand-word" href="{{ routes.root_url }}">Mini<b>Anglers</b></a>
+
+    <div class="nav-links">
+      {%- if section.settings.menu != blank -%}
+        {%- for link in section.settings.menu.links -%}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- endfor -%}
+      {%- else -%}
+        <a href="#products">Shop</a>
+        <a href="#configure">Personalize</a>
+        <a href="#">The Process</a>
+        <a href="#">Contact</a>
+      {%- endif -%}
+    </div>
+
+    <div class="nav-actions">
+      <a class="icon-btn" href="{{ routes.search_url }}" aria-label="Search">{% render 'ma-icon', icon: 'search' %}</a>
+      <a class="icon-btn" href="{{ routes.cart_url }}" aria-label="Cart">
+        {% render 'ma-icon', icon: 'cart' %}
+        <span class="cart-count" id="cartCount">{{ cart.item_count }}</span>
+      </a>
+      <a class="btn btn-glass btn-sm" href="#configure">{% render 'ma-icon', icon: 'sliders' %} Customize</a>
+    </div>
+  </div>
+</nav>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Navigation menu" },
+    { "type": "header", "content": "Brand colours (optional overrides)" },
+    { "type": "color", "id": "bg_0", "label": "Background base" },
+    { "type": "color", "id": "brand_teal", "label": "Accent (teal)" }
+  ]
+}
+{% endschema %}

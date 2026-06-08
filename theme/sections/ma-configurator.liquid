@@ -1,0 +1,120 @@
+{%- comment -%}
+  MiniAnglers configurator.
+  Pick 1 of up to 3 bait boxes, add a free engraving (captured as a
+  line item property), Add to Build -> Shopify cart.
+  Falls back to a preview-only "brute" when no products are assigned.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+
+{%- capture boxes_json -%}
+[
+{%- assign boxes = '1,2,3' | split: ',' -%}
+{%- for n in boxes -%}
+  {%- assign key_box = 'box_' | append: n -%}
+  {%- assign key_bays = 'bays_' | append: n -%}
+  {%- assign key_cols = 'cols_' | append: n -%}
+  {%- assign key_finish = 'finish_' | append: n -%}
+  {%- assign prod = s[key_box] -%}
+  {%- assign fallback_titles = 'The Compact Four,The Modular Six,The Bank Eight' | split: ',' -%}
+  {%- assign fallback_bays = '4,6,8' | split: ',' -%}
+  {%- assign fallback_cols = '2,3,4' | split: ',' -%}
+  {%- assign fallback_finish = 'Matte,Matte,Carbon' | split: ',' -%}
+  {%- assign idx = forloop.index0 -%}
+  {%- if prod != blank -%}
+    {%- assign title = prod.title -%}
+    {%- assign vid = prod.selected_or_first_available_variant.id -%}
+    {%- assign price = prod.price -%}
+    {%- assign avail = prod.available -%}
+  {%- else -%}
+    {%- assign title = fallback_titles[idx] -%}
+    {%- assign vid = nil -%}
+    {%- assign price = 0 -%}
+    {%- assign avail = false -%}
+  {%- endif -%}
+  {%- assign bays = s[key_bays] | default: fallback_bays[idx] -%}
+  {%- assign cols = s[key_cols] | default: fallback_cols[idx] -%}
+  {%- assign finish = s[key_finish] | default: fallback_finish[idx] -%}
+  {"title": {{ title | json }}, "variantId": {{ vid | json }}, "price": {{ price | json }}, "available": {{ avail | json }}, "bays": {{ bays | json }}, "cols": {{ cols | json }}, "finish": {{ finish | json }}}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]
+{%- endcapture -%}
+
+<section class="config section" id="configure"
+         data-configurator
+         data-boxes='{{ boxes_json | strip_newlines }}'
+         data-default="{{ s.default_box | default: 1 | minus: 1 }}"
+         data-show-price="{{ s.show_prices }}">
+  <div class="config-head">
+    <span class="eyebrow glow">{{ s.eyebrow | default: 'Make It Yours' }}</span>
+    <h2>{{ s.heading | default: 'Pick a box. Add your name.' }}</h2>
+    <p>{{ s.subtext | default: 'Standard builds, ready to fish. The only choice you make is what we engrave on the rim — your name, club or rig code.' }}</p>
+  </div>
+
+  <form class="config-grid" action="{{ routes.cart_add_url }}" method="post" data-cfg-form>
+    <div class="config-preview">
+      <div class="preview-tag"><span class="glass-tag">Live Preview</span></div>
+      <div class="cfg-box" data-cfg-box></div>
+      <div class="cfg-etch" data-cfg-etch>YOUR NAME HERE</div>
+    </div>
+
+    <div class="config-panel">
+      <div class="cfg-row">
+        <div class="cfg-label"><span class="l">Choose your box</span></div>
+        <div class="prod-list" data-cfg-list></div>
+      </div>
+
+      <div class="cfg-row">
+        <div class="cfg-label">
+          <span class="l">{{ s.engraving_label | default: 'Engraving' }}</span>
+          <span class="v" data-cfg-count>Free · 0/{{ s.max_chars | default: 16 }}</span>
+        </div>
+        <input class="cfg-input" name="properties[Engraving]" maxlength="{{ s.max_chars | default: 16 }}"
+               placeholder="{{ s.engraving_placeholder | default: 'Your name' }}" aria-label="Engraving text" data-cfg-input>
+      </div>
+
+      {%- comment -%} variant id swapped by JS based on selection {%- endcomment -%}
+      <input type="hidden" name="id" value="" data-cfg-id>
+
+      <div class="cfg-foot">
+        <div class="cfg-total">
+          <span class="pl">Your build</span>
+          <span class="pv" data-cfg-pick>—</span>
+        </div>
+        <button class="btn btn-steel btn-md" type="submit" data-cfg-add>{% render 'ma-icon', icon: 'plus' %} {{ s.button_label | default: 'Add to Build' }}</button>
+      </div>
+    </div>
+  </form>
+</section>
+
+{% schema %}
+{
+  "name": "Configurator",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Make It Yours" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pick a box. Add your name." },
+    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Standard builds, ready to fish. The only choice you make is what we engrave on the rim — your name, club or rig code." },
+    { "type": "text", "id": "engraving_label", "label": "Engraving field label", "default": "Engraving" },
+    { "type": "text", "id": "engraving_placeholder", "label": "Engraving placeholder", "default": "Your name" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add to Build" },
+    { "type": "range", "id": "max_chars", "label": "Max engraving characters", "min": 8, "max": 30, "step": 1, "default": 16 },
+    { "type": "range", "id": "default_box", "label": "Default selected box", "min": 1, "max": 3, "step": 1, "default": 2 },
+    { "type": "checkbox", "id": "show_prices", "label": "Show prices", "default": false },
+    { "type": "header", "content": "Box 1" },
+    { "type": "product", "id": "box_1", "label": "Product" },
+    { "type": "text", "id": "bays_1", "label": "Compartments", "default": "4" },
+    { "type": "text", "id": "cols_1", "label": "Grid columns", "default": "2" },
+    { "type": "select", "id": "finish_1", "label": "Finish", "options": [{"value":"Matte","label":"Matte"},{"value":"Carbon","label":"Carbon"},{"value":"Steel","label":"Steel"}], "default": "Matte" },
+    { "type": "header", "content": "Box 2" },
+    { "type": "product", "id": "box_2", "label": "Product" },
+    { "type": "text", "id": "bays_2", "label": "Compartments", "default": "6" },
+    { "type": "text", "id": "cols_2", "label": "Grid columns", "default": "3" },
+    { "type": "select", "id": "finish_2", "label": "Finish", "options": [{"value":"Matte","label":"Matte"},{"value":"Carbon","label":"Carbon"},{"value":"Steel","label":"Steel"}], "default": "Matte" },
+    { "type": "header", "content": "Box 3" },
+    { "type": "product", "id": "box_3", "label": "Product" },
+    { "type": "text", "id": "bays_3", "label": "Compartments", "default": "8" },
+    { "type": "text", "id": "cols_3", "label": "Grid columns", "default": "4" },
+    { "type": "select", "id": "finish_3", "label": "Finish", "options": [{"value":"Matte","label":"Matte"},{"value":"Carbon","label":"Carbon"},{"value":"Steel","label":"Steel"}], "default": "Carbon" }
+  ],
+  "presets": [{ "name": "Configurator" }]
+}
+{% endschema %}

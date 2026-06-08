@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiniAnglers — Modular Tackle System</title>
+  <meta name="description" content="Precision-engineered, 3D-printed bait boxes and wafter supports for method-feeder anglers. Custom-built and engraved to your setup." />
+
+  <!-- Fonts: Sora (display) · Manrope (body) · JetBrains Mono (mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       MiniAnglers — design tokens (transcribed from prototype)
+       BRUTE / rough cut: no logo image, no photos, no prices
+       ============================================================ */
+    :root {
+      /* base / surfaces */
+      --bg-0: #0A0A0B;
+      --bg-1: #121212;
+      --bg-2: #161616;
+      --bg-3: #1C1C1E;
+      --bg-4: #242426;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-soft: rgba(255, 255, 255, 0.05);
+
+      /* steel / neutrals */
+      --steel-100: #F2F2F5;
+      --steel-200: #d7d7db;
+      --steel-300: #C7C7CC;
+      --steel-400: #AEAEB2;
+      --steel-500: #8E8E93;
+      --steel-600: #636366;
+
+      /* accent / signal */
+      --teal: #4FD1C5;
+      --teal-dim: rgba(79, 209, 197, 0.14);
+      --green-0: #0F1F16;
+      --green-1: #1A2E22;
+      --green-2: #163A33;
+      --coral: #ff8a80;
+      --cream: #faf9f5;
+
+      /* type */
+      --font-display: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+      /* shadows — layered, color-tinted, low opacity */
+      --shadow-glass: 0 1px 0 rgba(255,255,255,0.06) inset, 0 18px 40px -20px rgba(0,0,0,0.8);
+      --shadow-float: 0 30px 70px -30px rgba(0,0,0,0.9), 0 8px 24px -12px rgba(0,0,0,0.6);
+      --shadow-teal: 0 10px 40px -16px rgba(79,209,197,0.35);
+
+      --r-sm: 10px;
+      --r-md: 16px;
+      --r-lg: 24px;
+      --r-xl: 32px;
+
+      --maxw: 1200px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-0);
+      color: var(--steel-200);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    /* atmospheric background: layered radial gradients + grain */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(900px 600px at 80% -5%, rgba(79,209,197,0.10), transparent 60%),
+        radial-gradient(700px 500px at 10% 10%, rgba(22,58,51,0.45), transparent 55%),
+        radial-gradient(1000px 800px at 50% 110%, rgba(15,31,22,0.6), transparent 60%),
+        var(--bg-0);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .section {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--steel-500);
+    }
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--steel-600);
+    }
+    .eyebrow.glow { color: var(--teal); }
+    .eyebrow.glow::before { background: var(--teal); }
+
+    .muted { color: var(--steel-500); }
+
+    /* ---------- buttons ---------- */
+    .btn {
+      --bsize: 14px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: var(--bsize);
+      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 12px 20px;
+      cursor: pointer;
+      color: var(--steel-100);
+      background: transparent;
+      transition: transform .25s cubic-bezier(.2,.8,.2,1),
+                  background-color .25s ease, border-color .25s ease, box-shadow .25s ease, color .2s ease;
+      will-change: transform;
+    }
+    .btn svg { width: 17px; height: 17px; }
+    .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+    .btn:active { transform: translateY(1px) scale(0.99); }
+
+    .btn-lg { --bsize: 15px; padding: 15px 26px; }
+    .btn-md { padding: 13px 22px; }
+    .btn-sm { --bsize: 13px; padding: 9px 16px; }
+
+    .btn-glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03));
+      border-color: var(--line);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-glass);
+    }
+    .btn-glass:hover { transform: translateY(-2px); border-color: rgba(79,209,197,0.4); box-shadow: var(--shadow-glass), var(--shadow-teal); }
+
+    .btn-steel {
+      background: linear-gradient(180deg, var(--steel-100), var(--steel-300));
+      color: #0c0c0d;
+    }
+    .btn-steel:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -14px rgba(255,255,255,0.4); }
+
+    .btn-ghost {
+      border-color: var(--line);
+      color: var(--steel-300);
+    }
+    .btn-ghost:hover { transform: translateY(-2px); border-color: var(--steel-500); color: var(--steel-100); }
+
+    .glass-tag {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--steel-200);
+      background: rgba(10,10,11,0.55);
+      border: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      padding: 6px 11px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--font-display); color: var(--steel-100); letter-spacing: -0.03em; line-height: 1.04; }
+
+    /* ============================================================
+       NAV
+       ============================================================ */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(10,10,11,0.82), rgba(10,10,11,0.5));
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .nav-inner {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .brand-word {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: -0.04em;
+      color: var(--steel-100);
+    }
+    .brand-word b { color: var(--teal); font-weight: 800; }
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      margin-left: 18px;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--steel-400);
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--steel-100); outline: none; }
+    .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .icon-btn {
+      width: 40px; height: 40px;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      color: var(--steel-300);
+      cursor: pointer;
+      position: relative;
+      transition: transform .2s ease, border-color .2s ease, color .2s ease;
+    }
+    .icon-btn:hover { transform: translateY(-1px); border-color: var(--steel-600); color: var(--steel-100); }
+    .icon-btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .cart-count {
+      position: absolute; top: -5px; right: -5px;
+      min-width: 17px; height: 17px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: var(--teal);
+      color: #06201d;
+      font-family: var(--font-mono);
+      font-size: 10px; font-weight: 600;
+      display: grid; place-items: center;
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero {
+      position: relative;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 70px 24px 90px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .hero-left .eyebrow { margin-bottom: 22px; }
+    .hero h1 {
+      font-size: clamp(44px, 6vw, 76px);
+      font-weight: 800;
+      margin-bottom: 22px;
+    }
+    .hero-sub {
+      max-width: 460px;
+      font-size: 17px;
+      color: var(--steel-400);
+      margin-bottom: 30px;
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 44px; }
+    .hero-stats {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stats > div { display: flex; flex-direction: column; gap: 3px; }
+    .stat-n {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--steel-100);
+      letter-spacing: -0.02em;
+    }
+    .stat-l {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--steel-500);
+    }
+
+    /* showcase — placeholder panel instead of photo (BRUTE: no photos) */
+    .showcase {
+      position: relative;
+      aspect-ratio: 4 / 4.4;
+      border-radius: var(--r-xl);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: var(--shadow-float);
+      background:
+        radial-gradient(120% 90% at 70% 10%, rgba(79,209,197,0.16), transparent 55%),
+        linear-gradient(160deg, var(--green-2), var(--bg-1) 60%, var(--bg-0));
+    }
+    .showcase-placeholder {
+      position: absolute; inset: 0;
+      display: grid; place-items: center;
+    }
+    /* CSS-rendered bait box stand-in for the missing hero photo */
+    .ph-box {
+      width: 56%;
+      aspect-ratio: 1.5 / 1;
+      border-radius: 18px;
+      background: linear-gradient(165deg, #2a2a2c, var(--bg-2));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 30px 60px -24px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.07);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      padding: 14px;
+      transform: rotateX(8deg) rotateZ(-2deg);
+    }
+    .ph-box span {
+      border-radius: 8px;
+      background: radial-gradient(120% 120% at 50% 0%, #161616, #0c0c0d);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .showcase-scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), transparent 45%);
+      pointer-events: none;
+    }
+    .showcase-tag { position: absolute; top: 16px; left: 16px; }
+    .showcase-spec {
+      position: absolute; bottom: 18px; left: 18px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      line-height: 1.5;
+      color: var(--steel-300);
+    }
+
+    /* ============================================================
+       PRODUCTS
+       ============================================================ */
+    .products { padding: 40px 0 70px; }
+    .products-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 34px;
+    }
+    .products-head h2 { font-size: clamp(28px, 3.4vw, 40px); font-weight: 700; margin-top: 12px; }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .pcard {
+      border-radius: var(--r-lg);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+      overflow: hidden;
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), border-color .3s ease, box-shadow .3s ease;
+      will-change: transform;
+    }
+    .pcard:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.16); box-shadow: var(--shadow-float); }
+    .pcard-media {
+      position: relative;
+      height: 200px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(110% 90% at 60% 0%, rgba(79,209,197,0.10), transparent 55%),
+        linear-gradient(165deg, var(--bg-3), var(--bg-0));
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .pcard-media .glass-tag { position: absolute; top: 14px; left: 14px; }
+    .mini-box {
+      width: 110px; height: 74px;
+      border-radius: 12px;
+      background: linear-gradient(165deg, #2a2a2c, var(--bg-2));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 40px -18px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .pcard-body { padding: 20px; }
+    .pcard-body h3 { font-size: 19px; font-weight: 600; margin-bottom: 8px; color: var(--steel-100); }
+    .pcard-body p { font-size: 14px; color: var(--steel-500); margin-bottom: 18px; }
+    .pcard-foot { display: flex; align-items: center; justify-content: space-between; }
+    .pcard-meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--steel-600); }
+
+    /* ============================================================
+       CONFIGURATOR
+       ============================================================ */
+    .config { padding: 50px 0 90px; }
+    .config-head { text-align: center; max-width: 560px; margin: 0 auto 44px; }
+    .config-head h2 { font-size: clamp(30px, 4vw, 46px); font-weight: 700; margin: 16px 0 14px; }
+    .config-head p { color: var(--steel-400); font-size: 16px; }
+    .config-head .eyebrow { justify-content: center; }
+    .config-head .eyebrow::before { display: none; }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .config-preview {
+      position: relative;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(120% 80% at 70% 0%, rgba(79,209,197,0.12), transparent 55%),
+        linear-gradient(165deg, var(--green-1), var(--bg-1) 65%, var(--bg-0));
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 26px;
+      padding: 30px;
+      overflow: hidden;
+    }
+    .preview-tag { position: absolute; top: 16px; left: 16px; }
+
+    .cfg-box {
+      display: grid;
+      gap: 9px;
+      padding: 14px;
+      border-radius: 16px;
+      background: linear-gradient(165deg, #2a2a2c, var(--bg-2));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 34px 60px -26px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.07);
+      transition: width .35s cubic-bezier(.2,.8,.2,1);
+    }
+    .cfg-box.carbon { background: linear-gradient(165deg, #1c1c1e, #0e0e0f); }
+    .cfg-box.steel { background: linear-gradient(165deg, var(--steel-300), var(--steel-500)); }
+    .cfg-box .bay {
+      width: 48px; height: 48px;
+      border-radius: 9px;
+      background: radial-gradient(120% 120% at 50% 0%, #161616, #0a0a0a);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .cfg-box.steel .bay { background: radial-gradient(120% 120% at 50% 0%, #3a3a3c, #1c1c1e); }
+    .cfg-etch {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      font-size: 15px;
+      color: var(--steel-300);
+      min-height: 18px;
+      text-align: center;
+    }
+
+    .config-panel {
+      border-radius: var(--r-lg);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--bg-2), var(--bg-1));
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .cfg-row { display: flex; flex-direction: column; gap: 12px; }
+    .cfg-label { display: flex; align-items: baseline; justify-content: space-between; }
+    .cfg-label .l { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--steel-100); }
+    .cfg-label .v { font-family: var(--font-mono); font-size: 11px; color: var(--teal); letter-spacing: 0.06em; }
+
+    .prod-list { display: flex; flex-direction: column; gap: 9px; }
+    .prod-opt {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 14px 15px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.02);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
+    }
+    .prod-opt:hover { transform: translateY(-1px); border-color: var(--steel-600); }
+    .prod-opt:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    .prod-opt.on { border-color: var(--teal); background: var(--teal-dim); }
+    .po-dot {
+      width: 16px; height: 16px; border-radius: 999px;
+      border: 2px solid var(--steel-600);
+      flex: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .prod-opt.on .po-dot { border-color: var(--teal); box-shadow: inset 0 0 0 3px var(--teal); }
+    .po-text { display: flex; flex-direction: column; gap: 2px; }
+    .po-title { font-family: var(--font-display); font-weight: 600; font-size: 15px; color: var(--steel-100); }
+    .po-meta { font-family: var(--font-mono); font-size: 11px; color: var(--steel-500); letter-spacing: 0.04em; }
+
+    .cfg-input {
+      width: 100%;
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      color: var(--steel-100);
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      padding: 14px 16px;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .cfg-input::placeholder { color: var(--steel-600); }
+    .cfg-input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-dim); }
+
+    .cfg-foot {
+      margin-top: 4px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .cfg-total { display: flex; flex-direction: column; }
+    .cfg-total .pl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel-500); }
+    .cfg-total .pv { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--steel-300); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer {
+      border-top: 1px solid var(--line-soft);
+      background: linear-gradient(180deg, transparent, rgba(15,31,22,0.35));
+      margin-top: 30px;
+      padding: 60px 0 34px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr 1.3fr;
+      gap: 36px;
+      margin-bottom: 44px;
+    }
+    .footer-brand .brand-word { display: block; margin-bottom: 14px; }
+    .footer-tag { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+    .footer-sub { font-size: 14px; color: var(--steel-500); max-width: 280px; }
+    .footer-col h4 { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: var(--steel-300); margin-bottom: 16px; }
+    .footer-col a { display: block; font-size: 14px; color: var(--steel-500); text-decoration: none; margin-bottom: 10px; cursor: pointer; transition: color .2s ease; }
+    .footer-col a:hover, .footer-col a:focus-visible { color: var(--steel-100); outline: none; }
+    .news { display: flex; gap: 8px; margin-top: 14px; }
+    .news input {
+      flex: 1; min-width: 0;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--steel-200);
+      background: var(--bg-0);
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      padding: 10px 12px;
+    }
+    .news input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-dim); }
+    .footer-fine {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-top: 22px;
+      border-top: 1px solid var(--line-soft);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--steel-600);
+    }
+
+    /* ============================================================
+       RESPONSIVE (mobile-first refinements)
+       ============================================================ */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 48px; }
+      .showcase { aspect-ratio: 4 / 3.4; max-width: 460px; }
+      .product-grid { grid-template-columns: 1fr; }
+      .config-grid { grid-template-columns: 1fr; }
+      .config-preview { min-height: 340px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 540px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .products-head { flex-direction: column; align-items: flex-start; }
+      .hero-stats { gap: 26px; }
+    }
+
+    /* staggered page-load reveal */
+    .reveal { opacity: 0; transform: translateY(14px); animation: rise .7s cubic-bezier(.2,.8,.2,1) forwards; }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <!-- ====================== NAV ====================== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <span class="brand-word">Mini<b>Anglers</b></span>
+      <div class="nav-links">
+        <a href="#products">Shop</a>
+        <a href="#configure">Personalize</a>
+        <a href="#">The Process</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="icon-btn" aria-label="Cart">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <a class="btn btn-glass btn-sm" href="#configure">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+          Customize
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====================== HERO ====================== -->
+  <header class="hero">
+    <div class="hero-left reveal" style="animation-delay:.05s">
+      <span class="eyebrow">Modular Tackle System</span>
+      <h1>Organized.<br/>Precise.<br/><span class="muted">Personalized.</span></h1>
+      <p class="hero-sub">Put an end to side tray chaos. Precision-engineered bait boxes and wafter supports, custom-built to your exact setup and style.</p>
+      <div class="hero-cta">
+        <a class="btn btn-glass btn-lg" href="#configure">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+          Start Customizing
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#products">Explore the system</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-n">3D-Printed</div><div class="stat-l">In-house</div></div>
+        <div><div class="stat-n">Engraved</div><div class="stat-l">Your name</div></div>
+        <div><div class="stat-n">∞</div><div class="stat-l">Configurations</div></div>
+      </div>
+    </div>
+
+    <div class="showcase reveal" style="animation-delay:.18s" aria-hidden="true">
+      <div class="showcase-placeholder">
+        <div class="ph-box"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="showcase-scrim"></div>
+      <div class="showcase-tag"><span class="glass-tag">Field Build · On The Bank</span></div>
+      <div class="showcase-spec">3D-PRINTED · ENGRAVED<br/>MODULAR COMPARTMENTS</div>
+    </div>
+  </header>
+
+  <!-- ====================== PRODUCTS ====================== -->
+  <main>
+  <section class="products section" id="products">
+    <div class="products-head">
+      <div>
+        <span class="eyebrow">The System</span>
+        <h2>Engineered modules.</h2>
+      </div>
+      <button class="btn btn-ghost btn-sm">
+        View all
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="product-grid" id="productGrid"><!-- injected --></div>
+  </section>
+
+  <!-- ====================== CONFIGURATOR ====================== -->
+  <section class="config section" id="configure">
+    <div class="config-head">
+      <span class="eyebrow glow">Make It Yours</span>
+      <h2>Pick a box. Add your name.</h2>
+      <p>Standard builds, ready to fish. The only choice you make is what we engrave on the rim — your name, club or rig code.</p>
+    </div>
+
+    <div class="config-grid">
+      <div class="config-preview">
+        <div class="preview-tag"><span class="glass-tag">Live Preview</span></div>
+        <div class="cfg-box" id="cfgBox"></div>
+        <div class="cfg-etch" id="cfgEtch">YOUR NAME HERE</div>
+      </div>
+
+      <div class="config-panel">
+        <div class="cfg-row">
+          <div class="cfg-label"><span class="l">Choose your box</span></div>
+          <div class="prod-list" id="boxList"><!-- injected --></div>
+        </div>
+
+        <div class="cfg-row">
+          <div class="cfg-label"><span class="l">Engraving</span><span class="v" id="engCount">Free · 0/16</span></div>
+          <input class="cfg-input" id="engInput" maxlength="16" placeholder="Your name" aria-label="Engraving text" />
+        </div>
+
+        <div class="cfg-foot">
+          <div class="cfg-total">
+            <span class="pl">Your build</span>
+            <span class="pv" id="cfgPick">The Modular Six</span>
+          </div>
+          <button class="btn btn-steel btn-md" id="addBuild">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Add to Build
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <!-- ====================== FOOTER ====================== -->
+  <footer class="footer">
+    <div class="section">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="brand-word">Mini<b>Anglers</b></span>
+          <div class="footer-tag">Sealed. Mounted. Etched.</div>
+          <p class="footer-sub">Precision tackle systems for the modern method-feeder angler. Machined in the UK.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <a href="#">Bait Boxes</a><a href="#">Wafter Supports</a><a href="#">Full Systems</a><a href="#">Spares</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">Our Story</a><a href="#">The Process</a><a href="#">Materials</a><a href="#">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Stay in the loop</h4>
+          <p class="footer-sub">New modules and restocks, no noise.</p>
+          <div class="news">
+            <input placeholder="your.email@example.com" aria-label="Email address" />
+            <button class="btn btn-steel btn-sm">Join</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-fine">
+        <span>© 2025 MiniAnglers. All rights reserved.</span>
+        <span>Privacy · Terms · Returns</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ===== Products (no prices in this brute) =====
+    const PRODUCTS = [
+      { tag: "Bait Box · 6-Bay",   title: "The Modular Six", desc: "Six open compartments, angled dividers, engraved rim." },
+      { tag: "Bait-Pot Holder",    title: "Edge Mount Pro",  desc: "Holds three clear bait pots, locks onto your side tray." },
+      { tag: "Full System",        title: "The Bank Kit",    desc: "Bait box, pot holder and a snap-fit alignment rail." },
+    ];
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = PRODUCTS.map(p => `
+      <article class="pcard">
+        <div class="pcard-media">
+          <span class="glass-tag">${p.tag}</span>
+          <div class="mini-box"></div>
+        </div>
+        <div class="pcard-body">
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <div class="pcard-foot">
+            <span class="pcard-meta">Coming soon</span>
+            <button class="btn btn-glass btn-sm" type="button">Add</button>
+          </div>
+        </div>
+      </article>`).join('');
+
+    // ===== Configurator =====
+    const BOXES = [
+      { title: "The Compact Four", bays: 4, finish: "Matte",  cols: 2 },
+      { title: "The Modular Six",  bays: 6, finish: "Matte",  cols: 3 },
+      { title: "The Bank Eight",   bays: 8, finish: "Carbon", cols: 4 },
+    ];
+    let sel = 1, name = "";
+
+    const boxList = document.getElementById('boxList');
+    const cfgBox  = document.getElementById('cfgBox');
+    const cfgEtch = document.getElementById('cfgEtch');
+    const cfgPick = document.getElementById('cfgPick');
+    const engInput= document.getElementById('engInput');
+    const engCount= document.getElementById('engCount');
+
+    function renderList() {
+      boxList.innerHTML = BOXES.map((b, i) => `
+        <button class="prod-opt ${i === sel ? 'on' : ''}" data-i="${i}" type="button">
+          <span class="po-dot"></span>
+          <span class="po-text">
+            <span class="po-title">${b.title}</span>
+            <span class="po-meta">${b.bays} compartments · ${b.finish}</span>
+          </span>
+        </button>`).join('');
+      boxList.querySelectorAll('.prod-opt').forEach(el =>
+        el.addEventListener('click', () => { sel = +el.dataset.i; renderAll(); }));
+    }
+
+    function renderPreview() {
+      const b = BOXES[sel];
+      const finishClass = b.finish === "Carbon" ? "carbon" : b.finish === "Steel" ? "steel" : "";
+      cfgBox.className = "cfg-box " + finishClass;
+      cfgBox.style.gridTemplateColumns = `repeat(${b.cols}, 48px)`;
+      cfgBox.innerHTML = Array.from({ length: b.bays }).map(() => '<div class="bay"></div>').join('');
+      cfgEtch.textContent = name.trim() ? name.toUpperCase() : "YOUR NAME HERE";
+      cfgEtch.style.color = b.finish === "Steel" ? "var(--bg-1)" : "var(--steel-300)";
+      cfgPick.textContent = b.title + (name.trim() ? " · " + name.toUpperCase() : "");
+    }
+
+    function renderAll() { renderList(); renderPreview(); }
+
+    engInput.addEventListener('input', e => {
+      name = e.target.value;
+      engCount.textContent = `Free · ${name.length}/16`;
+      renderPreview();
+    });
+
+    document.getElementById('addBuild').addEventListener('click', () => {
+      const b = BOXES[sel];
+      const count = document.getElementById('cartCount');
+      count.textContent = (+count.textContent + 1);
+      console.log('Add to build:', b.title, '| engraving:', name.toUpperCase() || '(none)');
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

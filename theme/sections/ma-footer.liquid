@@ -1,0 +1,80 @@
+{%- comment -%} MiniAnglers footer {%- endcomment -%}
+{%- assign s = section.settings -%}
+<footer class="footer">
+  <div class="section">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="brand-word">Mini<b>Anglers</b></span>
+        <div class="footer-tag">{{ s.tagline | default: 'Sealed. Mounted. Etched.' }}</div>
+        <p class="footer-sub">{{ s.blurb | default: 'Precision tackle systems for the modern method-feeder angler. Machined in the UK.' }}</p>
+      </div>
+
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'menu' -%}
+          <div class="footer-col" {{ block.shopify_attributes }}>
+            <h4>{{ block.settings.title }}</h4>
+            {%- if block.settings.menu != blank -%}
+              {%- for link in block.settings.menu.links -%}
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if section.blocks.size == 0 -%}
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <a href="#">Bait Boxes</a><a href="#">Wafter Supports</a><a href="#">Full Systems</a><a href="#">Spares</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">Our Story</a><a href="#">The Process</a><a href="#">Materials</a><a href="#">Contact</a>
+        </div>
+      {%- endif -%}
+
+      {%- if s.show_newsletter -%}
+        <div class="footer-col">
+          <h4>{{ s.newsletter_title | default: 'Stay in the loop' }}</h4>
+          <p class="footer-sub">{{ s.newsletter_text | default: 'New modules and restocks, no noise.' }}</p>
+          {%- form 'customer' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <div class="news">
+              <input type="email" name="contact[email]" placeholder="your.email@example.com" aria-label="Email address" required>
+              <button class="btn btn-steel btn-sm" type="submit">Join</button>
+            </div>
+            {%- if form.posted_successfully? -%}<p class="footer-sub" style="margin-top:8px;color:var(--teal)">Thanks — you're on the list.</p>{%- endif -%}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="footer-fine">
+      <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</span>
+      <span>Privacy · Terms · Returns</span>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Sealed. Mounted. Etched." },
+    { "type": "textarea", "id": "blurb", "label": "Brand blurb", "default": "Precision tackle systems for the modern method-feeder angler. Machined in the UK." },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter signup", "default": true },
+    { "type": "text", "id": "newsletter_title", "label": "Newsletter title", "default": "Stay in the loop" },
+    { "type": "text", "id": "newsletter_text", "label": "Newsletter text", "default": "New modules and restocks, no noise." }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Link column",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Column title", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ]
+}
+{% endschema %}

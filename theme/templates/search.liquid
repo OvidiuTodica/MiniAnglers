@@ -1,0 +1,25 @@
+<div class="page-wrap">
+  <h1>Search</h1>
+  <form action="{{ routes.search_url }}" method="get" role="search" style="max-width:480px;margin:18px 0">
+    <div class="news">
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search products…" aria-label="Search">
+      <button type="submit" class="btn btn-steel btn-sm">Go</button>
+    </div>
+  </form>
+
+  {%- if search.performed -%}
+    <p style="color:var(--steel-500);margin-bottom:18px">{{ search.results_count }} result(s) for “{{ search.terms | escape }}”.</p>
+    <div class="product-grid">
+      {%- for item in search.results -%}
+        {%- if item.object_type == 'product' -%}
+          <a class="pcard" href="{{ item.url }}">
+            <div class="pcard-media">
+              {%- if item.featured_image -%}<img src="{{ item.featured_image | image_url: width: 600 }}" alt="{{ item.title | escape }}" loading="lazy">{%- else -%}<div class="mini-box"></div>{%- endif -%}
+            </div>
+            <div class="pcard-body"><h3>{{ item.title }}</h3><div class="pcard-foot"><span class="pcard-price">{{ item.price | money }}</span><span class="btn btn-glass btn-sm">View</span></div></div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>

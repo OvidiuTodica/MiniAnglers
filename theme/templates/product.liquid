@@ -1,0 +1,41 @@
+{%- comment -%}
+  Minimal branded product page (round one).
+  Includes the free engraving line item property so single-product
+  pages capture personalization too — not just the homepage configurator.
+{%- endcomment -%}
+<div class="page-wrap">
+  <p><a class="eyebrow" href="{{ routes.all_products_collection_url }}">← All products</a></p>
+  <h1>{{ product.title }}</h1>
+
+  {%- if product.featured_image -%}
+    <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" style="max-width:480px;width:100%;border-radius:var(--r-lg);border:1px solid var(--line);margin:18px 0">
+  {%- endif -%}
+
+  <div style="font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--steel-100);margin:8px 0 18px">{{ product.price | money }}</div>
+
+  <div style="color:var(--steel-400);max-width:560px">{{ product.description }}</div>
+
+  {%- form 'product', product -%}
+    {%- unless product.has_only_default_variant -%}
+      {%- for option in product.options_with_values -%}
+        <div class="form-field">
+          <label for="opt-{{ forloop.index }}">{{ option.name }}</label>
+          <select class="cfg-input" id="opt-{{ forloop.index }}" name="options[{{ option.name | escape }}]">
+            {%- for value in option.values -%}<option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>{%- endfor -%}
+          </select>
+        </div>
+      {%- endfor -%}
+    {%- endunless -%}
+
+    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+    <div class="form-field" style="max-width:360px">
+      <label for="engraving">Engraving <span style="color:var(--teal);font-family:var(--font-mono);font-size:11px">Free · max 16</span></label>
+      <input class="cfg-input" id="engraving" type="text" maxlength="16" name="properties[Engraving]" placeholder="Your name">
+    </div>
+
+    <button type="submit" class="btn btn-steel btn-lg" {% unless product.available %}disabled{% endunless %} style="margin-top:14px">
+      {% render 'ma-icon', icon: 'plus' %} {% if product.available %}Add to Build{% else %}Sold out{% endif %}
+    </button>
+  {%- endform -%}
+</div>
