@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="ro">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,6 +32,7 @@
 
   {% section 'ma-footer' %}
 
+  <script src="{{ 'ma-i18n.js' | asset_url }}" defer></script>
   <script src="{{ 'ma-configurator.js' | asset_url }}" defer></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
   pages capture personalization too — not just the homepage configurator.
 {%- endcomment -%}
 <div class="page-wrap">
-  <p><a class="eyebrow" href="{{ routes.all_products_collection_url }}">← All products</a></p>
+  <p><a class="eyebrow" href="{{ routes.all_products_collection_url }}">← Toate produsele</a></p>
   <h1>{{ product.title }}</h1>
 
   {%- if product.featured_image -%}
@@ -30,12 +30,12 @@
     <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
 
     <div class="form-field" style="max-width:360px">
-      <label for="engraving">Engraving <span style="color:var(--teal);font-family:var(--font-mono);font-size:11px">Free · max 16</span></label>
-      <input class="cfg-input" id="engraving" type="text" maxlength="16" name="properties[Engraving]" placeholder="Your name">
+      <label for="engraving">Gravare <span style="color:var(--teal);font-family:var(--font-mono);font-size:11px">Gratuit · max 16</span></label>
+      <input class="cfg-input" id="engraving" type="text" maxlength="16" name="properties[Engraving]" placeholder="Numele tău">
     </div>
 
     <button type="submit" class="btn btn-steel btn-lg" {% unless product.available %}disabled{% endunless %} style="margin-top:14px">
-      {% render 'ma-icon', icon: 'plus' %} {% if product.available %}Add to Build{% else %}Sold out{% endif %}
+      {% render 'ma-icon', icon: 'plus' %} {% if product.available %}Adaugă în Construcție{% else %}Stoc epuizat{% endif %}
     </button>
   {%- endform -%}
 </div>

@@ -18,12 +18,12 @@
           <p>{{ product.description | strip_html | truncatewords: 14 }}</p>
           <div class="pcard-foot">
             <span class="pcard-price">{{ product.price | money }}</span>
-            <span class="btn btn-glass btn-sm">View</span>
+            <span class="btn btn-glass btn-sm">Vezi</span>
           </div>
         </div>
       </a>
     {%- else -%}
-      <p style="color:var(--steel-500)">No products yet.</p>
+      <p style="color:var(--steel-500)">Încă nu există produse.</p>
     {%- endfor -%}
   </div>
 </div>

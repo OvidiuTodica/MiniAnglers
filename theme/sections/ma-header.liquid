@@ -20,20 +20,21 @@
           <a href="{{ link.url }}">{{ link.title }}</a>
         {%- endfor -%}
       {%- else -%}
-        <a href="#products">Shop</a>
-        <a href="#configure">Personalize</a>
-        <a href="#">The Process</a>
-        <a href="#">Contact</a>
+        <a href="#products" data-i18n="nav.shop">Magazin</a>
+        <a href="#configure" data-i18n="nav.personalize">Personalizează</a>
+        <a href="#" data-i18n="nav.process">Procesul</a>
+        <a href="#" data-i18n="nav.contact">Contact</a>
       {%- endif -%}
     </div>
 
     <div class="nav-actions">
-      <a class="icon-btn" href="{{ routes.search_url }}" aria-label="Search">{% render 'ma-icon', icon: 'search' %}</a>
-      <a class="icon-btn" href="{{ routes.cart_url }}" aria-label="Cart">
+      <button class="lang-toggle" type="button" data-lang-toggle aria-label="Switch to English">EN</button>
+      <a class="icon-btn" href="{{ routes.search_url }}" aria-label="Caută" data-i18n-aria="aria.search">{% render 'ma-icon', icon: 'search' %}</a>
+      <a class="icon-btn" href="{{ routes.cart_url }}" aria-label="Coș" data-i18n-aria="aria.cart">
         {% render 'ma-icon', icon: 'cart' %}
         <span class="cart-count" id="cartCount">{{ cart.item_count }}</span>
       </a>
-      <a class="btn btn-glass btn-sm" href="#configure">{% render 'ma-icon', icon: 'sliders' %} Customize</a>
+      <a class="btn btn-glass btn-sm" href="#configure">{% render 'ma-icon', icon: 'sliders' %} <span data-i18n="nav.customize">Personalizează</span></a>
     </div>
   </div>
 </nav>
