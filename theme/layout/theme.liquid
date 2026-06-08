@@ -15,6 +15,19 @@
 
   {% if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
 
+  <link rel="icon" type="image/svg+xml" href="{{ 'favicon.svg' | asset_url }}">
+
+  {%- comment -%} Open Graph / social sharing {%- endcomment -%}
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
+  <meta property="og:title" content="{{ page_title | default: shop.name }}">
+  {% if page_description %}<meta property="og:description" content="{{ page_description | escape }}">{% endif %}
+  <meta property="og:url" content="{{ canonical_url }}">
+  {%- if request.page_type == 'product' and product.featured_image -%}
+    <meta property="og:image" content="https:{{ product.featured_image | image_url: width: 1200 }}">
+  {%- endif -%}
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -24,6 +37,7 @@
   {{ content_for_header }}
 </head>
 <body class="template-{{ request.page_type | handle }}">
+  {% section 'ma-announce' %}
   {% section 'ma-header' %}
 
   <main id="MainContent" role="main">

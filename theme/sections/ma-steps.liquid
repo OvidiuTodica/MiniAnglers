@@ -1,0 +1,36 @@
+{%- comment -%} MiniAnglers "How it works" — 3 steps (RO default, EN via data-i18n) {%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="steps section">
+  <div class="steps-head">
+    <span class="eyebrow" data-i18n="steps.eyebrow">{{ s.eyebrow | default: 'Cum funcționează' }}</span>
+    <h2 data-i18n="steps.heading">{{ s.heading | default: 'Trei pași până pe mal.' }}</h2>
+  </div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-n">01</div>
+      <h3 data-i18n="steps.t1">Alege modulul</h3>
+      <p data-i18n="steps.d1">Cutie, suport de borcane sau sistem complet — alege ce ți se potrivește.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <h3 data-i18n="steps.t2">Personalizează</h3>
+      <p data-i18n="steps.d2">Adaugă numele tău, clubul sau codul echipei — gravat gratuit pe ramă.</p>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <h3 data-i18n="steps.t3">Primești și pescuiești</h3>
+      <p data-i18n="steps.d3">Imprimat 3D în casă și livrat la tine, gata de tava laterală.</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "How it works",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Cum funcționează" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Trei pași până pe mal." }
+  ],
+  "presets": [{ "name": "How it works" }]
+}
+{% endschema %}
