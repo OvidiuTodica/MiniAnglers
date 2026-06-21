@@ -83,6 +83,8 @@
       'footer.join': 'Abonează-te',
       'footer.rights': 'Toate drepturile rezervate.',
       'footer.legal': 'Confidențialitate · Termeni · Retururi',
+      'cart.title': 'Construcția ta', 'cart.empty': 'Coșul tău este gol.', 'cart.start': 'Începe personalizarea',
+      'cart.qty': 'Cant.', 'cart.update': 'Actualizează', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Finalizează comanda',
     },
     en: {
       'nav.shop': 'Shop',
@@ -153,6 +155,8 @@
       'footer.join': 'Join',
       'footer.rights': 'All rights reserved.',
       'footer.legal': 'Privacy · Terms · Returns',
+      'cart.title': 'Your build', 'cart.empty': 'Your cart is empty.', 'cart.start': 'Start customizing',
+      'cart.qty': 'Qty', 'cart.update': 'Update', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Checkout',
     },
   };
 

@@ -1,10 +1,10 @@
 {%- comment -%} Minimal branded cart (round one). Shows engraving line item properties. {%- endcomment -%}
 <div class="page-wrap">
-  <h1>Construcția ta</h1>
+  <h1 data-i18n="cart.title">Construcția ta</h1>
 
   {%- if cart.item_count == 0 -%}
-    <p style="color:var(--steel-400)">Coșul tău este gol.</p>
-    <a class="btn btn-glass btn-lg" href="{{ routes.root_url }}#configure" style="margin-top:18px">Începe personalizarea</a>
+    <p style="color:var(--steel-400)" data-i18n="cart.empty">Coșul tău este gol.</p>
+    <a class="btn btn-glass btn-lg" href="{{ routes.root_url }}#cutii" style="margin-top:18px" data-i18n="cart.start">Începe personalizarea</a>
   {%- else -%}
     <form action="{{ routes.cart_url }}" method="post" novalidate>
       {%- for item in cart.items -%}
@@ -17,7 +17,7 @@
                 <div style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-top:4px">{{ p.first }}: {{ p.last }}</div>
               {%- endunless -%}
             {%- endfor -%}
-            <div style="color:var(--steel-500);font-size:13px;margin-top:6px">Cant.
+            <div style="color:var(--steel-500);font-size:13px;margin-top:6px"><span data-i18n="cart.qty">Cant.</span>
               <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" style="width:56px;background:var(--bg-0);border:1px solid var(--line);color:var(--steel-200);border-radius:8px;padding:4px 8px;margin-left:6px">
             </div>
           </div>
@@ -27,15 +27,15 @@
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
         <div style="display:flex;gap:10px">
-          <button type="submit" name="update" class="btn btn-ghost btn-md">Actualizează</button>
+          <button type="submit" name="update" class="btn btn-ghost btn-md" data-i18n="cart.update">Actualizează</button>
         </div>
         <div style="text-align:right">
-          <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel-500)">Subtotal</div>
+          <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel-500)" data-i18n="cart.subtotal">Subtotal</div>
           <div style="font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--steel-100)">{{ cart.total_price | money }}</div>
         </div>
       </div>
 
-      <button type="submit" name="checkout" class="btn btn-steel btn-lg" style="margin-top:20px;width:100%">Finalizează comanda</button>
+      <button type="submit" name="checkout" class="btn btn-steel btn-lg" style="margin-top:20px;width:100%" data-i18n="cart.checkout">Finalizează comanda</button>
     </form>
   {%- endif -%}
 </div>
