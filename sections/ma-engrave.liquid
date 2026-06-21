@@ -1,0 +1,25 @@
+{%- comment -%} MiniAnglers engraving callout (RO default, EN via data-i18n) {%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="callout-sec" id="gravare">
+  <div class="section">
+    <div class="callout">
+      <div>
+        <h2 data-i18n="engrave.heading">{{ s.heading | default: 'Gravarea e gratuită. Întotdeauna.' }}</h2>
+        <p data-i18n="engrave.text">{{ s.text | default: 'Numele tău, clubul sau codul echipei, gravat direct pe ramă. Fără costuri ascunse — doar identitatea ta pe teren.' }}</p>
+      </div>
+      <div class="field">{{ s.sample | default: 'TODICA · 2026' }}</div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Engraving callout",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Gravarea e gratuită. Întotdeauna." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Numele tău, clubul sau codul echipei, gravat direct pe ramă. Fără costuri ascunse — doar identitatea ta pe teren." },
+    { "type": "text", "id": "sample", "label": "Sample engraving", "default": "TODICA · 2026" }
+  ],
+  "presets": [{ "name": "Engraving callout" }]
+}
+{% endschema %}

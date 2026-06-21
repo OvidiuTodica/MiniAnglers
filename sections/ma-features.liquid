@@ -1,41 +1,51 @@
 {%- comment -%} MiniAnglers "Why" feature band (RO default, EN via data-i18n) {%- endcomment -%}
 {%- assign s = section.settings -%}
-<section class="features section">
-  <div class="features-head">
-    <span class="eyebrow glow" data-i18n="features.eyebrow">{{ s.eyebrow | default: 'De ce MiniAnglers' }}</span>
-    <h2 data-i18n="features.heading">{{ s.heading | default: 'Construit pentru pescari, de pescari.' }}</h2>
-  </div>
-  <div class="features-grid">
-    <div class="feature">
-      <span class="feature-ic">{% render 'ma-icon', icon: 'check' %}</span>
-      <h3 data-i18n="features.t1">Imprimat 3D în casă</h3>
-      <p data-i18n="features.d1">Control total al calității, fără intermediari.</p>
+<section class="features" id="dece">
+  <div class="section">
+    <div class="features-head">
+      <span class="eyebrow glow" data-i18n="features.eyebrow">{{ s.eyebrow | default: 'De ce MiniAnglers' }}</span>
+      <h2 data-i18n="features.heading">{{ s.heading | default: 'Construit pentru pescari, de pescari.' }}</h2>
     </div>
-    <div class="feature">
-      <span class="feature-ic">{% render 'ma-icon', icon: 'check' %}</span>
-      <h3 data-i18n="features.t2">Gravare gratuită</h3>
-      <p data-i18n="features.d2">Numele tău pe fiecare cutie, fără cost suplimentar.</p>
-    </div>
-    <div class="feature">
-      <span class="feature-ic">{% render 'ma-icon', icon: 'check' %}</span>
-      <h3 data-i18n="features.t3">Sistem modular</h3>
-      <p data-i18n="features.d3">Piese care se fixează exact pe tava ta laterală.</p>
-    </div>
-    <div class="feature">
-      <span class="feature-ic">{% render 'ma-icon', icon: 'check' %}</span>
-      <h3 data-i18n="features.t4">Rezistent pe mal</h3>
-      <p data-i18n="features.d4">Materiale alese să țină pe teren, sezon după sezon.</p>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-ic">{% render 'ma-icon', icon: 'box' %}</div>
+        <h3 data-i18n="features.t1">{{ s.t1 | default: 'Imprimat 3D în casă' }}</h3>
+        <p data-i18n="features.d1">{{ s.d1 | default: 'Control total al calității, fără intermediari.' }}</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ic">{% render 'ma-icon', icon: 'check' %}</div>
+        <h3 data-i18n="features.t2">{{ s.t2 | default: 'Gravare gratuită' }}</h3>
+        <p data-i18n="features.d2">{{ s.d2 | default: 'Numele tău pe fiecare cutie, fără cost suplimentar.' }}</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ic">{% render 'ma-icon', icon: 'layers' %}</div>
+        <h3 data-i18n="features.t3">{{ s.t3 | default: 'Sistem modular' }}</h3>
+        <p data-i18n="features.d3">{{ s.d3 | default: 'Piese care se fixează exact pe tava ta laterală.' }}</p>
+      </div>
+      <div class="feature">
+        <div class="feature-ic">{% render 'ma-icon', icon: 'shield' %}</div>
+        <h3 data-i18n="features.t4">{{ s.t4 | default: 'Rezistent pe mal' }}</h3>
+        <p data-i18n="features.d4">{{ s.d4 | default: 'Materiale alese să țină pe teren, sezon după sezon.' }}</p>
+      </div>
     </div>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Why band",
+  "name": "Why / Features",
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "De ce MiniAnglers" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Construit pentru pescari, de pescari." }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Construit pentru pescari, de pescari." },
+    { "type": "text", "id": "t1", "label": "Feature 1 title", "default": "Imprimat 3D în casă" },
+    { "type": "text", "id": "d1", "label": "Feature 1 text", "default": "Control total al calității, fără intermediari." },
+    { "type": "text", "id": "t2", "label": "Feature 2 title", "default": "Gravare gratuită" },
+    { "type": "text", "id": "d2", "label": "Feature 2 text", "default": "Numele tău pe fiecare cutie, fără cost suplimentar." },
+    { "type": "text", "id": "t3", "label": "Feature 3 title", "default": "Sistem modular" },
+    { "type": "text", "id": "d3", "label": "Feature 3 text", "default": "Piese care se fixează exact pe tava ta laterală." },
+    { "type": "text", "id": "t4", "label": "Feature 4 title", "default": "Rezistent pe mal" },
+    { "type": "text", "id": "d4", "label": "Feature 4 text", "default": "Materiale alese să țină pe teren, sezon după sezon." }
   ],
-  "presets": [{ "name": "Why band" }]
+  "presets": [{ "name": "Why / Features" }]
 }
 {% endschema %}

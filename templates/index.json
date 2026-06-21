@@ -1,9 +1,37 @@
 {
   "sections": {
     "hero": { "type": "ma-hero", "settings": {} },
+    "products": {
+      "type": "ma-products",
+      "blocks": {
+        "p1": { "type": "product", "settings": {
+          "name": "Set Bacuri Nadă Standard", "pn": "MA-BNS", "shape": "set4",
+          "desc": "Patru bacuri care se îmbină — 1 XL + 3 mărimi. Nadă sortată, totul pe tava ta.",
+          "spec1_k": "Bac XL", "spec1_v": "21 × 13 × 6.5 cm",
+          "spec2_k": "3 mărimi", "spec2_v": "15.5 / 10 / 5 cm lățime",
+          "spec3_k": "Înălțime", "spec3_v": "6.5 cm",
+          "spec4_k": "Perete", "spec4_v": "2 mm",
+          "tags": "SET 4, MATTE, GRAVAT", "price": "199 lei" } },
+        "p2": { "type": "product", "settings": {
+          "name": "Suport Wafters v2", "pn": "MA-WAF", "shape": "bar_long",
+          "desc": "Suport lung pentru wafters și pop-ups, aliniate și la îndemână în timpul montării.",
+          "spec1_k": "Dimensiuni", "spec1_v": "24 × 10 × 3.5 cm",
+          "spec2_k": "Lungime utilă", "spec2_v": "24 cm",
+          "spec3_k": "Perete", "spec3_v": "2 mm",
+          "tags": "WAFTERS, MATTE, GRAVAT", "price": "89 lei" } },
+        "p3": { "type": "product", "settings": {
+          "name": "Suport Gel v2", "pn": "MA-GEL", "shape": "bar_small",
+          "desc": "Compact, pentru borcanul de gel/dip — fix, fără răsturnări pe tava laterală.",
+          "spec1_k": "Dimensiuni", "spec1_v": "5.2 × 10 × 3.5 cm",
+          "spec2_k": "Perete", "spec2_v": "2 mm",
+          "tags": "GEL/DIP, MATTE, GRAVAT", "price": "39 lei" } }
+      },
+      "block_order": ["p1", "p2", "p3"],
+      "settings": {}
+    },
     "steps": { "type": "ma-steps", "settings": {} },
-    "products": { "type": "ma-products", "settings": {} },
-    "features": { "type": "ma-features", "settings": {} }
+    "features": { "type": "ma-features", "settings": {} },
+    "engrave": { "type": "ma-engrave", "settings": {} }
   },
-  "order": ["hero", "steps", "products", "features"]
+  "order": ["hero", "products", "steps", "features", "engrave"]
 }

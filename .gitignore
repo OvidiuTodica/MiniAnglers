@@ -9,6 +9,10 @@ temporary screenshots/
 .shopify/
 *.tmp.*
 
+# Throwaway design mockups + source 3D files (not part of the Shopify theme)
+mockups/
+mockups_stl/
+
 # OS / editor
 Thumbs.db
 .DS_Store
