@@ -1,9 +1,0 @@
-{
-  "sections": {
-    "hero": { "type": "ma-hero", "settings": {} },
-    "steps": { "type": "ma-steps", "settings": {} },
-    "products": { "type": "ma-products", "settings": {} },
-    "features": { "type": "ma-features", "settings": {} }
-  },
-  "order": ["hero", "steps", "products", "features"]
-}
