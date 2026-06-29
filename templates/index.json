@@ -5,6 +5,7 @@
       "type": "ma-products",
       "blocks": {
         "p1": { "type": "product", "settings": {
+          "product": "bacuri-nada-standard",
           "name": "Set Bacuri Nadă Standard", "pn": "MA-BNS", "shape": "set4",
           "desc": "Patru bacuri care se îmbină — 1 XL + 3 mărimi. Nadă sortată, totul pe tava ta.",
           "spec1_k": "Bac XL", "spec1_v": "21 × 13 × 6.5 cm",
