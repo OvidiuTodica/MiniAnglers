@@ -22,15 +22,68 @@
         <div class="product-desc">{{ product.description }}</div>
       {%- endif -%}
 
+      {%- comment -%} Variant data for JS picker {%- endcomment -%}
+      <script type="application/json" data-product-json>
+        {
+          "options": {{ product.options | json }},
+          "variants": [
+            {%- for v in product.variants -%}
+              {
+                "id": {{ v.id }},
+                "options": {{ v.options | json }},
+                "price": {{ v.price | json }},
+                "available": {{ v.available }},
+                "featured_image": {%- if v.featured_image -%}{{ v.featured_image | image_url: width: 900 | json }}{%- else -%}null{%- endif -%}
+              }{%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          ],
+          "money_format": {{ shop.money_format | json }}
+        }
+      </script>
+
       {%- form 'product', product -%}
         {%- unless product.has_only_default_variant -%}
           {%- for option in product.options_with_values -%}
-            <div class="form-field">
-              <label for="opt-{{ forloop.index }}">{{ option.name }}</label>
-              <select class="cfg-input" id="opt-{{ forloop.index }}" name="options[{{ option.name | escape }}]">
-                {%- for value in option.values -%}<option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>{%- endfor -%}
-              </select>
-            </div>
+            {%- assign opt_l = option.name | downcase -%}
+            {%- assign is_color = false -%}
+            {%- if opt_l == 'culoare' or opt_l == 'color' or opt_l == 'colour' -%}{%- assign is_color = true -%}{%- endif -%}
+            {%- if is_color -%}
+              <div class="form-field">
+                <label>{{ option.name }}</label>
+                <div class="swatches" role="radiogroup" aria-label="{{ option.name | escape }}">
+                  {%- for value in option.values -%}
+                    {%- assign vl = value | downcase | strip -%}
+                    {%- assign hex = '#888' -%}
+                    {%- case vl -%}
+                      {%- when 'albastru', 'blue' -%}{%- assign hex = '#2563eb' -%}
+                      {%- when 'auriu', 'gold' -%}{%- assign hex = '#c9a96e' -%}
+                      {%- when 'negru', 'black' -%}{%- assign hex = '#1a1a1a' -%}
+                    {%- endcase -%}
+                    {%- assign active = false -%}
+                    {%- if option.selected_value == value -%}{%- assign active = true -%}{%- endif -%}
+                    <button type="button"
+                            class="swatch{% if active %} is-active{% endif %}"
+                            data-option-name="{{ option.name | escape }}"
+                            data-value="{{ value | escape }}"
+                            style="--swatch-color:{{ hex }}"
+                            role="radio"
+                            aria-checked="{% if active %}true{% else %}false{% endif %}"
+                            aria-label="{{ value | escape }}"
+                            title="{{ value | escape }}">
+                      <span class="swatch-color" aria-hidden="true"></span>
+                      <span class="swatch-label">{{ value }}</span>
+                    </button>
+                  {%- endfor -%}
+                </div>
+              </div>
+            {%- else -%}
+              <div class="form-field">
+                <label for="opt-{{ forloop.index }}">{{ option.name }}</label>
+                <select class="cfg-input" id="opt-{{ forloop.index }}" name="options[{{ option.name | escape }}]">
+                  {%- for value in option.values -%}<option value="{{ value | escape }}" {% if option.selected_value == value %}selected{% endif %}>{{ value }}</option>{%- endfor -%}
+                </select>
+              </div>
+            {%- endif -%}
           {%- endfor -%}
         {%- endunless -%}
 

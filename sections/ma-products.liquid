@@ -52,6 +52,28 @@
               </div>
             {%- endif -%}
 
+            {%- if p != blank -%}
+              {%- assign color_opt = nil -%}
+              {%- for opt in p.options_with_values -%}
+                {%- assign opt_l = opt.name | downcase -%}
+                {%- if opt_l == 'culoare' or opt_l == 'color' or opt_l == 'colour' -%}{%- assign color_opt = opt -%}{%- endif -%}
+              {%- endfor -%}
+              {%- if color_opt -%}
+                <div class="colors" aria-label="Culori disponibile">
+                  {%- for val in color_opt.values -%}
+                    {%- assign vl = val | downcase | strip -%}
+                    {%- assign hex = '#888' -%}
+                    {%- case vl -%}
+                      {%- when 'albastru', 'blue' -%}{%- assign hex = '#2563eb' -%}
+                      {%- when 'auriu', 'gold' -%}{%- assign hex = '#c9a96e' -%}
+                      {%- when 'negru', 'black' -%}{%- assign hex = '#1a1a1a' -%}
+                    {%- endcase -%}
+                    <span class="color-dot" style="background:{{ hex }}" title="{{ val | escape }}" aria-label="{{ val | escape }}"></span>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+
             <div class="cfoot">
               <div class="price">
                 {%- if p != blank -%}{{ p.price | money }}{%- else -%}{{ b.price | default: '—' }}<small data-i18n="products.example">PREȚ EXEMPLU</small>{%- endif -%}
