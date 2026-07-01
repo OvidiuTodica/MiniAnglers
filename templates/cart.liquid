@@ -1,5 +1,5 @@
 {%- comment -%} Minimal branded cart (round one). Shows engraving line item properties. {%- endcomment -%}
-<div class="page-wrap">
+<div class="page-wrap" data-cart-root data-money-format="{{ shop.money_format | escape }}">
   <h1 data-i18n="cart.title">Construcția ta</h1>
 
   {%- if cart.item_count == 0 -%}
@@ -8,7 +8,7 @@
   {%- else -%}
     <form action="{{ routes.cart_url }}" method="post" novalidate>
       {%- for item in cart.items -%}
-        <div style="display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line-soft)">
+        <div class="cart-row" data-cart-row style="display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line-soft)">
           {%- if item.image -%}<img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title | escape }}" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r-sm);border:1px solid var(--line)">{%- endif -%}
           <div style="flex:1">
             <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">{{ item.product.title }}</div>
@@ -21,7 +21,10 @@
               <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" style="width:56px;background:var(--bg-0);border:1px solid var(--line);color:var(--steel-200);border-radius:8px;padding:4px 8px;margin-left:6px">
             </div>
           </div>
-          <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">{{ item.final_line_price | money }}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
+            <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">{{ item.final_line_price | money }}</div>
+            <button type="button" class="cart-remove" data-cart-remove="{{ forloop.index }}" aria-label="Elimină din coș" data-i18n-aria="cart.remove">{% render 'ma-icon', icon: 'close' %}</button>
+          </div>
         </div>
       {%- endfor -%}
 
@@ -31,7 +34,7 @@
         </div>
         <div style="text-align:right">
           <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel-500)" data-i18n="cart.subtotal">Subtotal</div>
-          <div style="font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--steel-100)">{{ cart.total_price | money }}</div>
+          <div style="font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--steel-100)" data-cart-subtotal>{{ cart.total_price | money }}</div>
         </div>
       </div>
 
