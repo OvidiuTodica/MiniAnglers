@@ -31,8 +31,7 @@
       "settings": {}
     },
     "steps": { "type": "ma-steps", "settings": {} },
-    "features": { "type": "ma-features", "settings": {} },
-    "engrave": { "type": "ma-engrave", "settings": {} }
+    "features": { "type": "ma-features", "settings": {} }
   },
-  "order": ["hero", "products", "steps", "features", "engrave"]
+  "order": ["hero", "products", "steps", "features"]
 }
