@@ -24,8 +24,7 @@
           <a href="{{ link.url }}">{{ link.title }}</a>
         {%- endfor -%}
       {%- else -%}
-        <a href="#products" data-i18n="nav.shop">Magazin</a>
-        <a href="{{ routes.all_products_collection_url }}" data-i18n="nav.personalize">Personalizează</a>
+        <a href="{{ routes.root_url }}#cutii" data-i18n="nav.shop">Magazin</a>
         <a href="/pages/procesul" data-i18n="nav.process">Procesul</a>
         <a href="/pages/contact" data-i18n="nav.contact">Contact</a>
       {%- endif -%}
@@ -38,17 +37,14 @@
         {% render 'ma-icon', icon: 'cart' %}
         <span class="cart-count" id="cartCount">{{ cart.item_count }}</span>
       </a>
-      <a class="btn btn-glass btn-sm nav-customize" href="{{ routes.all_products_collection_url }}">{% render 'ma-icon', icon: 'sliders' %} <span data-i18n="nav.customize">Personalizează</span></a>
     </div>
   </div>
 
   <div class="nav-mobile" id="navMobile" data-nav-mobile hidden>
-    <a href="#products" data-i18n="nav.shop">Magazin</a>
-    <a href="{{ routes.all_products_collection_url }}" data-i18n="nav.personalize">Personalizează</a>
+    <a href="{{ routes.root_url }}#cutii" data-i18n="nav.shop">Magazin</a>
     <a href="/pages/procesul" data-i18n="nav.process">Procesul</a>
     <a href="/pages/contact" data-i18n="nav.contact">Contact</a>
     <a href="{{ routes.search_url }}" data-i18n="aria.search">Caută</a>
-    <a class="btn btn-steel btn-md nav-mobile-cta" href="{{ routes.all_products_collection_url }}">{% render 'ma-icon', icon: 'sliders' %} <span data-i18n="nav.customize">Personalizează</span></a>
   </div>
 </nav>
 
