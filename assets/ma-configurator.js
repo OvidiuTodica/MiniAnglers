@@ -57,7 +57,7 @@
     }
 
     function updateCount() {
-      if (countEl) countEl.textContent = `${t('config.free')} · ${name.length}/${maxLen}`;
+      if (countEl) countEl.textContent = `${name.length}/${maxLen} ${t('config.chars')}`;
     }
 
     function render() { renderList(); renderPreview(); updateCount(); }

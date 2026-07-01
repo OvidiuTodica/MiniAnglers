@@ -15,5 +15,13 @@
       { "type": "color", "id": "color_accent", "label": "Accent (teal)", "default": "#4FD1C5" },
       { "type": "color", "id": "color_text", "label": "Body text", "default": "#d7d7db" }
     ]
+  },
+  {
+    "name": "Engraving",
+    "settings": [
+      { "type": "paragraph", "content": "Engraving is a paid add-on, not free. Link a lightweight Shopify product below (e.g. \"Gravare personalizată\") and its price will be charged automatically as a second cart line whenever a customer types engraving text. Until you link a product, the placeholder price is shown but nothing is charged." },
+      { "type": "product", "id": "engraving_product", "label": "Engraving product (charges automatically when linked)" },
+      { "type": "text", "id": "engraving_price_note", "label": "Placeholder price (shown until a product is linked)", "default": "+19 lei" }
+    ]
   }
 ]

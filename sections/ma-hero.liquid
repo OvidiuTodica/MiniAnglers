@@ -1,108 +1,29 @@
-{%- comment -%} MiniAnglers hero — blueprint dark + exploded assembly (RO default, EN via data-i18n) {%- endcomment -%}
+{%- comment -%} MiniAnglers hero — simple, centered, product-focused (RO default, EN via data-i18n) {%- endcomment -%}
 {%- assign s = section.settings -%}
 <header class="hero" id="sistem">
-  <div class="hero-left">
-    <span class="eyebrow" data-i18n="hero.eyebrow">{{ s.eyebrow | default: 'Sistem Modular de Pescuit · MA-SYS' }}</span>
-    <h1>
-      <span data-i18n="hero.line1">{{ s.line_1 | default: 'Organizat.' }}</span><br>
-      <span data-i18n="hero.line2">{{ s.line_2 | default: 'Precis.' }}</span><br>
-      <span class="muted" data-i18n="hero.line3">{{ s.line_3 | default: 'Personalizat.' }}</span>
-    </h1>
-    <p class="hero-sub" data-i18n="hero.sub">{{ s.subtext | default: 'Modele reale, imprimate 3D în casă. Bacuri de nadă, suporturi pentru wafters și gel — proiectate pe milimetru și gravate exact după setarea ta.' }}</p>
-    <div class="hero-cta">
-      <a class="btn btn-glass btn-lg" href="{{ s.cta1_link | default: '#cutii' }}">{% render 'ma-icon', icon: 'sliders' %} <span data-i18n="hero.cta1">{{ s.cta1_label | default: 'Configurează cutia' }}</span></a>
-      <a class="btn btn-ghost btn-lg" href="{{ s.cta2_link | default: '#proces' }}"><span data-i18n="hero.cta2">{{ s.cta2_label | default: 'Vezi procesul' }}</span></a>
-    </div>
-    <div class="hero-stats">
-      <div><div class="stat-n" data-i18n="hero.stat1n">{{ s.stat1_n | default: '3D' }}</div><div class="stat-l" data-i18n="hero.stat1l">{{ s.stat1_l | default: 'Imprimat în casă' }}</div></div>
-      <div><div class="stat-n" data-i18n="hero.stat2n">{{ s.stat2_n | default: '±0.1mm' }}</div><div class="stat-l" data-i18n="hero.stat2l">{{ s.stat2_l | default: 'Toleranță' }}</div></div>
-      <div><div class="stat-n" data-i18n="hero.stat3n">{{ s.stat3_n | default: '∞' }}</div><div class="stat-l" data-i18n="hero.stat3l">{{ s.stat3_l | default: 'Configurații' }}</div></div>
-    </div>
-  </div>
-
-  <div class="draw">
-    <span class="tag" data-i18n="hero.fig">{{ s.fig_label | default: 'FIG.01 — SET 4 BACURI / ASAMBLARE' }}</span>
-    {%- if s.image != blank -%}
-      <img src="{{ s.image | image_url: width: 900 }}" alt="{{ s.image.alt | escape | default: 'Set bacuri MiniAnglers' }}" style="width:100%;height:100%;object-fit:contain" loading="eager">
-    {%- else -%}
-      <svg id="assembly" class="assembly" role="img" aria-label="Vedere explodată: set de 4 bacuri de nadă care se îmbină"></svg>
-    {%- endif -%}
-    <div class="asm-etch" data-i18n="hero.etch">{{ s.etch | default: '— NUMELE TĂU —' }}</div>
+  <span class="eyebrow" data-i18n="hero.eyebrow">{{ s.eyebrow | default: 'Sistem Modular de Pescuit' }}</span>
+  <h1>
+    <span data-i18n="hero.line1">{{ s.line_1 | default: 'Organizat.' }}</span>
+    <span data-i18n="hero.line2">{{ s.line_2 | default: 'Precis.' }}</span>
+    <span class="muted" data-i18n="hero.line3">{{ s.line_3 | default: 'Personalizat.' }}</span>
+  </h1>
+  <p class="hero-sub" data-i18n="hero.sub">{{ s.subtext | default: 'Bacuri de nadă și suporturi pentru wafters și gel, imprimate 3D. Gravare personalizată disponibilă cu numele tău.' }}</p>
+  <div class="hero-cta">
+    <a class="btn btn-glass btn-lg" href="{{ s.cta1_link | default: '#cutii' }}"><span data-i18n="hero.cta1">{{ s.cta1_label | default: 'Vezi produsele' }}</span></a>
   </div>
 </header>
-
-{%- unless s.image != blank -%}
-<script>
-(function(){
-  var svg=document.getElementById('assembly');if(!svg)return;
-  var NS='http://www.w3.org/2000/svg';
-  var COS=Math.cos(Math.PI/6),SIN=Math.sin(Math.PI/6),S=0.5;
-  function P(x,y,z){return [(x-y)*COS*S,((x+y)*SIN-z)*S];}
-  var tubs=[
-    {w:50, d:109, h:65, t:'BAC 5 cm'},
-    {w:100,d:109, h:65, t:'BAC 10 cm'},
-    {w:155,d:100, h:65, t:'BAC 15.5 cm'},
-    {w:130,d:210, h:65, t:'BAC XL · 21×13 cm'}
-  ];
-  var gap=72, pts=[], labels=[];
-  function mk(tag,cls){var e=document.createElementNS(NS,tag);if(cls)e.setAttribute('class',cls);return e;}
-  function poly(g,cls,pp){var p=mk('path',cls);p.setAttribute('d','M'+pp.map(function(q){return q[0].toFixed(1)+' '+q[1].toFixed(1);}).join(' L')+' Z');g.appendChild(p);}
-  tubs.forEach(function(tb,i){
-    var cx=0,cy=i*gap,hw=tb.w/2,hd=tb.d/2,H=tb.h,k=0.8;
-    var tTL=P(-hw,-hd,H),tTR=P(hw,-hd,H),tBR=P(hw,hd,H),tBL=P(-hw,hd,H);
-    var fBLt=P(-hw,hd,H),fBRt=P(hw,hd,H),fBRb=P(hw,hd,0),fBLb=P(-hw,hd,0);
-    var rTRt=P(hw,-hd,H),rBRt=P(hw,hd,H),rBRb=P(hw,hd,0),rTRb=P(hw,-hd,0);
-    var iTL=P(-hw*k,-hd*k,H),iTR=P(hw*k,-hd*k,H),iBR=P(hw*k,hd*k,H),iBL=P(-hw*k,hd*k,H);
-    var outer=mk('g');outer.setAttribute('transform','translate('+cx+' '+cy+')');
-    var g=mk('g','tub');g.style.animationDelay=(i*0.5)+'s';
-    poly(g,'face side',[rTRt,rBRt,rBRb,rTRb]);
-    poly(g,'face front',[fBLt,fBRt,fBRb,fBLb]);
-    poly(g,'face top',[tTL,tTR,tBR,tBL]);
-    poly(g,'rim',[iTL,iTR,iBR,iBL]);
-    outer.appendChild(g);svg.appendChild(outer);
-    [tTL,tTR,tBR,tBL,fBLb,fBRb,rTRb].forEach(function(q){pts.push([q[0]+cx,q[1]+cy]);});
-    labels.push({lx:tTR[0]+cx,ly:tTR[1]+cy,t:tb.t});
-  });
-  var axis=mk('path','axis');axis.setAttribute('d','M0 -34 L0 '+((tubs.length-1)*gap+36));
-  svg.insertBefore(axis,svg.firstChild);
-  var right=Math.max.apply(null,pts.map(function(p){return p[0];}))+22;
-  labels.forEach(function(l){
-    var ld=mk('path','leader');ld.setAttribute('d','M'+l.lx+' '+l.ly+' L'+(right-8)+' '+l.ly);svg.appendChild(ld);
-    var tx=mk('text','lbl');tx.setAttribute('x',right);tx.setAttribute('y',l.ly+3.5);tx.textContent=l.t;svg.appendChild(tx);
-    pts.push([right+l.t.length*6.4,l.ly]);
-  });
-  var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];}),pad=18;
-  var minX=Math.min.apply(null,xs)-pad,minY=Math.min.apply(null,ys)-pad;
-  svg.setAttribute('viewBox',minX+' '+minY+' '+(Math.max.apply(null,xs)-minX+pad)+' '+(Math.max.apply(null,ys)-minY+pad));
-  svg.setAttribute('preserveAspectRatio','xMidYMid meet');
-})();
-</script>
-{%- endunless -%}
 
 {% schema %}
 {
   "name": "Hero",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Sistem Modular de Pescuit · MA-SYS" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Sistem Modular de Pescuit" },
     { "type": "text", "id": "line_1", "label": "Headline line 1", "default": "Organizat." },
     { "type": "text", "id": "line_2", "label": "Headline line 2", "default": "Precis." },
     { "type": "text", "id": "line_3", "label": "Headline line 3 (accent)", "default": "Personalizat." },
-    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Modele reale, imprimate 3D în casă. Bacuri de nadă, suporturi pentru wafters și gel — proiectate pe milimetru și gravate exact după setarea ta." },
-    { "type": "text", "id": "cta1_label", "label": "Primary CTA label", "default": "Configurează cutia" },
-    { "type": "text", "id": "cta1_link", "label": "Primary CTA link", "default": "#cutii" },
-    { "type": "text", "id": "cta2_label", "label": "Secondary CTA label", "default": "Vezi procesul" },
-    { "type": "text", "id": "cta2_link", "label": "Secondary CTA link", "default": "#proces" },
-    { "type": "header", "content": "Drawing" },
-    { "type": "text", "id": "fig_label", "label": "Figure caption", "default": "FIG.01 — SET 4 BACURI / ASAMBLARE" },
-    { "type": "text", "id": "etch", "label": "Engraving text", "default": "— NUMELE TĂU —" },
-    { "type": "image_picker", "id": "image", "label": "Product photo (replaces the 3D drawing)" },
-    { "type": "header", "content": "Stats" },
-    { "type": "text", "id": "stat1_n", "label": "Stat 1 value", "default": "3D" },
-    { "type": "text", "id": "stat1_l", "label": "Stat 1 label", "default": "Imprimat în casă" },
-    { "type": "text", "id": "stat2_n", "label": "Stat 2 value", "default": "±0.1mm" },
-    { "type": "text", "id": "stat2_l", "label": "Stat 2 label", "default": "Toleranță" },
-    { "type": "text", "id": "stat3_n", "label": "Stat 3 value", "default": "∞" },
-    { "type": "text", "id": "stat3_l", "label": "Stat 3 label", "default": "Configurații" }
+    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Bacuri de nadă și suporturi pentru wafters și gel, imprimate 3D. Gravare personalizată disponibilă cu numele tău." },
+    { "type": "text", "id": "cta1_label", "label": "CTA label", "default": "Vezi produsele" },
+    { "type": "text", "id": "cta1_link", "label": "CTA link", "default": "#cutii" }
   ],
   "presets": [{ "name": "Hero" }]
 }

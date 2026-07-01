@@ -1,24 +1,65 @@
-/* MiniAnglers product page — live engraving preview.
+/* MiniAnglers product page — live engraving preview + paid add-on.
    Mirrors the typed name (uppercase) onto an etched plate + char counter.
-   Language-aware via window.maT; re-renders on 'ma:lang'. */
+   Engraving is a paid extra: when the section has a linked engraving
+   product (data-eng-variant), submitting the form with engraving text
+   adds a SECOND cart line for that product via the Ajax Cart API, so its
+   price is charged alongside the main item. Without a linked product,
+   the form submits normally (single item, no charge) — the price shown
+   is a placeholder until a merchant links a real product in the theme
+   editor (Theme settings → Engraving). */
 (function () {
   const t = (k) => (typeof window.maT === 'function' ? window.maT(k) : k);
 
   function init(root) {
+    const form  = root.closest('form');
     const input = root.querySelector('[data-eng-input]');
     const etch  = root.querySelector('[data-eng-etch]');
     const count = root.querySelector('[data-eng-count]');
     const maxLen = parseInt(root.dataset.max, 10) || (input ? parseInt(input.getAttribute('maxlength'), 10) : 16) || 16;
+    const engVariantId = root.dataset.engVariant ? parseInt(root.dataset.engVariant, 10) : null;
+    const cartUrl = root.dataset.cartUrl || '/cart';
 
     function render() {
       const name = (input && input.value || '').trim();
       if (etch) etch.textContent = name ? name.toUpperCase() : t('config.namehere');
-      if (count) count.textContent = `${t('config.free')} · ${(input ? input.value.length : 0)}/${maxLen}`;
+      if (count) count.textContent = `${(input ? input.value.length : 0)}/${maxLen} ${t('config.chars')}`;
     }
 
     if (input) input.addEventListener('input', render);
     document.addEventListener('ma:lang', render);
     render();
+
+    if (!form || !engVariantId) return; // no linked engraving product: normal single-item submit
+
+    form.addEventListener('submit', function (e) {
+      const name = (input && input.value || '').trim();
+      if (!name) return; // no engraving requested: normal single-item submit
+
+      e.preventDefault();
+      const idField = form.querySelector('input[name="id"]');
+      const mainId = idField ? parseInt(idField.value, 10) : null;
+      if (!mainId) { form.submit(); return; }
+
+      const submitBtn = form.querySelector('.product-add');
+      if (submitBtn) submitBtn.disabled = true;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          items: [
+            { id: mainId, quantity: 1, properties: { Gravare: name } },
+            { id: engVariantId, quantity: 1, properties: { 'Pentru': name } }
+          ]
+        })
+      })
+        .then((res) => { if (!res.ok) throw new Error('cart add failed'); return res.json(); })
+        .then(() => { window.location.href = cartUrl; })
+        .catch(() => {
+          if (submitBtn) submitBtn.disabled = false;
+          form.submit(); // fall back to native single-item submit
+        });
+    });
   }
 
   document.addEventListener('DOMContentLoaded', () => {

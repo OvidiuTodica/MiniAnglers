@@ -1,4 +1,13 @@
 {%- comment -%} MiniAnglers — "FAQ" page template (handle "faq"). Accordion via <details>, no JS. {%- endcomment -%}
+{%- assign eng_product = settings.engraving_product -%}
+{%- if eng_product != blank -%}
+  {%- assign eng_variant = eng_product.selected_or_first_available_variant -%}
+{%- endif -%}
+{%- if eng_variant != blank and eng_variant.available -%}
+  {%- assign eng_price_display = eng_variant.price | money -%}
+{%- else -%}
+  {%- assign eng_price_display = settings.engraving_price_note | default: '+19 lei' -%}
+{%- endif -%}
 <div class="page-wrap">
   <div class="page-head">
     <span class="eyebrow glow">Întrebări frecvente</span>
@@ -8,7 +17,7 @@
   <div class="faq">
     <details class="faq-item">
       <summary>Cum funcționează personalizarea (gravarea)?</summary>
-      <p>Pe pagina fiecărui produs ai un câmp de gravare. Scrii numele, clubul sau codul echipei (max 16 caractere), vezi o previzualizare live, apoi adaugi în coș. Gravarea este gratuită.</p>
+      <p>Pe pagina fiecărui produs ai un câmp de gravare. Scrii numele, clubul sau codul echipei (max 16 caractere), vezi o previzualizare live, apoi adaugi în coș. Gravarea este o opțiune contra cost ({{ eng_price_display }}), adăugată automat ca linie separată în coș.</p>
     </details>
     <details class="faq-item">
       <summary>Cât durează până primesc comanda?</summary>

@@ -1,7 +1,9 @@
 {%- comment -%}
   MiniAnglers configurator (RO default, EN via data-i18n + ma-i18n.js).
-  Pick 1 of up to 3 bait boxes, add a free engraving (line item property),
-  Add to Build -> Shopify cart. Falls back to preview-only when no products.
+  Pick 1 of up to 3 bait boxes, add an engraving (line item property; paid
+  add-on handled on the product page — see ma-product.js), Add to Build ->
+  Shopify cart. Falls back to preview-only when no products. Unused on the
+  current homepage (kept for potential reuse).
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 
@@ -66,7 +68,7 @@
       <div class="cfg-row">
         <div class="cfg-label">
           <span class="l" data-i18n="config.engraving">Gravare</span>
-          <span class="v" data-cfg-count>Gratuit · 0/{{ s.max_chars | default: 16 }}</span>
+          <span class="v" data-cfg-count>0/{{ s.max_chars | default: 16 }} caractere</span>
         </div>
         <input class="cfg-input" name="properties[Engraving]" maxlength="{{ s.max_chars | default: 16 }}"
                placeholder="Numele tău" data-i18n-ph="config.placeholder" aria-label="Text gravură" data-cfg-input>
