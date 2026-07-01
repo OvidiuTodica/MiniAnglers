@@ -3,34 +3,49 @@
   <div class="page-head">
     <span class="eyebrow glow">Procesul</span>
     <h1>De la idee la mal.</h1>
-    <p class="page-lead">Fiecare cutie MiniAnglers e gândită, imprimată și gravată în casă. Fără intermediari, fără compromisuri — doar piese făcute să țină pe teren.</p>
+    <p class="page-lead">Fiecare produs MiniAnglers e proiectat și imprimat de noi, în România. Fără intermediari — doar piese gândite pentru pescar și făcute să țină pe teren.</p>
   </div>
 
   <div class="steps-grid" style="margin-top:8px">
     <div class="step">
       <div class="step-n">01</div>
       <h3>Proiectare</h3>
-      <p>Fiecare modul e desenat în CAD (Fusion 360), optimizat pentru tava ta laterală și pentru rezistență reală pe mal.</p>
+      <p>Fiecare piesă e desenată și optimizată de noi în CAD — pentru a se potrivi pe tava laterală și pentru rezistență reală pe mal.</p>
     </div>
     <div class="step">
       <div class="step-n">02</div>
-      <h3>Imprimare 3D în casă</h3>
-      <p>Imprimăm fiecare piesă la noi, cu control total al calității. Poți cere variante și ajustări fără bătăi de cap.</p>
+      <h3>Imprimare 3D</h3>
+      <p>Imprimăm fiecare piesă la noi, din PETG — material ales pentru rezistență la umezeală, soare și manevrare dură, sezon după sezon.</p>
     </div>
     <div class="step">
       <div class="step-n">03</div>
-      <h3>Gravare & control</h3>
-      <p>Numele sau codul tău e gravat pe ramă, apoi fiecare cutie e verificată manuală înainte să plece spre tine.</p>
+      <h3>Gravare</h3>
+      <p>Vine cu logo-ul MiniAnglers (standard) sau, contra cost, cu numele tău, clubul ori codul echipei, gravat direct pe ramă.</p>
     </div>
+    <div class="step">
+      <div class="step-n">04</div>
+      <h3>Control & livrare</h3>
+      <p>Verificăm manual fiecare piesă înainte s-o expediem, gata de tava ta laterală.</p>
+    </div>
+  </div>
+
+  <div class="page-block">
+    <h2>Timp de livrare</h2>
+    <p>
+      <strong style="color:var(--ink)">Model standard</strong> (logo MiniAnglers): <strong style="color:var(--cyan)">4–5 zile lucrătoare</strong>.<br>
+      <strong style="color:var(--ink)">Cu gravare personalizată</strong>: <strong style="color:var(--cyan)">8–10 zile lucrătoare</strong>.<br>
+      Fiecare piesă e făcută la comandă — de aceea gravarea personalizată durează puțin mai mult.
+    </p>
   </div>
 
   <div class="page-block" id="materiale">
     <h2>Materiale</h2>
-    <p>Folosim filamente alese pentru rezistență la umezeală, soare și manevrare dură pe mal. Scopul e simplu: o cutie care arată bine și ține sezon după sezon.</p>
+    <p>Folosim PETG — un filament ales special pentru echipament de exterior: rezistent la umezeală, la razele UV și la loviturile de pe mal. Scopul e simplu: o piesă care arată bine și ține sezon după sezon.</p>
   </div>
 
   <div class="page-cta">
-    <a class="btn btn-steel btn-lg" href="{{ routes.all_products_collection_url }}">{% render 'ma-icon', icon: 'sliders' %} Personalizează cutia ta</a>
+    <a class="btn btn-steel btn-lg" href="{{ routes.root_url }}#cutii">{% render 'ma-icon', icon: 'sliders' %} Vezi produsele</a>
+    <a class="btn btn-ghost btn-lg" href="/pages/contact">Ai o întrebare? Scrie-ne</a>
   </div>
 
   {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
