@@ -77,7 +77,7 @@
       'product.soldout': 'Stoc epuizat',
       // footer
       'footer.tagline': 'Sigilat. Montat. Gravat.',
-      'footer.blurb': 'Sisteme de pescuit de precizie pentru pescarul modern la method-feeder. Fabricat în UK.',
+      'footer.blurb': 'Sisteme de pescuit de precizie, proiectate și imprimate 3D în România.',
       'footer.shop': 'Magazin',
       'footer.shop1': 'Cutii de Momeală', 'footer.shop2': 'Suporturi Wafter', 'footer.shop3': 'Sisteme Complete', 'footer.shop4': 'Întrebări frecvente',
       'footer.company': 'Companie',
@@ -153,7 +153,7 @@
       'product.add': 'Add to cart',
       'product.soldout': 'Sold out',
       'footer.tagline': 'Sealed. Mounted. Etched.',
-      'footer.blurb': 'Precision tackle systems for the modern method-feeder angler. Machined in the UK.',
+      'footer.blurb': 'Precision fishing systems, designed and 3D-printed in Romania.',
       'footer.shop': 'Shop',
       'footer.shop1': 'Bait Boxes', 'footer.shop2': 'Wafter Supports', 'footer.shop3': 'Full Systems', 'footer.shop4': 'FAQ',
       'footer.company': 'Company',
