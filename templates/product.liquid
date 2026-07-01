@@ -18,11 +18,24 @@
   <a class="eyebrow" href="{{ routes.all_products_collection_url }}" data-i18n="product.back">← Toate produsele</a>
 
   <div class="product-layout">
-    <div class="product-media">
-      {%- if product.featured_image -%}
-        <img src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" width="900" height="900">
-      {%- else -%}
-        <div class="product-media-ph" aria-hidden="true"><div class="mini-box"></div></div>
+    <div class="product-gallery" data-product-gallery>
+      <div class="product-media">
+        {%- if product.featured_image -%}
+          <img data-main-image src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" width="1000" height="667">
+        {%- else -%}
+          <div class="product-media-ph" aria-hidden="true"><div class="mini-box"></div></div>
+        {%- endif -%}
+      </div>
+      {%- if product.images.size > 1 -%}
+        <div class="product-thumbs" role="tablist" aria-label="Poze produs">
+          {%- for image in product.images -%}
+            <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-thumb
+                    data-full="{{ image | image_url: width: 1000 }}"
+                    aria-label="{{ image.alt | escape | default: product.title }} — {{ forloop.index }}">
+              <img src="{{ image | image_url: width: 140 }}" alt="" loading="lazy">
+            </button>
+          {%- endfor -%}
+        </div>
       {%- endif -%}
     </div>
 

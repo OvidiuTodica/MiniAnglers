@@ -67,6 +67,31 @@
   });
 })();
 
+/* Product gallery — clicking a thumbnail swaps the main image. */
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const gallery = document.querySelector('[data-product-gallery]');
+    if (!gallery) return;
+    const mainImg = gallery.querySelector('[data-main-image]');
+    const thumbs = gallery.querySelectorAll('[data-thumb]');
+    if (!mainImg || !thumbs.length) return;
+
+    thumbs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const full = btn.dataset.full;
+        if (!full) return;
+        mainImg.src = full;
+        thumbs.forEach((b) => b.classList.toggle('is-active', b === btn));
+      });
+    });
+
+    window.maSetActiveThumb = function (src) {
+      if (!src) return;
+      thumbs.forEach((b) => b.classList.toggle('is-active', b.dataset.full === src));
+    };
+  });
+})();
+
 /* Variant picker — swaps hidden id, price, and featured image when a
    color swatch is clicked or a non-color option dropdown changes. */
 (function () {
@@ -81,7 +106,7 @@
 
     const hiddenId = form.querySelector('input[name="id"]');
     const priceEl = document.querySelector('.product-price');
-    const mediaImg = document.querySelector('.product-media img');
+    const mediaImg = document.querySelector('[data-main-image]');
     const addBtn = form.querySelector('.product-add');
     if (!hiddenId) return;
 
@@ -117,7 +142,7 @@
       if (priceEl) priceEl.textContent = formatMoney(variant.price);
       if (mediaImg && variant.featured_image) {
         mediaImg.src = variant.featured_image;
-        mediaImg.alt = variant.featured_image && variant.featured_image.alt ? variant.featured_image.alt : mediaImg.alt;
+        if (typeof window.maSetActiveThumb === 'function') window.maSetActiveThumb(variant.featured_image);
       }
       if (addBtn) {
         addBtn.disabled = !variant.available;
