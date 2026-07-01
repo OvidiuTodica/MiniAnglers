@@ -1,39 +1,61 @@
-/* MiniAnglers product page — live engraving preview + paid add-on.
-   Mirrors the typed name (uppercase) onto an etched plate + char counter.
-   Engraving is a paid extra: when the section has a linked engraving
-   product (data-eng-variant), submitting the form with engraving text
-   adds a SECOND cart line for that product via the Ajax Cart API, so its
-   price is charged alongside the main item. Without a linked product,
-   the form submits normally (single item, no charge) — the price shown
-   is a placeholder until a merchant links a real product in the theme
-   editor (Theme settings → Engraving). */
+/* MiniAnglers product page — engraving with two options.
+   Standard (free) keeps the shop-name logo on the rim; Custom (paid) lets
+   the customer type a name. When "custom" is chosen AND a linked engraving
+   product exists (data-eng-variant), submitting adds a SECOND cart line for
+   that product via the Ajax Cart API so it is charged; otherwise the form
+   submits normally (single item), carrying a line-item property that records
+   the standard logo or the typed name. */
 (function () {
   const t = (k) => (typeof window.maT === 'function' ? window.maT(k) : k);
 
   function init(root) {
-    const form  = root.closest('form');
-    const input = root.querySelector('[data-eng-input]');
-    const etch  = root.querySelector('[data-eng-etch]');
-    const count = root.querySelector('[data-eng-count]');
+    const form   = root.closest('form');
+    const input  = root.querySelector('[data-eng-input]');
+    const etch   = root.querySelector('[data-eng-etch]');
+    const count  = root.querySelector('[data-eng-count]');
+    const stdProp = root.querySelector('[data-eng-standard-prop]');
+    const opts   = root.querySelectorAll('.eng-opt');
+    const radios = root.querySelectorAll('input[name="eng_choice"]');
     const maxLen = parseInt(root.dataset.max, 10) || (input ? parseInt(input.getAttribute('maxlength'), 10) : 16) || 16;
     const engVariantId = root.dataset.engVariant ? parseInt(root.dataset.engVariant, 10) : null;
     const cartUrl = root.dataset.cartUrl || '/cart';
+    const logo = root.dataset.logo || 'MiniAnglers';
+
+    function choice() {
+      const c = root.querySelector('input[name="eng_choice"]:checked');
+      return c ? c.value : 'standard';
+    }
 
     function render() {
+      const custom = choice() === 'custom';
       const name = (input && input.value || '').trim();
-      if (etch) etch.textContent = name ? name.toUpperCase() : t('config.namehere');
+      // preview plate: typed name (custom) or the shop logo (standard)
+      if (etch) etch.textContent = custom ? (name ? name.toUpperCase() : t('config.namehere')) : logo;
       if (count) count.textContent = `${(input ? input.value.length : 0)}/${maxLen} ${t('config.chars')}`;
     }
 
+    function applyChoice() {
+      const custom = choice() === 'custom';
+      // toggle which "Gravare" property submits + show/hide the text field
+      if (input)   { input.disabled = !custom; input.hidden = !custom; }
+      if (count)   { count.hidden = !custom; }
+      if (stdProp) { stdProp.disabled = custom; }
+      opts.forEach((o) => o.classList.toggle('is-active', o.dataset.engOpt === (custom ? 'custom' : 'standard')));
+      if (custom && input) input.focus();
+      render();
+    }
+
+    radios.forEach((r) => r.addEventListener('change', applyChoice));
     if (input) input.addEventListener('input', render);
     document.addEventListener('ma:lang', render);
-    render();
+    applyChoice();
 
-    if (!form || !engVariantId) return; // no linked engraving product: normal single-item submit
+    if (!form || !engVariantId) return; // no linked engraving product: standard/normal submit only
 
     form.addEventListener('submit', function (e) {
+      if (choice() !== 'custom') return; // standard logo -> normal single-item submit
       const name = (input && input.value || '').trim();
-      if (!name) return; // no engraving requested: normal single-item submit
+      if (!name) return; // custom but empty -> submit as-is
 
       e.preventDefault();
       const idField = form.querySelector('input[name="id"]');

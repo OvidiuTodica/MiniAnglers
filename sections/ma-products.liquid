@@ -11,7 +11,7 @@
       {%- for block in section.blocks -%}
         {%- assign b = block.settings -%}
         {%- assign p = b.product -%}
-        <article class="card" {{ block.shopify_attributes }}>
+        <article class="card{% if p != blank %} is-linked{% endif %}" {{ block.shopify_attributes }}>
           <div class="top">
             <span class="name">{% if p != blank %}{{ p.title }}{% else %}{{ b.name }}{% endif %}</span>
             <span class="pn">{{ b.pn }}</span>
@@ -79,7 +79,7 @@
                 {%- if p != blank -%}{{ p.price | money }}{%- else -%}{{ b.price | default: '—' }}<small data-i18n="products.example">PREȚ EXEMPLU</small>{%- endif -%}
               </div>
               {%- if p != blank -%}
-                <a class="add" href="{{ p.url }}"><span data-i18n="products.view">Vezi produsul</span></a>
+                <a class="add card-link" href="{{ p.url }}"><span data-i18n="products.view">Vezi produsul</span></a>
               {%- else -%}
                 <a class="add" href="{{ routes.all_products_collection_url }}"><span data-i18n="products.soon">În curând</span></a>
               {%- endif -%}

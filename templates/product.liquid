@@ -113,23 +113,43 @@
 
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
 
-        {%- comment -%} Engraving widget — paid add-on {%- endcomment -%}
+        {%- comment -%} Engraving widget — standard logo (free) OR custom name (paid) {%- endcomment -%}
         <div class="engrave" data-product-engrave data-max="16"
              data-eng-price="{{ eng_price_display | escape }}"
              data-cart-url="{{ routes.cart_url }}"
+             data-logo="{{ shop.name }}"
              {%- if eng_variant != blank and eng_variant.available %} data-eng-variant="{{ eng_variant.id }}"{% endif %}>
           <div class="engrave-head">
             <span class="l" data-i18n="config.engraving">Gravare</span>
-            <span class="v" data-eng-price-tag>{{ eng_price_display }}</span>
           </div>
+
+          <div class="engrave-choices">
+            <label class="eng-opt is-active" data-eng-opt="standard">
+              <input type="radio" name="eng_choice" value="standard" checked>
+              <span class="eng-opt-main">
+                <span class="eng-opt-title" data-i18n="config.eng_standard">Standard — logo {{ shop.name }}</span>
+                <span class="eng-opt-sub" data-i18n="config.eng_standard_sub">Inclus, fără cost</span>
+              </span>
+            </label>
+            <label class="eng-opt" data-eng-opt="custom">
+              <input type="radio" name="eng_choice" value="custom">
+              <span class="eng-opt-main">
+                <span class="eng-opt-title" data-i18n="config.eng_custom">Gravează numele tău</span>
+                <span class="eng-opt-sub" data-eng-price-sub>{{ eng_price_display }}</span>
+              </span>
+            </label>
+          </div>
+
+          {%- comment -%} Standard = logo property; disabled/enabled by JS depending on choice {%- endcomment -%}
+          <input type="hidden" name="properties[Gravare]" value="Logo {{ shop.name }} (standard)" data-eng-standard-prop>
           <input class="cfg-input" data-eng-input type="text" maxlength="16"
                  name="properties[Gravare]" placeholder="Numele tău"
-                 data-i18n-ph="config.placeholder" aria-label="Text gravură">
-          <div class="engrave-count" data-eng-count>0/16 caractere</div>
+                 data-i18n-ph="config.placeholder" aria-label="Text gravură" disabled hidden>
+          <div class="engrave-count" data-eng-count hidden>0/16 caractere</div>
 
           <div class="engrave-preview">
             <span class="glass-tag" data-i18n="product.preview">Previzualizare gravură</span>
-            <div class="engrave-plate" data-eng-etch>NUMELE TĂU AICI</div>
+            <div class="engrave-plate" data-eng-etch>{{ shop.name }}</div>
           </div>
         </div>
 
