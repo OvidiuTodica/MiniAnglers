@@ -34,7 +34,7 @@
       'hero.line2': 'Precis.',
       'hero.line3': 'Personalizat.',
       'hero.sub': 'Bacuri de nadă și suporturi pentru wafters și gel, imprimate 3D. Gravare personalizată disponibilă cu numele tău.',
-      'hero.cta1': 'Configurează cutia',
+      'hero.cta1': 'Vezi produsele',
       // products
       'products.heading': 'Produsele. Date reale, imprimate 3D.',
       'products.example': 'PREȚ EXEMPLU',
@@ -90,7 +90,7 @@
       'hero.line2': 'Precise.',
       'hero.line3': 'Personalized.',
       'hero.sub': 'Groundbait tubs and wafter/gel holders, 3D-printed in-house. Custom engraving available with your name.',
-      'hero.cta1': 'Configure your box',
+      'hero.cta1': 'View the products',
       'products.heading': 'The products. Real data, 3D-printed.',
       'products.example': 'EXAMPLE PRICE',
       'products.soon': 'Coming soon',

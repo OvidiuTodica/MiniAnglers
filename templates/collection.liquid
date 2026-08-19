@@ -1,10 +1,18 @@
-{%- comment -%} Minimal branded collection grid (round one). {%- endcomment -%}
+{%- comment -%} MiniAnglers — catalog page (routes.all_products_collection_url and any other collection) {%- endcomment -%}
+{%- assign count = collection.products.size -%}
 <div class="page-wrap">
-  <span class="eyebrow">{{ collection.metafields.custom.eyebrow | default: 'Collection' }}</span>
-  <h1>{{ collection.title }}</h1>
-  {%- if collection.description != blank -%}<p style="color:var(--steel-400);max-width:560px;margin-bottom:18px">{{ collection.description }}</p>{%- endif -%}
+  <div class="page-head">
+    <span class="eyebrow glow">{{ collection.metafields.custom.eyebrow | default: 'Magazin' }}</span>
+    <h1>{{ collection.title | default: 'Toate produsele' }}</h1>
+    {%- if collection.description != blank -%}
+      <p class="page-lead">{{ collection.description }}</p>
+    {%- else -%}
+      <p class="page-lead">Sisteme de pescuit imprimate 3D, gata de personalizat cu numele tău.</p>
+    {%- endif -%}
+    <span class="mono">{% if count == 1 %}1 produs{% else %}{{ count }} produse{% endif %}</span>
+  </div>
 
-  <div class="product-grid" style="margin-top:24px">
+  <div class="product-grid" style="margin-top:8px">
     {%- for product in collection.products -%}
       <a class="pcard" href="{{ product.url }}">
         <div class="pcard-media">

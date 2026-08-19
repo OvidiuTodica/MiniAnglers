@@ -9,7 +9,7 @@
   </h1>
   <p class="hero-sub" data-i18n="hero.sub">{{ s.subtext | default: 'Bacuri de nadă și suporturi pentru wafters și gel, imprimate 3D. Gravare personalizată disponibilă cu numele tău.' }}</p>
   <div class="hero-cta">
-    <a class="btn btn-glass btn-lg" href="{{ s.cta1_link | default: '#cutii' }}"><span data-i18n="hero.cta1">{{ s.cta1_label | default: 'Vezi produsele' }}</span></a>
+    <a class="btn btn-glass btn-lg" href="{{ s.cta1_link | default: routes.all_products_collection_url }}"><span data-i18n="hero.cta1">{{ s.cta1_label | default: 'Vezi produsele' }}</span></a>
   </div>
 </header>
 
@@ -23,7 +23,7 @@
     { "type": "text", "id": "line_3", "label": "Headline line 3 (accent)", "default": "Personalizat." },
     { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Bacuri de nadă și suporturi pentru wafters și gel, imprimate 3D. Gravare personalizată disponibilă cu numele tău." },
     { "type": "text", "id": "cta1_label", "label": "CTA label", "default": "Vezi produsele" },
-    { "type": "text", "id": "cta1_link", "label": "CTA link", "default": "#cutii" }
+    { "type": "text", "id": "cta1_link", "label": "CTA link", "default": "/collections/all" }
   ],
   "presets": [{ "name": "Hero" }]
 }
