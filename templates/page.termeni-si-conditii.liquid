@@ -1,0 +1,67 @@
+{%- comment -%} MiniAnglers — Terms of Service (handle "termeni-si-conditii") {%- endcomment -%}
+{%- assign contact_email = settings.legal_contact_email -%}
+{%- if contact_email == blank -%}{%- assign contact_email = shop.email -%}{%- endif -%}
+{%- case settings.legal_vat_status -%}
+  {%- when 'included' -%}{%- assign vat_text = 'Prețurile afișate includ TVA.' -%}
+  {%- when 'excluded' -%}{%- assign vat_text = 'Prețurile afișate nu includ TVA; TVA se adaugă, dacă este cazul, la finalizarea comenzii.' -%}
+  {%- else -%}{%- assign vat_text = 'La data publicării, PFA Todica Ovidiu-Victor-Nicușor este neplătitoare de TVA; prețurile afișate reprezintă suma totală de plată.' -%}
+{%- endcase -%}
+<div class="page-wrap">
+  <div class="page-head">
+    <span class="eyebrow glow">Legal</span>
+    <h1>Termeni și Condiții</h1>
+    <p class="page-lead">Regulile care guvernează utilizarea site-ului și orice comandă plasată pe MiniAnglers.</p>
+  </div>
+
+  {%- render 'ma-legal-nav', current: 'termeni-si-conditii' -%}
+  {%- render 'ma-legal-block', contact_email: contact_email -%}
+
+  <div class="page-block">
+    <span class="legal-updated">Ultima actualizare: 19 august 2026</span>
+
+    <h3>1. Identificarea comerciantului</h3>
+    <p>Magazinul online MiniAnglers este operat de PFA Todica Ovidiu-Victor-Nicușor, CUI 52748161 (vezi datele complete mai sus).</p>
+
+    <h3>2. Acceptarea termenilor</h3>
+    <p>Prin plasarea unei comenzi pe acest site, confirmi că ai citit, înțeles și acceptat acești Termeni și Condiții, Politica de Confidențialitate, Politica de Retur și Politica de Livrare.</p>
+
+    <h3>3. Produsele și prețurile</h3>
+    <p>Produsele MiniAnglers sunt imprimate 3D, în casă, în România. Prețurile afișate sunt exprimate în lei (RON). {{ vat_text }} Ne rezervăm dreptul de a corecta erorile evidente de preț înainte de confirmarea comenzii.</p>
+
+    <h3>4. Comanda și încheierea contractului</h3>
+    <p>Plasarea unei comenzi constituie o ofertă de cumpărare. Contractul se consideră încheiat în momentul în care primești confirmarea comenzii pe email.</p>
+
+    <h3>5. Plata</h3>
+    <p>Plata se face online, prin metodele de plată afișate la finalizarea comenzii. Comanda este procesată doar după confirmarea plății.</p>
+
+    <h3>6. Personalizare și gravare</h3>
+    <p>Textul de gravură este furnizat de tine și este printat exact așa cum a fost introdus — te rugăm să verifici corectitudinea înainte de a plasa comanda. Ne rezervăm dreptul de a refuza gravarea unui text ofensator, ilegal sau care încalcă drepturi ale unor terți.</p>
+
+    <h3>7. Livrarea</h3>
+    <p>Vezi <a href="/pages/livrare">Politica de Livrare</a> pentru termene, curier și costuri.</p>
+
+    <h3>8. Dreptul de retragere</h3>
+    <p>Vezi <a href="/pages/retur-si-rambursare">Politica de Retur și Rambursare</a> pentru detalii complete, inclusiv excepția aplicabilă produselor personalizate.</p>
+
+    <h3>9. Garanția legală de conformitate</h3>
+    <p>Produsele beneficiază de garanția legală de conformitate prevăzută de legislația română și europeană privind protecția consumatorilor, aplicabilă produselor cu defecte de fabricație.</p>
+
+    <h3>10. Limitarea răspunderii</h3>
+    <p>MiniAnglers nu răspunde pentru daune indirecte rezultate din utilizarea necorespunzătoare a produselor. Produsele sunt destinate organizării echipamentului de pescuit și nu sunt jucării pentru copii.</p>
+
+    <h3>11. Proprietate intelectuală</h3>
+    <p>Designul produselor, fișierele 3D, conținutul și identitatea vizuală a site-ului MiniAnglers sunt proprietatea PFA Todica Ovidiu-Victor-Nicușor și nu pot fi reproduse fără acord scris.</p>
+
+    <h3>12. Litigii</h3>
+    <p>În caz de neînțelegere, te încurajăm să ne contactezi direct. Poți depune o sesizare la <a href="https://www.anpc.ro" target="_blank" rel="noopener">Autoritatea Națională pentru Protecția Consumatorilor (ANPC)</a> sau poți folosi <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">platforma europeană de soluționare online a litigiilor (SOL/ODR)</a>.</p>
+
+    <h3>13. Legea aplicabilă</h3>
+    <p>Acești termeni sunt guvernați de legislația română.</p>
+  </div>
+
+  <div class="page-cta">
+    <a class="btn btn-ghost btn-lg" href="/pages/contact">Ai o întrebare? Scrie-ne</a>
+  </div>
+
+  {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
+</div>

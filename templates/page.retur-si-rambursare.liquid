@@ -1,0 +1,44 @@
+{%- comment -%} MiniAnglers — Refund & Returns Policy (handle "retur-si-rambursare") {%- endcomment -%}
+{%- assign contact_email = settings.legal_contact_email -%}
+{%- if contact_email == blank -%}{%- assign contact_email = shop.email -%}{%- endif -%}
+<div class="page-wrap">
+  <div class="page-head">
+    <span class="eyebrow glow">Legal</span>
+    <h1>Politica de Retur și Rambursare</h1>
+    <p class="page-lead">Dreptul tău de retragere, cum returnezi un produs, și ce se întâmplă cu produsele gravate personalizat.</p>
+  </div>
+
+  {%- render 'ma-legal-nav', current: 'retur-si-rambursare' -%}
+  {%- render 'ma-legal-block', contact_email: contact_email -%}
+
+  <div class="page-block">
+    <span class="legal-updated">Ultima actualizare: 19 august 2026</span>
+
+    <h3>Dreptul de retragere (14 zile)</h3>
+    <p>Conform OUG nr. 34/2014 privind drepturile consumatorilor, ai dreptul de a te retrage dintr-o comandă în termen de <strong style="color:var(--ink)">14 zile calendaristice</strong> de la primirea produsului, fără a fi nevoie să justifici decizia și fără costuri suplimentare, cu excepția costului de retur.</p>
+
+    <h3>Excepție — produse personalizate</h3>
+    <p>Conform Art. 16 lit. c) din OUG nr. 34/2014, dreptul de retragere <strong style="color:var(--ink)">nu se aplică</strong> produselor confecționate după specificațiile tale sau personalizate în mod clar — inclusiv orice produs cu gravură cu nume, text sau cod de echipă la cerere. Această excepție nu se aplică produselor standard, nepersonalizate, sau produselor primite cu defecte de fabricație — acestea rămân acoperite de garanția legală de conformitate indiferent de personalizare.</p>
+
+    <h3>Cum returnezi un produs (produse nepersonalizate)</h3>
+    <p>Scrie-ne cu numărul comenzii, în termen de 14 zile de la primire. Îți vom confirma adresa de retur și pașii următori.</p>
+
+    <h3>Condiția produsului</h3>
+    <p>Produsul trebuie returnat nefolosit, în ambalajul original, împreună cu toate accesoriile primite.</p>
+
+    <h3>Costul returului</h3>
+    <p>Costul transportului de retur este suportat de client, cu excepția cazului în care produsul este defect sau a fost livrat greșit.</p>
+
+    <h3>Rambursarea</h3>
+    <p>Rambursăm suma plătită în cel mult 14 zile de la data la care primim produsul returnat (sau dovada expedierii, dacă survine mai devreme), folosind aceeași metodă de plată utilizată la comandă.</p>
+
+    <h3>Produse defecte sau neconforme</h3>
+    <p>Dacă primești un produs cu defect de fabricație sau diferit de ce ai comandat, contactează-ne cu poze ale produsului — indiferent dacă este personalizat sau nu, rămâne acoperit de garanția legală de conformitate, iar costul de retur în acest caz este suportat de noi.</p>
+  </div>
+
+  <div class="page-cta">
+    <a class="btn btn-ghost btn-lg" href="/pages/contact">Vrei să inițiezi un retur? Scrie-ne</a>
+  </div>
+
+  {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
+</div>

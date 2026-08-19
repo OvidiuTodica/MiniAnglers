@@ -1,0 +1,67 @@
+{%- comment -%} MiniAnglers — Privacy Policy / GDPR (handle "confidentialitate") {%- endcomment -%}
+{%- assign contact_email = settings.legal_contact_email -%}
+{%- if contact_email == blank -%}{%- assign contact_email = shop.email -%}{%- endif -%}
+<div class="page-wrap">
+  <div class="page-head">
+    <span class="eyebrow glow">Legal</span>
+    <h1>Politica de Confidențialitate</h1>
+    <p class="page-lead">Cum colectăm, folosim și protejăm datele tale atunci când cumperi de la MiniAnglers.</p>
+  </div>
+
+  {%- render 'ma-legal-nav', current: 'confidentialitate' -%}
+  {%- render 'ma-legal-block', contact_email: contact_email -%}
+
+  <div class="page-block">
+    <span class="legal-updated">Ultima actualizare: 19 august 2026</span>
+    <p>Această politică descrie modul în care <strong style="color:var(--ink)">PFA Todica Ovidiu-Victor-Nicușor</strong> ("MiniAnglers", "noi") prelucrează datele cu caracter personal ale vizitatorilor și clienților magazinului online MiniAnglers, în conformitate cu Regulamentul (UE) 2016/679 (GDPR) și Legea nr. 190/2018.</p>
+
+    <h3>Operatorul de date</h3>
+    <p>Operatorul de date cu caracter personal este PFA Todica Ovidiu-Victor-Nicușor, CUI 52748161. Pentru orice întrebare legată de datele tale, ne poți contacta la datele de mai sus.</p>
+
+    <h3>Ce date colectăm</h3>
+    <ul>
+      <li><strong>Date de identificare și contact</strong> — nume, adresă de livrare și facturare, email, telefon, furnizate la plasarea unei comenzi sau la crearea unui cont.</li>
+      <li><strong>Date despre comandă</strong> — produsele cumpărate, valoarea comenzii, textul de gravură personalizat pe care îl introduci.</li>
+      <li><strong>Date de plată</strong> — procesate direct de furnizorul de plăți al magazinului; nu stocăm numere de card pe serverele noastre.</li>
+      <li><strong>Date tehnice</strong> — adresă IP, tip de browser, pagini vizitate, colectate automat prin cookie-uri.</li>
+      <li><strong>Date de marketing</strong> — adresa de email, dacă te-ai abonat voluntar la newsletter.</li>
+    </ul>
+
+    <h3>Temeiul legal al prelucrării</h3>
+    <ul>
+      <li>Executarea contractului — procesarea comenzilor, livrarea, facturarea.</li>
+      <li>Obligație legală — păstrarea documentelor fiscale conform legislației române.</li>
+      <li>Consimțământ — newsletter și cookie-uri neesențiale; poți retrage consimțământul oricând.</li>
+      <li>Interes legitim — prevenirea fraudei, îmbunătățirea site-ului.</li>
+    </ul>
+
+    <h3>Cu cine partajăm datele</h3>
+    <ul>
+      <li><strong>Shopify Inc.</strong> — platforma pe care rulează magazinul, acționează ca persoană împuternicită conform propriului Data Processing Addendum.</li>
+      <li>Furnizorul de curierat — primește numele, adresa și telefonul tău exclusiv pentru livrare.</li>
+      <li>Furnizorul de plăți — procesează plata direct, conform propriei politici de confidențialitate.</li>
+    </ul>
+    <p>Nu vindem și nu închiriem datele tale către terți în scop de marketing.</p>
+
+    <h3>Cât timp păstrăm datele</h3>
+    <p>Datele legate de comenzi și facturare sunt păstrate 10 ani, conform legislației fiscale române. Datele de cont și marketing sunt păstrate cât timp contul este activ sau până la retragerea consimțământului.</p>
+
+    <h3>Cookie-uri</h3>
+    <p>Site-ul folosește cookie-uri esențiale (coș de cumpărături, autentificare) fără a necesita consimțământ, și poate folosi cookie-uri de analiză sau marketing doar cu acordul tău.</p>
+
+    <h3>Drepturile tale</h3>
+    <p>Conform GDPR, ai dreptul de a accesa datele tale, de a solicita rectificarea sau ștergerea lor, de a restricționa sau te opune prelucrării, de a primi datele într-un format portabil, și de a retrage oricând un consimțământ acordat anterior. Ai de asemenea dreptul de a depune o plângere la <a href="https://www.dataprotection.ro" target="_blank" rel="noopener">Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal (ANSPDCP)</a>.</p>
+
+    <h3>Securitate</h3>
+    <p>Luăm măsuri tehnice și organizatorice rezonabile pentru a proteja datele tale împotriva accesului neautorizat, pierderii sau divulgării accidentale.</p>
+
+    <h3>Modificări</h3>
+    <p>Această politică poate fi actualizată periodic. Data ultimei actualizări este afișată la începutul paginii.</p>
+  </div>
+
+  <div class="page-cta">
+    <a class="btn btn-ghost btn-lg" href="/pages/contact">Ai o întrebare despre datele tale? Scrie-ne</a>
+  </div>
+
+  {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
+</div>

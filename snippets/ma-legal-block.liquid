@@ -1,0 +1,14 @@
+{%- comment -%}
+  MiniAnglers — shared trader-identification block for the four legal pages.
+  Usage: {% render 'ma-legal-block', contact_email: contact_email %}
+{%- endcomment -%}
+<div class="legal-trader">
+  <p>
+    <strong>PFA Todica Ovidiu-Victor-Nicușor</strong><br>
+    Sediu profesional: Sat Gavojdia, Comuna Gavojdia, Nr. 368, Jud. Timiș<br>
+    CUI: 52748161 &middot; Nr. Reg. Com.: F2025041573009 &middot; EUID: ROONRC.F2025041573009<br>
+    Activități autorizate (CAEN): 3230, 3299, 4778, 4791, 8559<br>
+    {%- if contact_email != blank -%}Email: <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>{%- endif -%}
+    {%- if settings.legal_contact_phone != blank -%} &middot; Tel: {{ settings.legal_contact_phone }}{%- endif -%}
+  </p>
+</div>

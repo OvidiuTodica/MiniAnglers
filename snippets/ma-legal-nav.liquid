@@ -1,0 +1,10 @@
+{%- comment -%}
+  MiniAnglers — cross-links between the four legal pages.
+  Usage: {% render 'ma-legal-nav', current: 'confidentialitate' %}
+{%- endcomment -%}
+<nav class="legal-nav" aria-label="Pagini legale">
+  <a href="/pages/confidentialitate"{% if current == 'confidentialitate' %} aria-current="page"{% endif %}>Confidențialitate</a>
+  <a href="/pages/termeni-si-conditii"{% if current == 'termeni-si-conditii' %} aria-current="page"{% endif %}>Termeni și condiții</a>
+  <a href="/pages/retur-si-rambursare"{% if current == 'retur-si-rambursare' %} aria-current="page"{% endif %}>Retur și rambursare</a>
+  <a href="/pages/livrare"{% if current == 'livrare' %} aria-current="page"{% endif %}>Livrare</a>
+</nav>

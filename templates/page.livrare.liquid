@@ -1,0 +1,49 @@
+{%- comment -%} MiniAnglers — Shipping Policy (handle "livrare") {%- endcomment -%}
+{%- assign contact_email = settings.legal_contact_email -%}
+{%- if contact_email == blank -%}{%- assign contact_email = shop.email -%}{%- endif -%}
+{%- assign courier = settings.legal_courier | default: 'curier partener' -%}
+{%- assign delivery_time = settings.legal_delivery_time | default: '1–3 zile lucrătoare' -%}
+{%- assign proc_standard = settings.legal_processing_standard | default: '4–5 zile lucrătoare' -%}
+{%- assign proc_custom = settings.legal_processing_custom | default: '8–10 zile lucrătoare' -%}
+<div class="page-wrap">
+  <div class="page-head">
+    <span class="eyebrow glow">Legal</span>
+    <h1>Politica de Livrare</h1>
+    <p class="page-lead">Fiecare produs e imprimat 3D la comandă — iată cât durează până ajunge la tine.</p>
+  </div>
+
+  {%- render 'ma-legal-nav', current: 'livrare' -%}
+  {%- render 'ma-legal-block', contact_email: contact_email -%}
+
+  <div class="page-block">
+    <span class="legal-updated">Ultima actualizare: 19 august 2026</span>
+
+    <h3>Zona de livrare</h3>
+    <p>Livrăm în prezent în România.</p>
+
+    <h3>Timp de procesare</h3>
+    <p>
+      <strong style="color:var(--ink)">Model standard</strong> (logo MiniAnglers): <strong style="color:var(--cyan)">{{ proc_standard }}</strong>.<br>
+      <strong style="color:var(--ink)">Cu gravare personalizată</strong>: <strong style="color:var(--cyan)">{{ proc_custom }}</strong>.<br>
+      Acesta e timpul de printare și control, separat de timpul de transport al curierului — detalii pe pagina <a href="/pages/procesul">Procesul</a>.
+    </p>
+
+    <h3>Curier și cost</h3>
+    <p>Livrarea se face prin {{ courier }}. Costul de livrare este calculat automat la finalizarea comenzii, în funcție de adresă.</p>
+
+    <h3>Timp estimat de livrare</h3>
+    <p>După expediere, coletul ajunge de regulă în <strong style="color:var(--ink)">{{ delivery_time }}</strong>.</p>
+
+    <h3>Urmărirea comenzii</h3>
+    <p>Vei primi un cod de urmărire (AWB) pe email imediat ce comanda este expediată.</p>
+
+    <h3>Colet deteriorat sau pierdut</h3>
+    <p>Dacă coletul ajunge deteriorat sau nu ajunge deloc, contactează-ne cu numărul comenzii — rezolvăm direct cu curierul.</p>
+  </div>
+
+  <div class="page-cta">
+    <a class="btn btn-ghost btn-lg" href="/pages/contact">Întrebare despre livrare? Scrie-ne</a>
+  </div>
+
+  {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
+</div>

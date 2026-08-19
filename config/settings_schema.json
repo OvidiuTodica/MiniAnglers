@@ -4,8 +4,8 @@
     "theme_name": "MiniAnglers",
     "theme_version": "0.1.0",
     "theme_author": "MiniAnglers",
-    "theme_documentation_url": "https://www.minianglers.co.uk",
-    "theme_support_url": "https://www.minianglers.co.uk"
+    "theme_documentation_url": "https://www.minianglers.com",
+    "theme_support_url": "https://www.minianglers.com"
   },
   {
     "name": "Brand",
@@ -22,6 +22,24 @@
       { "type": "paragraph", "content": "Engraving is a paid add-on, not free. Link a lightweight Shopify product below (e.g. \"Gravare personalizată\") and its price will be charged automatically as a second cart line whenever a customer types engraving text. Until you link a product, the placeholder price is shown but nothing is charged." },
       { "type": "product", "id": "engraving_product", "label": "Engraving product (charges automatically when linked)" },
       { "type": "text", "id": "engraving_price_note", "label": "Placeholder price (shown until a product is linked)", "default": "+19 lei" }
+    ]
+  },
+  {
+    "name": "Legal & Contact",
+    "settings": [
+      { "type": "paragraph", "content": "Feeds the Privacy, Terms, Refund and Shipping pages (Confidențialitate / Termeni / Retur / Livrare). Confirm VAT status and courier before removing the store password — these values go straight onto legally binding pages." },
+      { "type": "text", "id": "legal_contact_email", "label": "Contact email for legal pages", "info": "Leave blank to use your store email (Settings → General)." },
+      { "type": "text", "id": "legal_contact_phone", "label": "Contact phone (optional)" },
+      { "type": "select", "id": "legal_vat_status", "label": "VAT / TVA status", "options": [
+        {"value":"none","label":"Neplătitor de TVA"},
+        {"value":"included","label":"Prețurile includ TVA"},
+        {"value":"excluded","label":"Prețurile nu includ TVA"}
+      ], "default": "none", "info": "Confirm with your accountant before launch." },
+      { "type": "header", "content": "Livrare" },
+      { "type": "text", "id": "legal_courier", "label": "Courier(s) used", "default": "curier partener" },
+      { "type": "text", "id": "legal_delivery_time", "label": "Estimated delivery time after shipping", "default": "1–3 zile lucrătoare" },
+      { "type": "text", "id": "legal_processing_standard", "label": "Processing time — standard (logo) items", "default": "4–5 zile lucrătoare" },
+      { "type": "text", "id": "legal_processing_custom", "label": "Processing time — custom engraving", "default": "8–10 zile lucrătoare" }
     ]
   }
 ]
