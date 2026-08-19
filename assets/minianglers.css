@@ -247,7 +247,7 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 
 /* ---------- FOOTER ---------- */
 .footer{ border-top:1px solid var(--gridb); margin-top:30px; padding:56px 0 34px; }
-.footer-grid{ display:grid; grid-template-columns:1.6fr 1fr 1fr 1.3fr; gap:36px; margin-bottom:40px; }
+.footer-grid{ display:grid; grid-template-columns:1.6fr 1fr 1.3fr; gap:36px; margin-bottom:40px; }
 .footer-brand .brand-word{ display:block; margin-bottom:14px; }
 .footer-tag{ font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); margin-bottom:12px; }
 .footer-sub{ font-size:14px; color:var(--mute); max-width:280px; }
@@ -336,6 +336,21 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .faq-item[open] summary::after{ content:"−"; }
 .faq-item p{ color:var(--mute); line-height:1.7; padding:0 0 20px; font-size:14.5px; max-width:none; }
 .faq-item a{ color:var(--cyan); }
+
+/* legal pages */
+.page-block h3{ font-family:var(--sans); font-size:17px; color:var(--ink); margin:22px 0 6px; }
+.page-block ul, .page-block ol{ color:var(--mute); line-height:1.8; padding-left:22px; margin-top:8px; }
+.page-block li{ margin-bottom:8px; }
+.page-block li::marker{ color:var(--cyan); }
+.page-block a{ color:var(--cyan); }
+.legal-updated{ font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); display:block; margin-bottom:6px; }
+.legal-trader{ max-width:680px; border:1px solid var(--line); border-radius:6px; background:rgba(10,20,34,0.5); padding:16px 20px; margin:28px 0; font-size:13.5px; }
+.legal-trader p{ color:var(--mute); line-height:1.9; margin:0; }
+.legal-trader strong{ color:var(--ink); }
+.legal-trader a{ color:var(--cyan); }
+.legal-nav{ display:flex; flex-wrap:wrap; gap:10px 18px; max-width:680px; margin-bottom:8px; }
+.legal-nav a{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--mute); text-decoration:none; border-bottom:1px solid transparent; }
+.legal-nav a:hover{ color:var(--cyan); border-color:var(--cyan); }
 
 /* ---------- responsive ---------- */
 @media (max-width:900px){
