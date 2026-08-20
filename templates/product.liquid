@@ -46,6 +46,12 @@
         <div class="product-desc">{{ product.description }}</div>
       {%- endif -%}
 
+      {%- if product.tags.size > 0 -%}
+        <div class="tags">
+          {%- for tag in product.tags -%}<span>{{ tag }}</span>{%- endfor -%}
+        </div>
+      {%- endif -%}
+
       {%- comment -%} Variant data for JS picker {%- endcomment -%}
       <script type="application/json" data-product-json>
         {

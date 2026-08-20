@@ -195,4 +195,29 @@
       });
     });
   });
+
+  // Turns a plain "Label: Value" bullet list typed into the product
+  // description into aligned spec rows, reusing the same .spec component
+  // the homepage product cards already use — so merchants can add specs
+  // by typing a bulleted list in Shopify's description field, no metafields.
+  function enhanceSpecList() {
+    document.querySelectorAll('.product-desc ul').forEach((ul) => {
+      ul.classList.add('spec');
+      ul.querySelectorAll('li').forEach((li) => {
+        const text = li.textContent;
+        const i = text.indexOf(':');
+        if (i === -1) return;
+        const k = document.createElement('span');
+        k.className = 'k';
+        k.textContent = text.slice(0, i).trim();
+        const v = document.createElement('span');
+        v.className = 'val';
+        v.textContent = text.slice(i + 1).trim();
+        li.textContent = '';
+        li.append(k, v);
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', enhanceSpecList);
 })();

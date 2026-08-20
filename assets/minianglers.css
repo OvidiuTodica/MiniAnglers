@@ -213,7 +213,7 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .pcard-media .glass-tag{ position:absolute; top:14px; left:14px; }
 .mini-box{ width:120px; height:78px; border-radius:6px; border:1px solid var(--neon); background:rgba(61,165,255,0.06); box-shadow:inset 0 0 24px rgba(61,165,255,0.12); }
 .pcard-body{ padding:18px 16px; }
-.pcard-body h3{ font-size:19px; font-weight:600; margin-bottom:6px; color:var(--ink); }
+.pcard-body h3{ font-size:19px; font-weight:600; margin-bottom:18px; color:var(--ink); }
 .pcard-body p{ font-size:14px; color:var(--mute); margin-bottom:16px; }
 .pcard-foot{ display:flex; align-items:center; justify-content:space-between; }
 .pcard-price{ font-family:var(--sans); font-weight:700; font-size:17px; color:var(--cyan); }
@@ -294,6 +294,9 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .product-info h1{ font-size:clamp(28px,3.4vw,40px); margin-bottom:10px; }
 .product-price{ font-family:var(--sans); font-weight:700; font-size:22px; color:var(--cyan); margin-bottom:18px; }
 .product-desc{ color:var(--mute); max-width:520px; margin-bottom:6px; line-height:1.8; }
+.product-desc p{ margin-bottom:10px; }
+.product-desc p:last-child{ margin-bottom:0; }
+.product-desc ul{ margin-top:8px; }
 .engrave{ border:1px solid var(--line); border-radius:8px; background:rgba(10,20,34,0.5); padding:20px; margin:22px 0; display:flex; flex-direction:column; gap:14px; }
 .engrave-head{ display:flex; align-items:baseline; justify-content:space-between; }
 .engrave-head .l{ font-family:var(--sans); font-weight:600; font-size:15px; color:var(--ink); }
