@@ -10,8 +10,10 @@
       'nav.shop': 'Magazin',
       'nav.process': 'Procesul',
       'nav.contact': 'Contact',
+      'nav.account': 'Cont',
       'aria.search': 'Caută',
       'aria.cart': 'Coș',
+      'aria.account': 'Contul meu',
       // announcement
       'announce.text': 'Gravare personalizată disponibilă · Imprimat 3D în casă · Livrare în toată țara',
       // steps
@@ -70,8 +72,10 @@
       'nav.shop': 'Shop',
       'nav.process': 'The Process',
       'nav.contact': 'Contact',
+      'nav.account': 'Account',
       'aria.search': 'Search',
       'aria.cart': 'Cart',
+      'aria.account': 'My account',
       'announce.text': 'Custom engraving available · 3D-printed in-house · Nationwide delivery',
       'steps.heading': 'From file to bank',
       'steps.ref': 'PROCESS · 04 STEPS',
