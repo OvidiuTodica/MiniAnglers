@@ -384,6 +384,13 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .nav-search-box input{ border:none; background:transparent; outline:none; width:100%; font-family:var(--body); font-size:14.5px; color:var(--ink); }
 .nav-search-box input::placeholder{ color:var(--mute); }
 
+/* brand logo (inherits currentColor: ink in header, white in footer) */
+.brand-word{ display:inline-flex; align-items:center; }
+.brand-word svg{ height:34px; width:auto; display:block; }
+.footer-brand .brand-word{ display:inline-flex; margin-bottom:14px; }
+.footer-brand .brand-word svg{ height:44px; }
+@media (max-width:460px){ .brand-word svg{ height:28px; } }
+
 /* category nav strip */
 .catnav{ background:var(--bg2); border-bottom:1px solid var(--line); position:sticky; top:66px; z-index:49; }
 .catnav-inner{ max-width:var(--maxw); margin:0 auto; padding:0 28px; display:flex; gap:24px; height:48px; align-items:center; overflow-x:auto; }
