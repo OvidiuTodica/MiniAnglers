@@ -1,39 +1,17 @@
-{%- comment -%} MiniAnglers header / nav (desktop + mobile drawer) {%- endcomment -%}
-
-{%- if section.settings.brand_teal != blank or section.settings.bg_0 != blank -%}
-  <style>
-    :root{
-      {%- if section.settings.bg_0 != blank %}--bg-0: {{ section.settings.bg_0 }};{% endif -%}
-      {%- if section.settings.brand_teal != blank %}--teal: {{ section.settings.brand_teal }};{% endif -%}
-    }
-  </style>
-{%- endif -%}
-
+{%- comment -%} MiniAnglers header — storefront: logo, search, actions + category nav {%- endcomment -%}
 <nav class="nav" data-nav>
   <div class="nav-inner">
-    <button class="nav-burger" type="button" data-nav-toggle aria-expanded="false" aria-controls="navMobile" aria-label="Meniu">
-      <span data-burger-open>{% render 'ma-icon', icon: 'menu' %}</span>
-      <span data-burger-close hidden>{% render 'ma-icon', icon: 'close' %}</span>
-    </button>
-
     <a class="brand-word" href="{{ routes.root_url }}">Mini<b>Anglers</b></a>
 
-    <div class="nav-links">
-      {%- if section.settings.menu != blank -%}
-        {%- for link in section.settings.menu.links -%}
-          <a href="{{ link.url }}">{{ link.title }}</a>
-        {%- endfor -%}
-      {%- else -%}
-        <a href="{{ routes.all_products_collection_url }}" data-i18n="nav.shop">Magazin</a>
-        <a href="/pages/procesul" data-i18n="nav.process">Procesul</a>
-        <a href="/pages/contact" data-i18n="nav.contact">Contact</a>
-      {%- endif -%}
-    </div>
+    <form class="nav-search-box" action="{{ routes.search_url }}" method="get" role="search">
+      {% render 'ma-icon', icon: 'search' %}
+      <input type="search" name="q" value="{{ search.terms | escape }}"
+        placeholder="Caută produse..." aria-label="Caută" data-i18n-ph="search.ph" data-i18n-aria="aria.search">
+    </form>
 
     <div class="nav-actions">
       <button class="lang-toggle" type="button" data-lang-toggle aria-label="Switch to English">EN</button>
       <a class="icon-btn" href="{{ routes.account_url }}" aria-label="Contul meu" data-i18n-aria="aria.account">{% render 'ma-icon', icon: 'user' %}</a>
-      <a class="icon-btn nav-search" href="{{ routes.search_url }}" aria-label="Caută" data-i18n-aria="aria.search">{% render 'ma-icon', icon: 'search' %}</a>
       <a class="icon-btn" href="{{ routes.cart_url }}" aria-label="Coș" data-i18n-aria="aria.cart">
         {% render 'ma-icon', icon: 'cart' %}
         <span class="cart-count" id="cartCount">{{ cart.item_count }}</span>
@@ -41,43 +19,28 @@
     </div>
   </div>
 
-  <div class="nav-mobile" id="navMobile" data-nav-mobile hidden>
-    <a href="{{ routes.root_url }}#cutii" data-i18n="nav.shop">Magazin</a>
-    <a href="/pages/procesul" data-i18n="nav.process">Procesul</a>
-    <a href="/pages/contact" data-i18n="nav.contact">Contact</a>
-    <a href="{{ routes.account_url }}" data-i18n="nav.account">Cont</a>
-    <a href="{{ routes.search_url }}" data-i18n="aria.search">Caută</a>
+  <div class="catnav">
+    <div class="catnav-inner">
+      {%- if section.settings.menu != blank -%}
+        {%- for link in section.settings.menu.links -%}
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        {%- endfor -%}
+      {%- else -%}
+        <a href="{{ routes.all_products_collection_url }}" class="is-active" data-i18n="catnav.all">Toate produsele</a>
+        <a href="#shop" data-i18n="catnav.bacuri">Bacuri de nadă</a>
+        <a href="#shop" data-i18n="catnav.wafters">Suporturi wafters</a>
+        <a href="#shop" data-i18n="catnav.gel">Suporturi gel &amp; dip</a>
+        <a href="#gravare" data-i18n="catnav.gravare">Gravare</a>
+      {%- endif -%}
+    </div>
   </div>
 </nav>
-
-<script>
-  (function () {
-    var nav = document.querySelector('[data-nav]');
-    if (!nav) return;
-    var btn = nav.querySelector('[data-nav-toggle]');
-    var panel = nav.querySelector('[data-nav-mobile]');
-    var iOpen = btn.querySelector('[data-burger-open]');
-    var iClose = btn.querySelector('[data-burger-close]');
-    function set(open) {
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      panel.hidden = !open;
-      iOpen.hidden = open; iClose.hidden = !open;
-      nav.classList.toggle('nav-open', open);
-    }
-    btn.addEventListener('click', function () { set(panel.hidden); });
-    panel.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
-  })();
-</script>
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
-    { "type": "link_list", "id": "menu", "label": "Navigation menu" },
-    { "type": "header", "content": "Brand colours (optional overrides)" },
-    { "type": "color", "id": "bg_0", "label": "Background base" },
-    { "type": "color", "id": "brand_teal", "label": "Accent (teal)" }
+    { "type": "link_list", "id": "menu", "label": "Category nav menu (optional)" }
   ]
 }
 {% endschema %}

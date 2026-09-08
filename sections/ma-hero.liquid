@@ -1,30 +1,44 @@
-{%- comment -%} MiniAnglers hero — simple, centered, product-focused (RO default, EN via data-i18n) {%- endcomment -%}
+{%- comment -%} MiniAnglers hero — storefront promo banner (RO default, EN via data-i18n) {%- endcomment -%}
 {%- assign s = section.settings -%}
-<header class="hero" id="sistem">
-  <span class="eyebrow" data-i18n="hero.eyebrow">{{ s.eyebrow | default: 'Sistem Modular de Pescuit' }}</span>
-  <h1>
-    <span data-i18n="hero.line1">{{ s.line_1 | default: 'Organizat.' }}</span>
-    <span data-i18n="hero.line2">{{ s.line_2 | default: 'Precis.' }}</span>
-    <span class="muted" data-i18n="hero.line3">{{ s.line_3 | default: 'Personalizat.' }}</span>
-  </h1>
-  <p class="hero-sub" data-i18n="hero.sub">{{ s.subtext | default: 'Bacuri de nadă și suporturi pentru wafters și gel, imprimate 3D. Gravare personalizată disponibilă cu numele tău.' }}</p>
-  <div class="hero-cta">
-    <a class="btn btn-glass btn-lg" href="{{ s.cta1_link | default: routes.all_products_collection_url }}"><span data-i18n="hero.cta1">{{ s.cta1_label | default: 'Vezi produsele' }}</span></a>
+<section class="promo" id="sistem">
+  <div class="section">
+    <div class="promo-card">
+      <div class="promo-copy">
+        <span class="promo-tag" data-i18n="promo.tag">{{ s.tag | default: 'Nou în magazin' }}</span>
+        <h1 data-i18n="promo.title">{{ s.title | default: 'Stația ta de nadă, imprimată 3D și gravată cu numele tău.' }}</h1>
+        <p data-i18n="promo.sub">{{ s.subtext | default: 'Bacuri de nadă și suporturi pentru wafters și gel. Logo MiniAnglers gravat gratuit pe fiecare piesă.' }}</p>
+        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span data-i18n="promo.cta">{{ s.cta_label | default: 'Cumpără acum' }}</span></a>
+      </div>
+      <div class="promo-art" aria-hidden="true">
+        <svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bac de nadă compartimentat">
+          <rect x="20" y="24" width="260" height="200" rx="18" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+          <g fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.45)" stroke-width="1.6">
+            <circle cx="76" cy="86" r="28"/><circle cx="150" cy="86" r="28"/><circle cx="224" cy="86" r="28"/>
+            <circle cx="76" cy="162" r="28"/><circle cx="150" cy="162" r="28"/><circle cx="224" cy="162" r="28"/>
+          </g>
+          <g fill="#ffffff">
+            <circle cx="70" cy="80" r="10"/><circle cx="86" cy="92" r="7" fill="#CFEBD9"/>
+            <circle cx="150" cy="82" r="9" fill="#CFEBD9"/><circle cx="224" cy="82" r="10"/><circle cx="234" cy="92" r="6" fill="#CFEBD9"/>
+            <circle cx="76" cy="160" r="9" fill="#CFEBD9"/><circle cx="150" cy="162" r="11"/><circle cx="224" cy="160" r="8" fill="#CFEBD9"/>
+          </g>
+          <rect x="34" y="192" width="232" height="24" rx="8" fill="rgba(0,0,0,0.18)"/>
+          <text x="150" y="209" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="#ffffff">MINIANGLERS</text>
+        </svg>
+      </div>
+    </div>
   </div>
-</header>
+</section>
 
 {% schema %}
 {
-  "name": "Hero",
+  "name": "Hero (promo)",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Sistem Modular de Pescuit" },
-    { "type": "text", "id": "line_1", "label": "Headline line 1", "default": "Organizat." },
-    { "type": "text", "id": "line_2", "label": "Headline line 2", "default": "Precis." },
-    { "type": "text", "id": "line_3", "label": "Headline line 3 (accent)", "default": "Personalizat." },
-    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Bacuri de nadă și suporturi pentru wafters și gel, imprimate 3D. Gravare personalizată disponibilă cu numele tău." },
-    { "type": "text", "id": "cta1_label", "label": "CTA label", "default": "Vezi produsele" },
-    { "type": "text", "id": "cta1_link", "label": "CTA link", "default": "/collections/all" }
+    { "type": "text", "id": "tag", "label": "Tag", "default": "Nou în magazin" },
+    { "type": "text", "id": "title", "label": "Headline", "default": "Stația ta de nadă, imprimată 3D și gravată cu numele tău." },
+    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Bacuri de nadă și suporturi pentru wafters și gel. Logo MiniAnglers gravat gratuit pe fiecare piesă." },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Cumpără acum" },
+    { "type": "text", "id": "cta_link", "label": "CTA link", "default": "/collections/all" }
   ],
-  "presets": [{ "name": "Hero" }]
+  "presets": [{ "name": "Hero (promo)" }]
 }
 {% endschema %}
