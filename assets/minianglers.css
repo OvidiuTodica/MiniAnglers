@@ -529,6 +529,14 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
   .cat-tile .ic{ width:44px; height:44px; }
   .cat-tile .ic svg{ width:22px; height:22px; }
   .cat-tile b{ font-size:14px; }
+  /* value strip: one tidy grouped list instead of four empty boxes */
+  .products{ padding:32px 0 26px; }
+  .values{ padding:6px 0 10px; }
+  .values-grid{ grid-template-columns:1fr; gap:0; background:var(--bg2); border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:var(--shadow-glass); }
+  .value{ border:0; border-radius:0; box-shadow:none; background:transparent; padding:14px 16px; align-items:center; border-bottom:1px solid var(--line-soft); }
+  .value:last-child{ border-bottom:0; }
+  .value b{ font-size:14px; }
+  .value span{ font-size:12.5px; }
 }
 @media (max-width:360px){
   .cats-grid{ grid-template-columns:1fr; }
