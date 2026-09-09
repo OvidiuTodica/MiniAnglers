@@ -31,7 +31,7 @@
           {%- for image in product.images -%}
             <button type="button" class="thumb{% if forloop.first %} is-active{% endif %}" data-thumb
                     data-full="{{ image | image_url: width: 1000 }}"
-                    aria-label="{{ image.alt | escape | default: product.title }} — {{ forloop.index }}">
+                    aria-label="{{ image.alt | escape | default: product.title }}, poza {{ forloop.index }}">
               <img src="{{ image | image_url: width: 140 }}" alt="" loading="lazy">
             </button>
           {%- endfor -%}
@@ -133,7 +133,7 @@
             <label class="eng-opt is-active" data-eng-opt="standard">
               <input type="radio" name="eng_choice" value="standard" checked>
               <span class="eng-opt-main">
-                <span class="eng-opt-title" data-i18n="config.eng_standard">Standard — logo {{ shop.name }}</span>
+                <span class="eng-opt-title" data-i18n="config.eng_standard">Logo {{ shop.name }}</span>
                 <span class="eng-opt-sub" data-i18n="config.eng_standard_sub">Inclus, fără cost</span>
               </span>
             </label>
@@ -166,7 +166,7 @@
 
         <p class="pdp-trust">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-          <span data-i18n="pdp.trust">Logo gravat gratuit · Printat în Timiș · Livrare 4-5 zile</span>
+          <span data-i18n="pdp.trust">Logo gravat gratuit, printat în Timiș, livrare în 4-5 zile.</span>
         </p>
       {%- endform -%}
     </div>

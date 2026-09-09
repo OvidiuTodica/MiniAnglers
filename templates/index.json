@@ -8,7 +8,7 @@
           "product": "bacuri-nada-standard",
           "name": "Set Bacuri Nadă Standard", "cat_label": "Bacuri de nadă", "category": "bacuri", "badge": "best",
           "pn": "MA-BNS", "shape": "set4",
-          "desc": "Patru bacuri care se îmbină — 1 XL + 3 mărimi. Nadă sortată, totul pe tava ta.",
+          "desc": "Patru bacuri care se îmbină: 1 XL și 3 mărimi. Nadă sortată, totul pe tava ta.",
           "spec1_k": "Bac XL", "spec1_v": "21 × 13 × 6.5 cm",
           "spec2_k": "3 mărimi", "spec2_v": "15.5 / 10 / 5 cm lățime",
           "spec3_k": "Înălțime", "spec3_v": "6.5 cm",
@@ -25,7 +25,7 @@
         "p3": { "type": "product", "settings": {
           "name": "Suport Gel v2", "cat_label": "Suporturi gel & dip", "category": "suporturi", "badge": "new",
           "pn": "MA-GEL", "shape": "bar_small",
-          "desc": "Compact, pentru borcanul de gel/dip — fix, fără răsturnări pe tava laterală.",
+          "desc": "Compact, pentru borcanul de gel sau dip. Stă fix, fără răsturnări pe tava laterală.",
           "spec1_k": "Dimensiuni", "spec1_v": "5.2 × 10 × 3.5 cm",
           "spec2_k": "Perete", "spec2_v": "2 mm",
           "tags": "GEL/DIP, MATTE, GRAVAT", "price": "39 lei" } }
