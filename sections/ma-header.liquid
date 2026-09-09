@@ -11,6 +11,7 @@
 
     <div class="nav-actions">
       <button class="lang-toggle" type="button" data-lang-toggle aria-label="Switch to English">EN</button>
+      <a class="icon-btn nav-search-icon" href="{{ routes.search_url }}" aria-label="Caută" data-i18n-aria="aria.search">{% render 'ma-icon', icon: 'search' %}</a>
       <a class="icon-btn" href="{{ routes.account_url }}" aria-label="Contul meu" data-i18n-aria="aria.account">{% render 'ma-icon', icon: 'user' %}</a>
       <a class="icon-btn" href="{{ routes.cart_url }}" aria-label="Coș" data-i18n-aria="aria.cart">
         {% render 'ma-icon', icon: 'cart' %}
