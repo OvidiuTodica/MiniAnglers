@@ -1,7 +1,7 @@
 {%- comment -%} MiniAnglers header — storefront: logo, search, actions + category nav {%- endcomment -%}
 <nav class="nav" data-nav>
   <div class="nav-inner">
-    <a class="brand-word" href="{{ routes.root_url }}" aria-label="MiniAnglers">{{ 'minianglers-logo.svg' | inline_asset_content }}</a>
+    <a class="brand-word" href="{{ routes.root_url }}" aria-label="MiniAnglers">{% render 'ma-logo' %}</a>
 
     <form class="nav-search-box" action="{{ routes.search_url }}" method="get" role="search">
       {% render 'ma-icon', icon: 'search' %}
