@@ -54,7 +54,7 @@ tooling, a `package.json`, or a framework without the owner explicitly asking
 
 ```
 layout/theme.liquid          — single layout: head/SEO, font loading, section slots, script tags
-sections/ma-*.liquid         — homepage/global sections (announce, header, hero, steps, features, products, footer)
+sections/ma-*.liquid         — homepage/global sections (announce, header, hero=promo, categories, products, features=value strip, footer; ma-steps exists but is off the homepage)
 snippets/ma-*.liquid         — reusable partials (icon sprite, legal block, legal nav)
 templates/                   — page/product/collection/cart/search/404 templates + all legal pages
 config/settings_schema.json  — theme editor settings definitions
@@ -79,10 +79,11 @@ with this — `ma-<purpose>.liquid` / `ma-<purpose>.js`.
   url, image at 1200px on product pages), Twitter summary_large_image card.
   Match this pattern for any new page type — don't skip OG tags on new
   templates.
-- Font loading: Google Fonts preconnect + a single combined stylesheet link
-  for Space Grotesk (display), Inter (body), JetBrains Mono (mono/labels) —
-  see §4 for how these map to CSS tokens. Don't add another font without
-  updating both this link and the `--font-*` tokens together.
+- Font loading: Google Fonts preconnect + a single stylesheet link for
+  Plus Jakarta Sans (display + body). The `--font-mono` token is a system
+  monospace stack, used only for small spec readouts. See §4 for how these
+  map to CSS tokens. Don't add another font without updating both this link
+  and the `--font-*` tokens together.
 - Script load order: `ma-i18n.js` → `ma-product.js` → `ma-cart.js`, all
   `defer`, all at the end of `<body>`. Preserve this order — `ma-product.js`
   and `ma-cart.js` both listen for the `ma:lang` event `ma-i18n.js` fires.
@@ -134,64 +135,71 @@ existing style (`// nav`, `// hero`, `// footer`, etc.).
 
 ## 4. Design system
 
-**Aesthetic: "Blueprint Dark"** — dark navy background with a faint technical
-grid overlay and a neon-blue/cyan accent system, monospace "instrument
-readout" labels. This is a deliberate, already-chosen direction — don't drift
-toward generic dark-mode SaaS styling or reintroduce an old teal/dark-navy
-predecessor palette if you see it referenced anywhere stale.
+**Aesthetic: "Storefront"** — a clean, light e-commerce look: off-white ground,
+a fresh-green accent, a dark utility bar and dark footer, rounded cards, soft
+green-tinted shadows, Plus Jakarta Sans throughout. This replaced the earlier
+"Blueprint Dark" (dark-navy / neon-cyan, Space Grotesk) system when the owner
+published the storefront theme on **2026-09-09**; don't reintroduce the dark/neon
+palette or the old fonts unless the owner asks.
 
 **Tokens** (defined once in `:root`, `assets/minianglers.css` — always use
 these, never hard-code a hex value inline):
 
 | Token | Value | Use |
 |---|---|---|
-| `--bg` / `--bg2` / `--bg3` | `#070D16` / `#0A1422` / `#0C1A2E` | background layers, darkest → elevated |
-| `--ink` | `#DCEBFF` | primary text |
-| `--neon` | `#3DA5FF` | primary accent (buttons, links, focus) |
-| `--cyan` | `#19E3FF` | secondary accent (labels, eyebrows, tags) |
-| `--signal` | `#FFD23D` | sparing use — alerts/highlights only |
-| `--mute` | `#7E94B4` | secondary/muted text |
-| `--grid` / `--gridb` | rgba neon, low opacity | background grid lines |
-| `--line` / `--line-soft` | rgba neon, low opacity | borders/dividers |
-| `--glow` / `--shadow-glass` / `--shadow-float` / `--shadow-teal` | — | the only sanctioned shadow/glow treatments |
-| `--r-sm/md/lg/xl` | 6/8/10/14px | border-radius scale |
-| `--font-display` (Space Grotesk) / `--font-body` (Inter) / `--font-mono` (JetBrains Mono) | — | never pair headings and body in the same face |
+| `--bg` / `--bg2` / `--bg3` | `#F4F6F4` / `#FFFFFF` / `#FBFCFB` | page ground / cards / subtle |
+| `--ink` | `#181A18` | primary text (and the dark utility-bar/footer ground) |
+| `--neon` | `#177A48` | primary accent (buttons, borders, icons) |
+| `--neon-deep` | `#125E38` | hover + accent text on light (AA-safe) |
+| `--cyan` | `#146B3F` | price + label green (deep, passes AA on white) |
+| `--accent-soft` | `#E7F3EC` | green tint (eyebrow/tag/tile-icon backgrounds) |
+| `--accent-on-dark` | `#7FD3A6` | green accent used on the dark footer |
+| `--mute` | `#6E736D` | secondary/muted text |
+| `--line` / `--line-soft` | `#E5E8E5` / `#EDEFED` | borders/dividers |
+| `--signal` / `--coral` | `#E9A21B` / `#D6362A` | warning / error, sparing |
+| `--glow` / `--shadow-glass` / `--shadow-float` | — | the sanctioned green-tinted shadows |
+| `--r-sm/md/lg/xl` | 8/10/12/16px | border-radius scale |
+| `--font-display` = `--font-body` (Plus Jakarta Sans) / `--font-mono` (system mono, spec readouts only) | — | one family carries the page |
 | `--maxw` | 1200px | page/content max-width |
 
 Legacy aliases (`--bg-0..4`, `--steel-*`, `--teal`, `--green-*`, `--coral`,
-`--cream`) exist so old markup keeps working — **write new code against the
-blueprint tokens (`--bg`, `--ink`, `--neon`, `--cyan`, `--mute`), not the
-legacy aliases.**
+`--cream`) are remapped to the storefront palette so old markup keeps working —
+**write new code against the storefront tokens (`--bg`, `--ink`, `--neon`,
+`--neon-deep`, `--cyan`, `--mute`), not the legacy aliases.**
 
 **Established component patterns** — reuse, don't reinvent:
-- `.eyebrow` — bordered mono-font uppercase label, cyan, used above headings
-- `.glass-tag` — small pill tag, mono font, translucent background, subtle border
-- `.mono` / `.muted` — utility text styles for instrument-style labels and dimmed text
-- `.section` — centered max-width content wrapper (use this, not ad hoc containers)
-- Body has a fixed technical grid background (`--grid` lines at 32px) and
-  respects `prefers-reduced-motion` globally — any new animation must too.
+- `.promo-card` — green gradient hero banner (the homepage hero).
+- `.cat-tile` — category tile (icon in a green-soft square + label + price).
+- `.scard` — storefront product card (media + Nou/Best badge + title + price + CTA); the whole card is the link.
+- `.catnav` — sticky category-nav strip; `.chip` — filter pill in the products toolbar.
+- `.value` — value-strip trust item; `.eyebrow` / `.glass-tag` — small green-soft pills.
+- `.section` — centered max-width wrapper (use this, not ad hoc containers).
+- Buttons are pill-shaped (`border-radius:999px`); header is light + sticky, footer
+  is dark (`--ink`) with white/green content. Brand logo is `snippets/ma-logo.liquid`
+  (inline SVG, `fill:currentColor`) rendered with `{% render 'ma-logo' %}`.
 
-**Anti-generic guardrails** (apply on top of the tokens above):
+**Anti-generic guardrails:**
 - Never introduce a color outside the token set above without the owner
   approving a palette change first.
-- Shadows: use `--shadow-glass` / `--shadow-float` / `--glow` — never a flat
-  default box-shadow.
-- Typography: display face for headings only, body face for body only, mono
-  face for labels/eyebrows/tags only — never mix.
+- Shadows: use `--shadow-glass` / `--shadow-float` / `--glow` (green-tinted) —
+  never a flat default box-shadow.
+- One accent (green) across the whole page; one radius scale; Plus Jakarta Sans
+  everywhere (`--font-mono` only for tiny spec readouts).
 - Animate only `transform` and `opacity`, never `transition: all`, and always
   respect `prefers-reduced-motion` (already wired globally — don't bypass it
   per-component).
 - Every interactive element needs hover, focus-visible, and active states.
-- Depth comes from the `--bg`/`--bg2`/`--bg3` layering + glow/shadow tokens,
-  not from arbitrary opacity stacking.
+- Mobile: compact single-row sticky header (the search bar collapses to an icon),
+  44px touch targets, 16px inputs (no iOS zoom), horizontally-scrollable catnav.
 
 ---
 
 ## 5. Git & deploy workflow
 
-**Push = deploy.** Shopify's GitHub integration watches `origin/shopify-theme`
-directly; a push there is live on minianglers.com within a few minutes — no
-Shopify CLI or Admin publish step involved.
+**Push = deploy.** Shopify's GitHub integration watches `origin/theme-storefront`
+(the published/live theme since 2026-09-09); a push there is live on
+minianglers.com within a few minutes — no Shopify CLI or Admin publish step
+involved.
 
 **Always commit and push once a change looks right — do not stop to ask
 "should I push this live?" first.** This is a standing instruction from the
@@ -206,7 +214,8 @@ the confirmation step, not the care taken beforehand.
 **Branches:**
 | Branch | Status |
 |---|---|
-| `shopify-theme` | **The one to work on.** Live, connected to the deployed theme. |
+| `theme-storefront` | **The one to work on.** The published/live theme (light "Storefront" design) since 2026-09-09. Push here = deploy. |
+| `shopify-theme` | The previous live theme ("Blueprint Dark"), now an unpublished theme in the library. Don't push here expecting it to go live. |
 | `main` | Old pre-Shopify static-HTML prototype. Unrelated to the live store — do not merge from or into it. |
 | `shopify-preview` | Stale snapshot frozen ~2026-06-21, missing everything since. Don't treat as current or diff against it. |
 
@@ -274,5 +283,5 @@ Ovidiu runs the store himself; he is not a developer.
   once it looks right (§5), flagging real risk in the summary instead.
 - Do not default to Shopify metafields/custom-data solutions without
   considering the Description/Tags/Pages alternative first (§6).
-- Do not treat `main` or `shopify-preview` as current — `shopify-theme` is
-  the only live branch.
+- Do not treat `main`, `shopify-preview`, or `shopify-theme` as the live
+  branch — `theme-storefront` is the published/live theme (§5).
