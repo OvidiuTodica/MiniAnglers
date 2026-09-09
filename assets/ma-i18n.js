@@ -55,6 +55,7 @@
       'product.preview': 'Previzualizare gravură',
       'product.add': 'Adaugă în coș',
       'product.soldout': 'Stoc epuizat',
+      'product.photo_soon': 'Foto în curând',
       'cart.added': 'Adăugat în coș', 'cart.view': 'Vezi coșul',
       'pdp.trust': 'Logo gravat gratuit · Printat în Timiș · Livrare 4-5 zile',
       // footer
@@ -129,6 +130,7 @@
       'product.preview': 'Engraving preview',
       'product.add': 'Add to cart',
       'product.soldout': 'Sold out',
+      'product.photo_soon': 'Photo soon',
       'cart.added': 'Added to cart', 'cart.view': 'View cart',
       'pdp.trust': 'Free logo engraving · Printed in Timiș · 4-5 day delivery',
       'footer.tagline': 'Sealed. Mounted. Etched.',

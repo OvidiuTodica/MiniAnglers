@@ -19,7 +19,7 @@
           {%- if product.type != blank -%}<span class="glass-tag">{{ product.type }}</span>{%- endif -%}
           {%- if product.featured_image -%}
             <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" loading="lazy">
-          {%- else -%}<div class="mini-box"></div>{%- endif -%}
+          {%- else -%}{% render 'ma-placeholder' %}{%- endif -%}
         </div>
         <div class="pcard-body">
           <h3>{{ product.title }}</h3>

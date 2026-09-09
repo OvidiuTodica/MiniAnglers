@@ -23,7 +23,7 @@
         {%- if product.featured_image -%}
           <img data-main-image src="{{ product.featured_image | image_url: width: 1000 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" width="1000" height="667">
         {%- else -%}
-          <div class="product-media-ph" aria-hidden="true"><div class="mini-box"></div></div>
+          <div class="product-media-ph">{% render 'ma-placeholder' %}</div>
         {%- endif -%}
       </div>
       {%- if product.images.size > 1 -%}

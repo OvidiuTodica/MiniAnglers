@@ -274,6 +274,15 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .product-media img{ width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 18px 28px rgba(24,50,30,0.16)); transition:opacity .15s ease; }
 .product-media-ph{ display:grid; place-items:center; width:100%; height:100%; }
 .product-media-ph .mini-box{ width:160px; height:108px; }
+
+/* On-brand media placeholder (until a product photo is added) — snippets/ma-placeholder.liquid */
+.ma-ph{ position:relative; display:grid; place-items:center; width:100%; height:100%; }
+.ma-ph-art{ width:62%; max-width:230px; opacity:.92; }
+.ma-ph-tag{ position:absolute; bottom:14px; left:50%; transform:translateX(-50%);
+  font-family:var(--body); font-size:11px; font-weight:700; letter-spacing:.02em;
+  color:var(--neon-deep); background:var(--bg2); border:1px solid var(--line);
+  padding:5px 11px; border-radius:999px; box-shadow:var(--shadow-glass); white-space:nowrap; }
+.pcard-media .ma-ph-art{ width:52%; max-width:150px; }
 .product-thumbs{ display:flex; gap:10px; flex-wrap:wrap; }
 .thumb{ width:64px; height:64px; padding:6px; border-radius:var(--r-sm); border:1px solid var(--line); background:var(--bg2); cursor:pointer; display:grid; place-items:center; transition:border-color .18s ease; }
 .thumb img{ width:100%; height:100%; object-fit:contain; }
