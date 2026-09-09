@@ -1,7 +1,6 @@
 {
   "sections": {
     "hero": { "type": "ma-hero", "settings": {} },
-    "categories": { "type": "ma-categories", "settings": {} },
     "products": {
       "type": "ma-products",
       "blocks": {
@@ -36,5 +35,5 @@
     },
     "values": { "type": "ma-features", "settings": {} }
   },
-  "order": ["hero", "categories", "products", "values"]
+  "order": ["hero", "products", "values"]
 }
