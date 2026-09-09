@@ -4,10 +4,10 @@
   <div class="section">
     <div class="promo-card">
       <div class="promo-copy">
-        <span class="promo-tag" data-i18n="promo.tag">{{ s.tag | default: 'Nou în magazin' }}</span>
-        <h1 data-i18n="promo.title">{{ s.title | default: 'Stația ta de nadă, imprimată 3D și gravată cu numele tău.' }}</h1>
-        <p data-i18n="promo.sub">{{ s.subtext | default: 'Bacuri de nadă și suporturi pentru wafters și gel. Logo MiniAnglers gravat gratuit pe fiecare piesă.' }}</p>
-        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span data-i18n="promo.cta">{{ s.cta_label | default: 'Cumpără acum' }}</span></a>
+        <span class="promo-tag" data-i18n="promo.tag">{{ s.tag | default: 'Printat 3D în Timiș' }}</span>
+        <h1 data-i18n="promo.title">{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>
+        <p data-i18n="promo.sub">{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Gravăm gratuit logo-ul MiniAnglers pe fiecare piesă.' }}</p>
+        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span data-i18n="promo.cta">{{ s.cta_label | default: 'Vezi produsele' }}</span></a>
       </div>
       <div class="promo-art" aria-hidden="true">
         <svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bac de nadă compartimentat">
@@ -33,10 +33,10 @@
 {
   "name": "Hero (promo)",
   "settings": [
-    { "type": "text", "id": "tag", "label": "Tag", "default": "Nou în magazin" },
-    { "type": "text", "id": "title", "label": "Headline", "default": "Stația ta de nadă, imprimată 3D și gravată cu numele tău." },
-    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Bacuri de nadă și suporturi pentru wafters și gel. Logo MiniAnglers gravat gratuit pe fiecare piesă." },
-    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Cumpără acum" },
+    { "type": "text", "id": "tag", "label": "Tag", "default": "Printat 3D în Timiș" },
+    { "type": "text", "id": "title", "label": "Headline", "default": "Toată nada ta, la locul ei." },
+    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Gravăm gratuit logo-ul MiniAnglers pe fiecare piesă." },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Vezi produsele" },
     { "type": "text", "id": "cta_link", "label": "CTA link", "default": "/collections/all" }
   ],
   "presets": [{ "name": "Hero (promo)" }]

@@ -5,8 +5,8 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <span class="brand-word" aria-label="MiniAnglers">{% render 'ma-logo' %}</span>
-        <div class="footer-tag" data-i18n="footer.tagline">{{ s.tagline | default: 'Sigilat. Montat. Gravat.' }}</div>
-        <p class="footer-sub" data-i18n="footer.blurb">{{ s.blurb | default: 'Sisteme de pescuit de precizie, proiectate și imprimate 3D în România.' }}</p>
+        <div class="footer-tag" data-i18n="footer.tagline">{{ s.tagline | default: 'Totul la locul lui.' }}</div>
+        <p class="footer-sub" data-i18n="footer.blurb">{{ s.blurb | default: 'Cutii pentru nadă și suporturi, printate 3D în Timiș.' }}</p>
       </div>
 
       {%- for block in section.blocks -%}
@@ -35,14 +35,14 @@
       {%- if s.show_newsletter -%}
         <div class="footer-col">
           <h4 data-i18n="footer.news_title">{{ s.newsletter_title | default: 'Rămâi la curent' }}</h4>
-          <p class="footer-sub" data-i18n="footer.news_text">{{ s.newsletter_text | default: 'Module noi și reaprovizionări, fără zgomot.' }}</p>
+          <p class="footer-sub" data-i18n="footer.news_text">{{ s.newsletter_text | default: 'Produse noi și reveniri în stoc. Fără spam.' }}</p>
           {%- form 'customer' -%}
             <input type="hidden" name="contact[tags]" value="newsletter">
             <div class="news">
               <input type="email" name="contact[email]" placeholder="email@exemplu.com" aria-label="Adresă de email" required>
               <button class="btn btn-steel btn-sm" type="submit" data-i18n="footer.join">Abonează-te</button>
             </div>
-            {%- if form.posted_successfully? -%}<p class="footer-sub" style="margin-top:8px;color:var(--teal)">Mulțumim — ești pe listă.</p>{%- endif -%}
+            {%- if form.posted_successfully? -%}<p class="footer-sub" style="margin-top:8px;color:var(--teal)">Mulțumim, ești pe listă.</p>{%- endif -%}
           {%- endform -%}
         </div>
       {%- endif -%}
@@ -64,11 +64,11 @@
 {
   "name": "Footer",
   "settings": [
-    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Sigilat. Montat. Gravat." },
-    { "type": "textarea", "id": "blurb", "label": "Brand blurb", "default": "Sisteme de pescuit de precizie, proiectate și imprimate 3D în România." },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Totul la locul lui." },
+    { "type": "textarea", "id": "blurb", "label": "Brand blurb", "default": "Cutii pentru nadă și suporturi, printate 3D în Timiș." },
     { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter signup", "default": true },
     { "type": "text", "id": "newsletter_title", "label": "Newsletter title", "default": "Rămâi la curent" },
-    { "type": "text", "id": "newsletter_text", "label": "Newsletter text", "default": "Module noi și reaprovizionări, fără zgomot." }
+    { "type": "text", "id": "newsletter_text", "label": "Newsletter text", "default": "Produse noi și reveniri în stoc. Fără spam." }
   ],
   "blocks": [
     {
