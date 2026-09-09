@@ -16,7 +16,7 @@
       <span data-burger-close hidden>{% render 'ma-icon', icon: 'close' %}</span>
     </button>
 
-    <a class="brand-word" href="{{ routes.root_url }}" aria-label="MiniAnglers">{{ 'minianglers-logo.svg' | inline_asset_content }}</a>
+    <a class="brand-word" href="{{ routes.root_url }}" aria-label="MiniAnglers">{% render 'ma-logo' %}</a>
 
     <div class="nav-links">
       {%- if section.settings.menu != blank -%}

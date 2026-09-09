@@ -4,7 +4,7 @@
   <div class="section">
     <div class="footer-grid">
       <div class="footer-brand">
-        <span class="brand-word" aria-label="MiniAnglers">{{ 'minianglers-logo.svg' | inline_asset_content }}</span>
+        <span class="brand-word" aria-label="MiniAnglers">{% render 'ma-logo' %}</span>
         <div class="footer-tag" data-i18n="footer.tagline">{{ s.tagline | default: 'Sigilat. Montat. Gravat.' }}</div>
         <p class="footer-sub" data-i18n="footer.blurb">{{ s.blurb | default: 'Sisteme de pescuit de precizie, proiectate și imprimate 3D în România.' }}</p>
       </div>
