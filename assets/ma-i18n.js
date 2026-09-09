@@ -55,6 +55,8 @@
       'product.preview': 'Previzualizare gravură',
       'product.add': 'Adaugă în coș',
       'product.soldout': 'Stoc epuizat',
+      'cart.added': 'Adăugat în coș', 'cart.view': 'Vezi coșul',
+      'pdp.trust': 'Logo gravat gratuit · Printat în Timiș · Livrare 4-5 zile',
       // footer
       'footer.tagline': 'Sigilat. Montat. Gravat.',
       'footer.blurb': 'Sisteme de pescuit de precizie, proiectate și imprimate 3D în România.',
@@ -127,6 +129,8 @@
       'product.preview': 'Engraving preview',
       'product.add': 'Add to cart',
       'product.soldout': 'Sold out',
+      'cart.added': 'Added to cart', 'cart.view': 'View cart',
+      'pdp.trust': 'Free logo engraving · Printed in Timiș · 4-5 day delivery',
       'footer.tagline': 'Sealed. Mounted. Etched.',
       'footer.blurb': 'Precision fishing systems, designed and 3D-printed in Romania.',
       'footer.company': 'Company',

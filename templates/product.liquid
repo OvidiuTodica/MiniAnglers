@@ -163,7 +163,23 @@
           {% render 'ma-icon', icon: 'plus' %}
           {%- if product.available -%}<span data-i18n="product.add">Adaugă în coș</span>{%- else -%}<span data-i18n="product.soldout">Stoc epuizat</span>{%- endif -%}
         </button>
+
+        <p class="pdp-trust">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span data-i18n="pdp.trust">Logo gravat gratuit · Printat în Timiș · Livrare 4-5 zile</span>
+        </p>
       {%- endform -%}
     </div>
+  </div>
+
+  {%- comment -%} Sticky add-to-cart bar (mobile), shown by JS once the main button scrolls away {%- endcomment -%}
+  <div class="pdp-sticky" data-pdp-sticky>
+    <div class="pdp-sticky-info">
+      <span class="pdp-sticky-name">{{ product.title }}</span>
+      <span class="pdp-sticky-price" data-sticky-price>{{ product.price | money }}</span>
+    </div>
+    <button type="button" class="btn btn-steel pdp-sticky-add" data-sticky-add {% unless product.available %}disabled{% endunless %}>
+      <span data-i18n="product.add">Adaugă în coș</span>
+    </button>
   </div>
 </div>

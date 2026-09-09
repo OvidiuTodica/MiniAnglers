@@ -50,37 +50,61 @@
     document.addEventListener('ma:lang', render);
     applyChoice();
 
-    if (!form || !engVariantId) return; // no linked engraving product: standard/normal submit only
+    if (!form) return;
 
+    function showToast() {
+      const old = document.querySelector('.ma-toast');
+      if (old) old.remove();
+      const toast = document.createElement('div');
+      toast.className = 'ma-toast';
+      const msg = document.createElement('span');
+      msg.className = 'ma-toast-msg';
+      msg.textContent = t('cart.added');
+      const link = document.createElement('a');
+      link.className = 'ma-toast-link';
+      link.href = cartUrl;
+      link.textContent = t('cart.view');
+      toast.append(msg, link);
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('in'));
+      setTimeout(() => { toast.classList.remove('in'); setTimeout(() => toast.remove(), 300); }, 4200);
+    }
+
+    // Add to cart via Ajax so we can confirm in place instead of jumping to /cart.
     form.addEventListener('submit', function (e) {
-      if (choice() !== 'custom') return; // standard logo -> normal single-item submit
-      const name = (input && input.value || '').trim();
-      if (!name) return; // custom but empty -> submit as-is
-
       e.preventDefault();
+      const custom = choice() === 'custom';
+      const name = (input && input.value || '').trim();
       const idField = form.querySelector('input[name="id"]');
       const mainId = idField ? parseInt(idField.value, 10) : null;
-      if (!mainId) { form.submit(); return; }
-
       const submitBtn = form.querySelector('.product-add');
-      if (submitBtn) submitBtn.disabled = true;
+      const nativeSubmit = () => { if (submitBtn) submitBtn.disabled = false; HTMLFormElement.prototype.submit.call(form); };
+      if (!mainId) { nativeSubmit(); return; }
 
+      let items;
+      if (custom && name) {
+        items = [{ id: mainId, quantity: 1, properties: { Gravare: name } }];
+        if (engVariantId) items.push({ id: engVariantId, quantity: 1, properties: { 'Pentru': name } });
+      } else {
+        const stdVal = (stdProp && stdProp.value) || ('Logo ' + logo + ' (standard)');
+        items = [{ id: mainId, quantity: 1, properties: { Gravare: stdVal } }];
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          items: [
-            { id: mainId, quantity: 1, properties: { Gravare: name } },
-            { id: engVariantId, quantity: 1, properties: { 'Pentru': name } }
-          ]
-        })
+        body: JSON.stringify({ items: items })
       })
         .then((res) => { if (!res.ok) throw new Error('cart add failed'); return res.json(); })
-        .then(() => { window.location.href = cartUrl; })
-        .catch(() => {
+        .then(() => fetch('/cart.js', { headers: { 'Accept': 'application/json' } }).then((r) => r.json()))
+        .then((cart) => {
+          const countEl = document.getElementById('cartCount');
+          if (countEl) countEl.textContent = cart.item_count;
           if (submitBtn) submitBtn.disabled = false;
-          form.submit(); // fall back to native single-item submit
-        });
+          showToast();
+        })
+        .catch(nativeSubmit); // any failure -> normal add so a sale is never lost
     });
   }
 
@@ -220,4 +244,50 @@
   }
 
   document.addEventListener('DOMContentLoaded', enhanceSpecList);
+})();
+
+/* Sticky add-to-cart bar (mobile): appears once the main button scrolls out of view. */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    const bar = document.querySelector('[data-pdp-sticky]');
+    const form = document.querySelector('.product-info form');
+    if (!bar || !form) return;
+    const mainBtn = form.querySelector('.product-add');
+    const stickyBtn = bar.querySelector('[data-sticky-add]');
+    const stickyPrice = bar.querySelector('[data-sticky-price]');
+    const priceEl = document.querySelector('.product-price');
+
+    if (stickyBtn) stickyBtn.addEventListener('click', function () {
+      if (typeof form.requestSubmit === 'function') form.requestSubmit(mainBtn || undefined);
+      else HTMLFormElement.prototype.submit.call(form);
+    });
+
+    function sync() {
+      if (stickyPrice && priceEl) stickyPrice.textContent = priceEl.textContent;
+      if (stickyBtn && mainBtn) stickyBtn.disabled = mainBtn.disabled;
+    }
+    if (window.MutationObserver) {
+      const mo = new MutationObserver(sync);
+      if (priceEl) mo.observe(priceEl, { childList: true, characterData: true, subtree: true });
+      if (mainBtn) mo.observe(mainBtn, { attributes: true, attributeFilter: ['disabled'] });
+    }
+    sync();
+
+    if (window.IntersectionObserver && mainBtn) {
+      let mainVisible = true, footerVisible = false;
+      const decide = function () { bar.classList.toggle('show', !mainVisible && !footerVisible); };
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { mainVisible = en.isIntersecting; });
+        decide();
+      }, { rootMargin: '0px 0px -24px 0px' }).observe(mainBtn);
+      const footer = document.querySelector('.footer');
+      if (footer) new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { footerVisible = en.isIntersecting; });
+        decide();
+      }).observe(footer);
+      decide();
+    } else {
+      bar.classList.add('show');
+    }
+  });
 })();
