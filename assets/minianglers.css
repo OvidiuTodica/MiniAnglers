@@ -481,9 +481,7 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
   .news input{ font-size:16px; }
 }
 @media (max-width:520px){
-  .cats-grid{ grid-template-columns:1fr; }
   .values-grid{ grid-template-columns:1fr; }
-  .scards{ grid-template-columns:1fr; }
 }
 
 /* ---------- mobile polish ---------- */
@@ -504,4 +502,34 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
 @media (max-width:400px){
   .news{ flex-direction:column; align-items:stretch; }
   .news .btn{ width:100%; }
+}
+
+/* ---------- mobile: modern 2-up shop grid + compact hero ---------- */
+@media (max-width:560px){
+  /* compact promo so products come into view sooner */
+  .promo{ padding:14px 0 6px; }
+  .promo-card{ padding:22px 18px; border-radius:16px; }
+  .promo-tag{ font-size:11px; padding:5px 10px; }
+  .promo-card h1{ font-size:24px; line-height:1.14; margin-top:10px; }
+  .promo-card p{ font-size:14.5px; margin-top:8px; }
+  .promo-cta{ margin-top:16px; padding:12px 22px; font-size:14.5px; }
+  /* two products per row, compact tiles (tap the card to open the product) */
+  .scards{ gap:12px; }
+  .scard .media{ padding:16px; }
+  .scard .sbody{ padding:12px 12px 14px; }
+  .scard h3{ font-size:14.5px; line-height:1.2; }
+  .scard .cat{ font-size:12px; margin-top:1px; }
+  .scard .foot{ padding-top:10px; }
+  .scard .price{ font-size:16px; }
+  .scard .add{ display:none; }
+  .scard .flag{ font-size:10px; padding:4px 8px; top:8px; left:8px; }
+  .shop-tools h2{ font-size:22px; }
+  /* compact category tiles */
+  .cat-tile{ padding:14px; gap:12px; }
+  .cat-tile .ic{ width:44px; height:44px; }
+  .cat-tile .ic svg{ width:22px; height:22px; }
+  .cat-tile b{ font-size:14px; }
+}
+@media (max-width:360px){
+  .cats-grid{ grid-template-columns:1fr; }
 }
