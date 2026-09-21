@@ -1,8 +1,39 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "hero": { "type": "ma-hero", "settings": {} },
-    "products": { "type": "ma-products", "settings": {} },
-    "values": { "type": "ma-features", "settings": {} }
+    "hero": {
+      "type": "ma-hero",
+      "settings": {
+        "tag": "PRINTAT 3D",
+        "title": "Totul la îndemână, nimic la voia întâmplării.",
+        "subtext": "Uită de cutiile împrăștiate. Sistemele noastre modulare îți oferă un setup perfect compartimentat, creat pentru pescarii care apreciază detaliile.",
+        "cta_label": "",
+        "cta_link": ""
+      }
+    },
+    "products": {
+      "type": "ma-products",
+      "settings": {
+        "heading": "Toate produsele",
+        "limit": 12
+      }
+    },
+    "values": {
+      "type": "ma-features",
+      "settings": {}
+    }
   },
-  "order": ["hero", "products", "values"]
+  "order": [
+    "hero",
+    "products",
+    "values"
+  ]
 }
