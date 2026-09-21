@@ -6,22 +6,88 @@
   <meta name="theme-color" content="#177A48">
   <script>try{if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}</script>
   <link rel="canonical" href="{{ canonical_url }}">
+  {%- comment -%}
+    SEO titles + descriptions. Anything set in Admin ("Search engine listing" on a
+    product/page, or Online Store → Preferences for the homepage) wins; the values
+    below are fallbacks for what's left empty. Pages whose Admin title is still the
+    bare handle (e.g. "faq") get a proper Romanian title here.
+  {%- endcomment -%}
   {%- assign eng_handle = settings.engraving_product.handle | default: 'gravare' -%}
-  {%- if request.page_type == 'product' and product.handle == eng_handle -%}<meta name="robots" content="noindex">{%- endif -%}
-
   {%- liquid
     assign meta_title = page_title
     assign meta_desc = page_description
-    if request.page_type == 'index' and page_title == shop.name
-      assign meta_title = shop.name | append: ' — Sisteme de pescuit de precizie, imprimate 3D'
-    endif
-    if request.page_type == 'collection' and collection.handle == 'all'
-      assign meta_title = 'Produse'
-    endif
-    if meta_desc == blank and request.page_type == 'index'
-      assign meta_desc = 'Bacuri de nadă, suporturi pentru wafters și gel — imprimate 3D în România și personalizabile prin gravare. Comandă online, cu livrare în toată țara.'
-    endif
+    assign noindex = false
+    case request.page_type
+      when 'index'
+        if page_title == shop.name
+          assign meta_title = 'MiniAnglers — Bacuri de nadă și suporturi wafters printate 3D'
+        endif
+        if meta_desc == blank
+          assign meta_desc = 'Bacuri de nadă, suporturi pentru wafters și gel, printate 3D în România. Gravare personalizată cu numele tău. Comandă online, livrare în toată țara.'
+        endif
+      when 'collection'
+        if collection.handle == 'all'
+          assign meta_title = 'Produse — bacuri de nadă și suporturi wafters printate 3D'
+          if meta_desc == blank
+            assign meta_desc = 'Toate produsele MiniAnglers: seturi și bacuri de nadă XL / L / M / S și suporturi pentru wafters — printate 3D la comandă, cu gravare personalizată opțională.'
+          endif
+        endif
+      when 'product'
+        if product.handle == eng_handle
+          assign noindex = true
+        endif
+        if meta_desc == blank and product.description != blank
+          assign meta_desc = product.description | strip_html | strip_newlines | truncate: 155
+        endif
+      when 'page'
+        case page.handle
+          when 'despre'
+            if page.title == page.handle
+              assign meta_title = 'Despre noi'
+            endif
+            assign fallback_desc = 'Cine e MiniAnglers: pescari din Timiș care își proiectează și printează 3D propriile bacuri de nadă și suporturi pentru wafters, făcute la comandă.'
+          when 'procesul'
+            assign fallback_desc = 'Cum facem fiecare piesă: proiectare, printare 3D la comandă, gravare personalizată cu numele tău și termenele de producție și livrare.'
+          when 'faq'
+            if page.title == page.handle
+              assign meta_title = 'Întrebări frecvente'
+            endif
+            assign fallback_desc = 'Răspunsuri la întrebările frecvente despre gravare, termene de producție, livrare, retur și îngrijirea produselor MiniAnglers printate 3D.'
+          when 'contact'
+            assign fallback_desc = 'Scrie-ne pentru comenzi, gravare personalizată sau orice întrebare despre bacurile de nadă și suporturile MiniAnglers.'
+          when 'livrare'
+            if page.title == page.handle
+              assign meta_title = 'Livrare'
+            endif
+            assign fallback_desc = 'Politica de livrare MiniAnglers: curier, termene de producție pentru piesele printate 3D și livrare în toată România.'
+          when 'retur-si-rambursare'
+            if page.title == page.handle
+              assign meta_title = 'Retur și rambursare'
+            endif
+            assign fallback_desc = 'Dreptul de retragere în 14 zile, cum returnezi un produs MiniAnglers și ce se întâmplă cu produsele gravate personalizat.'
+          when 'termeni-si-conditii'
+            assign fallback_desc = 'Termenii și condițiile de vânzare MiniAnglers: comenzi, prețuri, plată, livrare, personalizare prin gravare și garanție.'
+          when 'confidentialitate'
+            if page.title == page.handle
+              assign meta_title = 'Politica de confidențialitate'
+            endif
+            assign fallback_desc = 'Cum colectăm, folosim și protejăm datele tale personale când comanzi de la MiniAnglers, conform GDPR.'
+        endcase
+        if meta_desc == blank and fallback_desc != blank
+          assign meta_desc = fallback_desc
+        endif
+      when 'search'
+        assign meta_title = 'Căutare'
+        assign noindex = true
+      when 'cart'
+        assign meta_title = 'Coșul tău'
+        assign noindex = true
+      when '404'
+        assign meta_title = 'Pagina nu a fost găsită'
+        assign noindex = true
+    endcase
   -%}
+  {%- if noindex -%}<meta name="robots" content="noindex">{%- endif -%}
 
   <title>
     {{ meta_title }}
