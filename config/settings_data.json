@@ -12,7 +12,15 @@
     "color_bg": "#0A0A0B",
     "color_accent": "#4FD1C5",
     "color_text": "#d7d7db",
-    "engraving_product": "gravare"
+    "engraving_product": "gravare",
+    "sections": {
+      "ma-footer": {
+        "type": "ma-footer",
+        "settings": {
+          "social_tiktok": "https://www.tiktok.com/@minianglers8"
+        }
+      }
+    }
   },
   "presets": {
     "MiniAnglers": {
