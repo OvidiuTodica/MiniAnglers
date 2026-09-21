@@ -1,6 +1,6 @@
 {%- comment -%}
   MiniAnglers hero — the green promo banner. Owner's call (2026-09-21): this banner is
-  reserved for offers and deals — plain brand green + the drawn tray, no photo/video behind it.
+  reserved for offers and deals — plain brand green, copy only (no illustration, photo or video).
   Text fields left empty in the theme editor fall back to the standard copy (RO default,
   EN via data-i18n); anything typed in the editor is shown as typed, in both languages,
   so an offer entered in Admin is never overwritten by the dictionary.
@@ -14,22 +14,6 @@
         <h1{% if s.title == blank %} data-i18n="promo.title"{% endif %}>{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>
         <p{% if s.subtext == blank %} data-i18n="promo.sub"{% endif %}>{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei.' }}</p>
         <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span{% if s.cta_label == blank %} data-i18n="promo.cta"{% endif %}>{{ s.cta_label | default: 'Vezi produsele' }}</span></a>
-      </div>
-      <div class="promo-art" aria-hidden="true">
-        <svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bac de nadă compartimentat">
-          <rect x="20" y="24" width="260" height="200" rx="18" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-          <g fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.45)" stroke-width="1.6">
-            <circle cx="76" cy="86" r="28"/><circle cx="150" cy="86" r="28"/><circle cx="224" cy="86" r="28"/>
-            <circle cx="76" cy="162" r="28"/><circle cx="150" cy="162" r="28"/><circle cx="224" cy="162" r="28"/>
-          </g>
-          <g fill="#ffffff">
-            <circle cx="70" cy="80" r="10"/><circle cx="86" cy="92" r="7" fill="#CFEBD9"/>
-            <circle cx="150" cy="82" r="9" fill="#CFEBD9"/><circle cx="224" cy="82" r="10"/><circle cx="234" cy="92" r="6" fill="#CFEBD9"/>
-            <circle cx="76" cy="160" r="9" fill="#CFEBD9"/><circle cx="150" cy="162" r="11"/><circle cx="224" cy="160" r="8" fill="#CFEBD9"/>
-          </g>
-          <rect x="34" y="192" width="232" height="24" rx="8" fill="rgba(0,0,0,0.18)"/>
-          <text x="150" y="209" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="#ffffff">MINIANGLERS</text>
-        </svg>
       </div>
     </div>
   </div>
