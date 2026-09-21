@@ -1,7 +1,7 @@
 {%- comment -%} MiniAnglers announcement bar (site-wide, rendered above header) {%- endcomment -%}
 {%- if section.settings.show -%}
   <div class="announce">
-    <span class="announce-text" data-i18n="announce.text">{{ section.settings.text | default: 'Logo gravat gratuit pe fiecare piesă. Livrăm oriunde în țară.' }}</span>
+    <span class="announce-text" data-i18n="announce.text">{{ section.settings.text | default: 'Gravare personalizată cu numele tău. Livrăm oriunde în țară.' }}</span>
   </div>
 {%- endif -%}
 
@@ -10,7 +10,7 @@
   "name": "Announcement bar",
   "settings": [
     { "type": "checkbox", "id": "show", "label": "Show announcement bar", "default": true },
-    { "type": "text", "id": "text", "label": "Text", "default": "Logo gravat gratuit pe fiecare piesă. Livrăm oriunde în țară." }
+    { "type": "text", "id": "text", "label": "Text", "default": "Gravare personalizată cu numele tău. Livrăm oriunde în țară." }
   ]
 }
 {% endschema %}

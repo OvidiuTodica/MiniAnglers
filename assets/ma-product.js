@@ -1,10 +1,9 @@
 /* MiniAnglers product page — engraving with two options.
-   Standard (free) keeps the shop-name logo on the rim; Custom (paid) lets
-   the customer type a name. When "custom" is chosen AND a linked engraving
-   product exists (data-eng-variant), submitting adds a SECOND cart line for
-   that product via the Ajax Cart API so it is charged; otherwise the form
-   submits normally (single item), carrying a line-item property that records
-   the standard logo or the typed name. */
+   Standard = no engraving (plain piece, no line-item property); Custom (paid)
+   lets the customer type a name. When "custom" is chosen AND a linked
+   engraving product exists (data-eng-variant), submitting adds a SECOND cart
+   line for that product via the Ajax Cart API so it is charged; otherwise the
+   form submits normally (single item). */
 (function () {
   const t = (k) => (typeof window.maT === 'function' ? window.maT(k) : k);
 
@@ -13,13 +12,12 @@
     const input  = root.querySelector('[data-eng-input]');
     const etch   = root.querySelector('[data-eng-etch]');
     const count  = root.querySelector('[data-eng-count]');
-    const stdProp = root.querySelector('[data-eng-standard-prop]');
+    const preview = root.querySelector('[data-eng-preview]');
     const opts   = root.querySelectorAll('.eng-opt');
     const radios = root.querySelectorAll('input[name="eng_choice"]');
     const maxLen = parseInt(root.dataset.max, 10) || (input ? parseInt(input.getAttribute('maxlength'), 10) : 16) || 16;
     const engVariantId = root.dataset.engVariant ? parseInt(root.dataset.engVariant, 10) : null;
     const cartUrl = root.dataset.cartUrl || '/cart';
-    const logo = root.dataset.logo || 'MiniAnglers';
 
     function choice() {
       const c = root.querySelector('input[name="eng_choice"]:checked');
@@ -29,17 +27,17 @@
     function render() {
       const custom = choice() === 'custom';
       const name = (input && input.value || '').trim();
-      // preview plate: typed name (custom) or the shop logo (standard)
-      if (etch) etch.textContent = custom ? (name ? name.toUpperCase() : t('config.namehere')) : logo;
+      // preview plate: the typed name (only shown for custom)
+      if (etch) etch.textContent = custom ? (name ? name.toUpperCase() : t('config.namehere')) : '';
       if (count) count.textContent = `${(input ? input.value.length : 0)}/${maxLen} ${t('config.chars')}`;
     }
 
     function applyChoice() {
       const custom = choice() === 'custom';
-      // toggle which "Gravare" property submits + show/hide the text field
+      // the "Gravare" property only submits for custom; show/hide the text field + preview
       if (input)   { input.disabled = !custom; input.hidden = !custom; }
       if (count)   { count.hidden = !custom; }
-      if (stdProp) { stdProp.disabled = custom; }
+      if (preview) { preview.hidden = !custom; }
       opts.forEach((o) => o.classList.toggle('is-active', o.dataset.engOpt === (custom ? 'custom' : 'standard')));
       if (custom && input) input.focus();
       render();
@@ -86,8 +84,7 @@
         items = [{ id: mainId, quantity: 1, properties: { Gravare: name } }];
         if (engVariantId) items.push({ id: engVariantId, quantity: 1, properties: { 'Pentru': name } });
       } else {
-        const stdVal = (stdProp && stdProp.value) || ('Logo ' + logo + ' (standard)');
-        items = [{ id: mainId, quantity: 1, properties: { Gravare: stdVal } }];
+        items = [{ id: mainId, quantity: 1 }];
       }
 
       if (submitBtn) submitBtn.disabled = true;

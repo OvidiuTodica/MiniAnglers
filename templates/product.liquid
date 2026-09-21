@@ -1,16 +1,18 @@
 {%- comment -%}
   MiniAnglers product page (RO default, EN via data-i18n).
-  Personalization lives here: choose the product, add a paid engraving
-  with a live preview, then add to cart. The typed text travels as a line
-  item property on the main product; when settings.engraving_product is
-  linked, its price is charged as a second cart line (see ma-product.js).
+  Personalization lives here: the product ships plain by default; the paid
+  custom engraving (name / club / team code) has a live preview. The typed
+  text travels as a line-item property on the main product; when
+  settings.engraving_product is linked, its price is charged as a second
+  cart line (see ma-product.js). Nothing about engraving is "free" — the
+  owner removed every such claim on 2026-09-21.
 {%- endcomment -%}
 {%- assign eng_product = settings.engraving_product -%}
 {%- if eng_product != blank -%}
   {%- assign eng_variant = eng_product.selected_or_first_available_variant -%}
 {%- endif -%}
 {%- if eng_variant != blank and eng_variant.available -%}
-  {%- assign eng_price_display = eng_variant.price | money -%}
+  {%- assign eng_price_display = eng_variant.price | money | prepend: '+' -%}
 {%- else -%}
   {%- assign eng_price_display = settings.engraving_price_note | default: '+19 lei' -%}
 {%- endif -%}
@@ -119,11 +121,10 @@
 
         <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
 
-        {%- comment -%} Engraving widget — standard logo (free) OR custom name (paid) {%- endcomment -%}
+        {%- comment -%} Engraving widget — none (default) OR custom name (paid) {%- endcomment -%}
         <div class="engrave" data-product-engrave data-max="16"
              data-eng-price="{{ eng_price_display | escape }}"
              data-cart-url="{{ routes.cart_url }}"
-             data-logo="{{ shop.name }}"
              {%- if eng_variant != blank and eng_variant.available %} data-eng-variant="{{ eng_variant.id }}"{% endif %}>
           <div class="engrave-head">
             <span class="l" data-i18n="config.engraving">Gravare</span>
@@ -133,8 +134,8 @@
             <label class="eng-opt is-active" data-eng-opt="standard">
               <input type="radio" name="eng_choice" value="standard" checked>
               <span class="eng-opt-main">
-                <span class="eng-opt-title" data-i18n="config.eng_standard">Logo {{ shop.name }}</span>
-                <span class="eng-opt-sub" data-i18n="config.eng_standard_sub">Inclus, fără cost</span>
+                <span class="eng-opt-title" data-i18n="config.eng_standard">Fără gravare</span>
+                <span class="eng-opt-sub" data-i18n="config.eng_standard_sub">Modelul standard</span>
               </span>
             </label>
             <label class="eng-opt" data-eng-opt="custom">
@@ -146,16 +147,14 @@
             </label>
           </div>
 
-          {%- comment -%} Standard = logo property; disabled/enabled by JS depending on choice {%- endcomment -%}
-          <input type="hidden" name="properties[Gravare]" value="Logo {{ shop.name }} (standard)" data-eng-standard-prop>
           <input class="cfg-input" data-eng-input type="text" maxlength="16"
                  name="properties[Gravare]" placeholder="Numele tău"
                  data-i18n-ph="config.placeholder" aria-label="Text gravură" disabled hidden>
           <div class="engrave-count" data-eng-count hidden>0/16 caractere</div>
 
-          <div class="engrave-preview">
+          <div class="engrave-preview" data-eng-preview hidden>
             <span class="glass-tag" data-i18n="product.preview">Previzualizare gravură</span>
-            <div class="engrave-plate" data-eng-etch>{{ shop.name }}</div>
+            <div class="engrave-plate" data-eng-etch></div>
           </div>
         </div>
 
@@ -166,7 +165,7 @@
 
         <p class="pdp-trust">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-          <span data-i18n="pdp.trust">Logo gravat gratuit, printat în Timiș, livrare în 4-5 zile.</span>
+          <span data-i18n="pdp.trust">Printat în Timiș, livrare în 4-5 zile.</span>
         </p>
       {%- endform -%}
     </div>

@@ -13,7 +13,10 @@ matching the code, fix this file in the same commit that causes the drift.
 organization gear — bait trays, wafter/pop-up holders, gel and dip jar
 holders — designed and printed in-house in Romania, sold in RON (lei).
 Optional paid custom engraving (name, club, or team code) is a core product
-differentiator; a standard MiniAnglers logo engrave is included free.
+differentiator. **Engraving is never free and must never be described as
+free/gratuit/inclus** — the owner removed every such claim on 2026-09-21.
+Products ship plain by default ("Fără gravare"); the paid custom option is
+the only engraving offered.
 
 **Registered entity:**
 - PFA Todica Ovidiu-Victor-Nicușor, CUI 52748161 (reg. 22.10.2025)
