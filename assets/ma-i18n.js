@@ -68,6 +68,7 @@
       'footer.join': 'Abonează-te',
       'footer.rights': 'Toate drepturile rezervate.',
       'footer.legal1': 'Confidențialitate', 'footer.legal2': 'Termeni și condiții', 'footer.legal3': 'Retur și rambursare', 'footer.legal4': 'Livrare',
+      'footer.anpc_sal': 'ANPC – SAL', 'footer.anpc_sol': 'SOL – Soluționarea online a litigiilor',
       'cart.title': 'Construcția ta', 'cart.empty': 'Coșul tău este gol.', 'cart.start': 'Începe personalizarea',
       'cart.qty': 'Cant.', 'cart.update': 'Actualizează', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Finalizează comanda', 'cart.remove': 'Elimină din coș',
       // storefront homepage
@@ -144,6 +145,7 @@
       'footer.join': 'Join',
       'footer.rights': 'All rights reserved.',
       'footer.legal1': 'Privacy', 'footer.legal2': 'Terms & Conditions', 'footer.legal3': 'Returns & Refunds', 'footer.legal4': 'Shipping',
+      'footer.anpc_sal': 'ANPC – ADR (consumer disputes)', 'footer.anpc_sol': 'EU online dispute resolution (ODR)',
       'cart.title': 'Your build', 'cart.empty': 'Your cart is empty.', 'cart.start': 'Start customizing',
       'cart.qty': 'Qty', 'cart.update': 'Update', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Checkout', 'cart.remove': 'Remove from cart',
       // storefront homepage
