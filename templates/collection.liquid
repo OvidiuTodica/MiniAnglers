@@ -1,5 +1,9 @@
 {%- comment -%} MiniAnglers — catalog page (routes.all_products_collection_url and any other collection) {%- endcomment -%}
+{%- assign eng_handle = settings.engraving_product.handle | default: 'gravare' -%}
 {%- assign count = collection.products.size -%}
+{%- for product in collection.products -%}
+  {%- if product.handle == eng_handle -%}{%- assign count = count | minus: 1 -%}{%- endif -%}
+{%- endfor -%}
 <div class="page-wrap">
   <div class="page-head">
     <span class="eyebrow glow">{{ collection.metafields.custom.eyebrow | default: 'Magazin' }}</span>
@@ -14,6 +18,7 @@
 
   <div class="product-grid" style="margin-top:8px">
     {%- for product in collection.products -%}
+      {%- if product.handle == eng_handle -%}{%- continue -%}{%- endif -%}
       <a class="pcard" href="{{ product.url }}">
         <div class="pcard-media">
           {%- if product.type != blank -%}<span class="glass-tag">{{ product.type }}</span>{%- endif -%}
@@ -29,8 +34,9 @@
           </div>
         </div>
       </a>
-    {%- else -%}
-      <p style="color:var(--steel-500)">Încă nu există produse.</p>
     {%- endfor -%}
+    {%- if count == 0 -%}
+      <p class="shop-empty" data-i18n="shop.empty">Primele produse apar în curând.</p>
+    {%- endif -%}
   </div>
 </div>

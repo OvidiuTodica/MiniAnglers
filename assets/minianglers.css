@@ -437,7 +437,6 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .chip:hover{ border-color:var(--neon); }
 .chip.is-active{ background:var(--neon); border-color:var(--neon); color:#fff; }
 .chip:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:2px; }
-.shop-sort{ font-family:var(--body); font-size:13.5px; font-weight:600; color:var(--mute); }
 
 .scards{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
 .scard{ background:var(--bg2); border:1px solid var(--line); border-radius:var(--r-xl); overflow:hidden; display:flex; flex-direction:column; text-decoration:none; box-shadow:var(--shadow-glass); transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease; }
@@ -456,6 +455,8 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .scard .add{ font-family:var(--sans); font-weight:700; font-size:13px; color:#fff; background:var(--neon); border:none; border-radius:999px; padding:10px 15px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:background-color .15s ease; }
 .scard:hover .add{ background:var(--neon-deep); }
 .scard[hidden]{ display:none !important; }
+.scard .media .ma-ph-art{ width:78%; max-width:none; }
+.shop-empty{ font-size:15px; color:var(--mute); margin:0; }
 
 /* value strip */
 .values{ padding:44px 0 8px; }
@@ -506,7 +507,6 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
 }
 @media (max-width:520px){
   .promo-card{ padding:28px 20px; }
-  .shop-sort{ display:none; }
 }
 @media (max-width:400px){
   .news{ flex-direction:column; align-items:stretch; }
@@ -525,6 +525,8 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
   /* two products per row, compact tiles (tap the card to open the product) */
   .scards{ gap:12px; }
   .scard .media{ padding:16px; }
+  .scard .media .ma-ph-art{ width:56%; margin-bottom:22px; }
+  .scard .media .ma-ph-tag{ bottom:10px; font-size:10px; padding:4px 9px; }
   .scard .sbody{ padding:12px 12px 14px; }
   .scard h3{ font-size:14.5px; line-height:1.2; }
   .scard .cat{ font-size:12px; margin-top:1px; }

@@ -1,38 +1,7 @@
 {
   "sections": {
     "hero": { "type": "ma-hero", "settings": {} },
-    "products": {
-      "type": "ma-products",
-      "blocks": {
-        "p1": { "type": "product", "settings": {
-          "product": "bacuri-nada-standard",
-          "name": "Set Bacuri Nadă Standard", "cat_label": "Bacuri de nadă", "category": "bacuri", "badge": "best",
-          "pn": "MA-BNS", "shape": "set4",
-          "desc": "Patru bacuri care se îmbină: 1 XL și 3 mărimi. Nadă sortată, totul pe tava ta.",
-          "spec1_k": "Bac XL", "spec1_v": "21 × 13 × 6.5 cm",
-          "spec2_k": "3 mărimi", "spec2_v": "15.5 / 10 / 5 cm lățime",
-          "spec3_k": "Înălțime", "spec3_v": "6.5 cm",
-          "spec4_k": "Perete", "spec4_v": "2 mm",
-          "tags": "SET 4, MATTE, GRAVAT", "price": "199 lei" } },
-        "p2": { "type": "product", "settings": {
-          "name": "Suport Wafters v2", "cat_label": "Suporturi wafters", "category": "suporturi", "badge": "none",
-          "pn": "MA-WAF", "shape": "bar_long",
-          "desc": "Suport lung pentru wafters și pop-ups, aliniate și la îndemână în timpul montării.",
-          "spec1_k": "Dimensiuni", "spec1_v": "24 × 10 × 3.5 cm",
-          "spec2_k": "Lungime utilă", "spec2_v": "24 cm",
-          "spec3_k": "Perete", "spec3_v": "2 mm",
-          "tags": "WAFTERS, MATTE, GRAVAT", "price": "89 lei" } },
-        "p3": { "type": "product", "settings": {
-          "name": "Suport Gel v2", "cat_label": "Suporturi gel & dip", "category": "suporturi", "badge": "new",
-          "pn": "MA-GEL", "shape": "bar_small",
-          "desc": "Compact, pentru borcanul de gel sau dip. Stă fix, fără răsturnări pe tava laterală.",
-          "spec1_k": "Dimensiuni", "spec1_v": "5.2 × 10 × 3.5 cm",
-          "spec2_k": "Perete", "spec2_v": "2 mm",
-          "tags": "GEL/DIP, MATTE, GRAVAT", "price": "39 lei" } }
-      },
-      "block_order": ["p1", "p2", "p3"],
-      "settings": {}
-    },
+    "products": { "type": "ma-products", "settings": {} },
     "values": { "type": "ma-features", "settings": {} }
   },
   "order": ["hero", "products", "values"]

@@ -54,7 +54,8 @@ tooling, a `package.json`, or a framework without the owner explicitly asking
 
 ```
 layout/theme.liquid          — single layout: head/SEO, font loading, section slots, script tags
-sections/ma-*.liquid         — homepage/global sections (announce, header, hero=promo, categories, products, features=value strip, footer; ma-steps exists but is off the homepage)
+sections/ma-*.liquid         — homepage/global sections (announce, header, hero=promo, products, features=value strip, footer; ma-categories + ma-steps exist but are off the homepage)
+                               ma-products reads collections.all directly (no manual blocks): published products appear automatically, the engraving add-on is skipped, tags nou/bestseller → badges, Product type → filter chips
 snippets/ma-*.liquid         — reusable partials (icon sprite, legal block, legal nav)
 templates/                   — page/product/collection/cart/search/404 templates + all legal pages
 config/settings_schema.json  — theme editor settings definitions

@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#177A48">
   <script>try{if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}</script>
   <link rel="canonical" href="{{ canonical_url }}">
+  {%- assign eng_handle = settings.engraving_product.handle | default: 'gravare' -%}
+  {%- if request.page_type == 'product' and product.handle == eng_handle -%}<meta name="robots" content="noindex">{%- endif -%}
 
   {%- liquid
     assign meta_title = page_title

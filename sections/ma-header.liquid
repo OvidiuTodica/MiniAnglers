@@ -28,10 +28,10 @@
         {%- endfor -%}
       {%- else -%}
         <a href="{{ routes.all_products_collection_url }}" class="is-active" data-i18n="catnav.all">Toate produsele</a>
-        <a href="#shop" data-i18n="catnav.bacuri">Bacuri de nadă</a>
-        <a href="#shop" data-i18n="catnav.wafters">Suporturi wafters</a>
-        <a href="#shop" data-i18n="catnav.gel">Suporturi gel &amp; dip</a>
-        <a href="#gravare" data-i18n="catnav.gravare">Gravare</a>
+        <a href="{{ routes.root_url }}#shop" data-i18n="catnav.bacuri">Bacuri de nadă</a>
+        <a href="{{ routes.root_url }}#shop" data-i18n="catnav.wafters">Suporturi wafters</a>
+        <a href="{{ routes.root_url }}#shop" data-i18n="catnav.gel">Suporturi gel &amp; dip</a>
+        <a href="/pages/faq" data-i18n="catnav.gravare">Gravare</a>
       {%- endif -%}
     </div>
   </div>
