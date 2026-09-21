@@ -15,6 +15,9 @@
     if request.page_type == 'index' and page_title == shop.name
       assign meta_title = shop.name | append: ' — Sisteme de pescuit de precizie, imprimate 3D'
     endif
+    if request.page_type == 'collection' and collection.handle == 'all'
+      assign meta_title = 'Produse'
+    endif
     if meta_desc == blank and request.page_type == 'index'
       assign meta_desc = 'Bacuri de nadă, suporturi pentru wafters și gel — imprimate 3D în România și personalizabile prin gravare. Comandă online, cu livrare în toată țara.'
     endif

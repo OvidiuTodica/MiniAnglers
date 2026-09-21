@@ -7,11 +7,15 @@
 <div class="page-wrap">
   <div class="page-head">
     <span class="eyebrow glow">{{ collection.metafields.custom.eyebrow | default: 'Magazin' }}</span>
-    <h1>{{ collection.title | default: 'Toate produsele' }}</h1>
+    {%- if collection.handle == 'all' or collection.title == blank -%}
+      <h1 data-i18n="catalog.title">Produse</h1>
+    {%- else -%}
+      <h1>{{ collection.title }}</h1>
+    {%- endif -%}
     {%- if collection.description != blank -%}
       <p class="page-lead">{{ collection.description }}</p>
     {%- else -%}
-      <p class="page-lead">Sisteme de pescuit imprimate 3D, gata de personalizat cu numele tău.</p>
+      <p class="page-lead" data-i18n="catalog.lead">Sisteme de pescuit imprimate 3D, gata de personalizat cu numele tău.</p>
     {%- endif -%}
     <span class="mono">{% if count == 1 %}1 produs{% else %}{{ count }} produse{% endif %}</span>
   </div>
