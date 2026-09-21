@@ -68,7 +68,7 @@ assets/minianglers.css       — the entire stylesheet, single file
 assets/ma-i18n.js            — custom RO/EN toggle (see §3)
 assets/ma-product.js         — product page logic (engraving config, variant/price updates)
 assets/ma-cart.js            — cart drawer/line-item logic
-assets/favicon.svg
+assets/favicon.svg           — the logo's "m" mark on brand green (+ favicon-32.png, apple-touch-icon.png, og-image.png; all generated from minianglers-logo.svg)
 ```
 
 **Naming convention:** every custom section, snippet, and JS asset carries an
