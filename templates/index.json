@@ -13,9 +13,13 @@
       "type": "ma-hero",
       "settings": {
         "tag": "PRINTAT 3D",
+        "tag_en": "3D PRINTED",
         "title": "Totul la îndemână, nimic la voia întâmplării.",
+        "title_en": "Everything within reach, nothing left to chance.",
         "subtext": "Uită de cutiile împrăștiate. Sistemele noastre modulare îți oferă un setup perfect compartimentat, creat pentru pescarii care apreciază detaliile.",
+        "subtext_en": "Forget scattered boxes. Our modular systems give you a perfectly compartmented setup, made for anglers who care about the details.",
         "cta_label": "",
+        "cta_label_en": "",
         "cta_link": ""
       }
     },

@@ -183,6 +183,11 @@
       const k = el.getAttribute('data-i18n-ph');
       if (d[k] != null) el.setAttribute('placeholder', d[k]);
     });
+    // owner-typed text (theme editor) with an English twin: RO is the rendered text, EN lives in the attribute
+    document.querySelectorAll('[data-i18n-en]').forEach(el => {
+      if (el.dataset.i18nRo == null) el.dataset.i18nRo = el.textContent;
+      el.textContent = window.MA_LANG === 'en' ? el.getAttribute('data-i18n-en') : el.dataset.i18nRo;
+    });
     document.querySelectorAll('[data-i18n-aria]').forEach(el => {
       const k = el.getAttribute('data-i18n-aria');
       if (d[k] != null) el.setAttribute('aria-label', d[k]);

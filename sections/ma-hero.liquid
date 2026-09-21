@@ -2,18 +2,19 @@
   MiniAnglers hero — the green promo banner. Owner's call (2026-09-21): this banner is
   reserved for offers and deals — plain brand green, copy only (no illustration, photo or video).
   Text fields left empty in the theme editor fall back to the standard copy (RO default,
-  EN via data-i18n); anything typed in the editor is shown as typed, in both languages,
-  so an offer entered in Admin is never overwritten by the dictionary.
+  EN via data-i18n). Anything typed in the editor is shown as typed and is never
+  overwritten by the dictionary; each field has an optional "(English)" twin that the
+  toggle swaps in via data-i18n-en (ma-i18n.js) — empty twin = Romanian shows in EN too.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="promo" id="sistem">
   <div class="section">
     <div class="promo-card">
       <div class="promo-copy">
-        <span class="promo-tag"{% if s.tag == blank %} data-i18n="promo.tag"{% endif %}>{{ s.tag | default: 'Printat 3D în Timiș' }}</span>
-        <h1{% if s.title == blank %} data-i18n="promo.title"{% endif %}>{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>
-        <p{% if s.subtext == blank %} data-i18n="promo.sub"{% endif %}>{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei.' }}</p>
-        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span{% if s.cta_label == blank %} data-i18n="promo.cta"{% endif %}>{{ s.cta_label | default: 'Vezi produsele' }}</span></a>
+        <span class="promo-tag"{% if s.tag == blank %} data-i18n="promo.tag"{% elsif s.tag_en != blank %} data-i18n-en="{{ s.tag_en | escape }}"{% endif %}>{{ s.tag | default: 'Printat 3D în Timiș' }}</span>
+        <h1{% if s.title == blank %} data-i18n="promo.title"{% elsif s.title_en != blank %} data-i18n-en="{{ s.title_en | escape }}"{% endif %}>{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>
+        <p{% if s.subtext == blank %} data-i18n="promo.sub"{% elsif s.subtext_en != blank %} data-i18n-en="{{ s.subtext_en | escape }}"{% endif %}>{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei.' }}</p>
+        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span{% if s.cta_label == blank %} data-i18n="promo.cta"{% elsif s.cta_label_en != blank %} data-i18n-en="{{ s.cta_label_en | escape }}"{% endif %}>{{ s.cta_label | default: 'Vezi produsele' }}</span></a>
       </div>
     </div>
   </div>
@@ -23,11 +24,15 @@
 {
   "name": "Hero (promo)",
   "settings": [
-    { "type": "paragraph", "content": "Offers & deals banner. Leave a field empty to keep the standard text (shown in RO and EN). Anything you type here replaces it, exactly as typed." },
+    { "type": "paragraph", "content": "Offers & deals banner. Leave a field empty to keep the standard text (shown in RO and EN). Anything you type here replaces it, exactly as typed. The \"(English)\" fields are shown when a visitor switches to EN — leave them empty and the Romanian text shows in both languages." },
     { "type": "text", "id": "tag", "label": "Tag", "placeholder": "Printat 3D în Timiș" },
+    { "type": "text", "id": "tag_en", "label": "Tag (English)" },
     { "type": "text", "id": "title", "label": "Headline", "placeholder": "Toată nada ta, la locul ei." },
+    { "type": "text", "id": "title_en", "label": "Headline (English)" },
     { "type": "textarea", "id": "subtext", "label": "Sub text", "placeholder": "Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei." },
+    { "type": "textarea", "id": "subtext_en", "label": "Sub text (English)" },
     { "type": "text", "id": "cta_label", "label": "Button label", "placeholder": "Vezi produsele" },
+    { "type": "text", "id": "cta_label_en", "label": "Button label (English)" },
     { "type": "url", "id": "cta_link", "label": "Button link", "info": "Empty = all products." }
   ],
   "presets": [{ "name": "Hero (promo)" }]
