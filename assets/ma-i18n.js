@@ -88,7 +88,7 @@
       'val.t1': 'Printat 3D la noi', 'val.d1': 'Făcut la comandă, în Timiș.',
       'val.t2': 'Gravare cu numele tău', 'val.d2': 'Opțional, pe orice piesă.',
       'val.t3': 'Livrăm în toată țara', 'val.d3': 'Ambalat sigur pentru drum.',
-      'val.t4': 'Retur în 14 zile', 'val.d4': 'Fără bătăi de cap.',
+      'val.t4': 'Retur în 14 zile', 'val.d4': 'Pentru piesele fără gravare personalizată.',
     },
     en: {
       'nav.shop': 'Shop',
@@ -163,7 +163,7 @@
       'val.t1': '3D-printed in-house', 'val.d1': 'Made to order in Timiș.',
       'val.t2': 'Engraved with your name', 'val.d2': 'Optional, on any piece.',
       'val.t3': 'We ship nationwide', 'val.d3': 'Packed safe for the trip.',
-      'val.t4': '14-day returns', 'val.d4': 'No hassle.',
+      'val.t4': '14-day returns', 'val.d4': 'For pieces without custom engraving.',
     },
   };
 
