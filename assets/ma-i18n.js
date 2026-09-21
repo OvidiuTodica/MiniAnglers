@@ -85,7 +85,7 @@
       'shop.badge_new': 'Nou', 'shop.badge_best': 'Best seller',
       // catalog page
       'catalog.title': 'Produse', 'catalog.lead': 'Sisteme de pescuit imprimate 3D, gata de personalizat cu numele tău.',
-      'val.t1': 'Printat 3D la noi', 'val.d1': 'Făcut la comandă, în Timiș.',
+      'val.t1': 'Printat 3D', 'val.d1': 'Făcut la comandă.',
       'val.t2': 'Gravare cu numele tău', 'val.d2': 'Opțional, pe orice piesă.',
       'val.t3': 'Livrăm în toată țara', 'val.d3': 'Ambalat sigur pentru drum.',
       'val.t4': 'Retur în 14 zile', 'val.d4': 'Pentru piesele fără gravare personalizată.',
@@ -160,7 +160,7 @@
       'shop.heading': 'All products', 'shop.f_all': 'All', 'shop.f_bacuri': 'Tubs', 'shop.f_suporturi': 'Holders', 'shop.empty': 'The first products are on their way.',
       'shop.badge_new': 'New', 'shop.badge_best': 'Best seller',
       'catalog.title': 'Products', 'catalog.lead': '3D-printed tackle systems, ready to be engraved with your name.',
-      'val.t1': '3D-printed in-house', 'val.d1': 'Made to order in Timiș.',
+      'val.t1': '3D printed', 'val.d1': 'Made to order.',
       'val.t2': 'Engraved with your name', 'val.d2': 'Optional, on any piece.',
       'val.t3': 'We ship nationwide', 'val.d3': 'Packed safe for the trip.',
       'val.t4': '14-day returns', 'val.d4': 'For pieces without custom engraving.',
