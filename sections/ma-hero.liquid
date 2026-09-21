@@ -1,29 +1,20 @@
 {%- comment -%}
-  MiniAnglers hero — storefront promo banner (RO default, EN via data-i18n).
-  Background: a real session clip (owner's footage — trays on the side tray at the water),
-  encoded muted + forward/reverse so it loops without a jump cut: assets/ma-hero.mp4 (+ poster jpg).
-  Reduced-motion users and blocked autoplay get the poster frame. Toggle off in the theme editor
-  to fall back to the drawn tray illustration.
+  MiniAnglers hero — the green promo banner. Owner's call (2026-09-21): this banner is
+  reserved for offers and deals — plain brand green + the drawn tray, no photo/video behind it.
+  Text fields left empty in the theme editor fall back to the standard copy (RO default,
+  EN via data-i18n); anything typed in the editor is shown as typed, in both languages,
+  so an offer entered in Admin is never overwritten by the dictionary.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <section class="promo" id="sistem">
   <div class="section">
-    <div class="promo-card{% if s.show_video %} has-video{% endif %}">
-      {%- if s.show_video -%}
-        <video class="promo-video" autoplay muted loop playsinline preload="metadata"
-               poster="{{ 'ma-hero-poster.jpg' | asset_url }}" aria-hidden="true" tabindex="-1"
-               disablepictureinpicture disableremoteplayback>
-          <source src="{{ 'ma-hero.mp4' | asset_url }}" type="video/mp4">
-        </video>
-        <div class="promo-shade" aria-hidden="true"></div>
-      {%- endif -%}
+    <div class="promo-card">
       <div class="promo-copy">
-        <span class="promo-tag" data-i18n="promo.tag">{{ s.tag | default: 'Printat 3D în Timiș' }}</span>
-        <h1 data-i18n="promo.title">{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>
-        <p data-i18n="promo.sub">{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei.' }}</p>
-        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span data-i18n="promo.cta">{{ s.cta_label | default: 'Vezi produsele' }}</span></a>
+        <span class="promo-tag"{% if s.tag == blank %} data-i18n="promo.tag"{% endif %}>{{ s.tag | default: 'Printat 3D în Timiș' }}</span>
+        <h1{% if s.title == blank %} data-i18n="promo.title"{% endif %}>{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>
+        <p{% if s.subtext == blank %} data-i18n="promo.sub"{% endif %}>{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei.' }}</p>
+        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span{% if s.cta_label == blank %} data-i18n="promo.cta"{% endif %}>{{ s.cta_label | default: 'Vezi produsele' }}</span></a>
       </div>
-      {%- unless s.show_video -%}
       <div class="promo-art" aria-hidden="true">
         <svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bac de nadă compartimentat">
           <rect x="20" y="24" width="260" height="200" rx="18" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
@@ -40,32 +31,20 @@
           <text x="150" y="209" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="#ffffff">MINIANGLERS</text>
         </svg>
       </div>
-      {%- endunless -%}
     </div>
   </div>
 </section>
-
-<script>
-  (function () {
-    var v = document.querySelector('.promo-video');
-    if (!v) return;
-    // respect reduced motion: keep the poster still instead of the clip
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      v.removeAttribute('autoplay'); v.pause();
-    }
-  })();
-</script>
 
 {% schema %}
 {
   "name": "Hero (promo)",
   "settings": [
-    { "type": "checkbox", "id": "show_video", "label": "Session video behind the banner", "default": true },
-    { "type": "text", "id": "tag", "label": "Tag", "default": "Printat 3D în Timiș" },
-    { "type": "text", "id": "title", "label": "Headline", "default": "Toată nada ta, la locul ei." },
-    { "type": "textarea", "id": "subtext", "label": "Sub text", "default": "Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei." },
-    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Vezi produsele" },
-    { "type": "text", "id": "cta_link", "label": "CTA link", "default": "/collections/all" }
+    { "type": "paragraph", "content": "Offers & deals banner. Leave a field empty to keep the standard text (shown in RO and EN). Anything you type here replaces it, exactly as typed." },
+    { "type": "text", "id": "tag", "label": "Tag", "placeholder": "Printat 3D în Timiș" },
+    { "type": "text", "id": "title", "label": "Headline", "placeholder": "Toată nada ta, la locul ei." },
+    { "type": "textarea", "id": "subtext", "label": "Sub text", "placeholder": "Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "placeholder": "Vezi produsele" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Empty = all products." }
   ],
   "presets": [{ "name": "Hero (promo)" }]
 }
