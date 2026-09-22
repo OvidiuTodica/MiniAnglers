@@ -42,7 +42,9 @@
           <a href="/pages/procesul" data-i18n="nav.process">Procesul</a>
           <a href="/pages/contact" data-i18n="footer.company1">Contact</a>
           <a href="/pages/faq" data-i18n="footer.company2">Întrebări frecvente</a>
-          <a href="{{ routes.account_url }}" data-i18n="footer.account">Contul meu</a>
+          {%- if customer -%}{%- assign f_acct = routes.account_url -%}
+          {%- else -%}{%- assign f_acct = routes.storefront_login_url | default: routes.account_login_url -%}{%- endif -%}
+          <a href="{{ f_acct }}" data-i18n="footer.account">Contul meu</a>
         </div>
       {%- endif -%}
 
