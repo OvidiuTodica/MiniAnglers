@@ -114,12 +114,18 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
   transition:transform .18s ease, border-color .18s ease, color .18s ease; }
 .lang-toggle:hover{ transform:translateY(-1px); border-color:var(--neon); color:var(--neon-deep); }
 .lang-toggle:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:2px; }
-.icon-btn{ width:40px; height:40px; display:grid; place-items:center; border-radius:999px; border:1px solid var(--line);
+.icon-btn{ width:40px; height:40px; flex:none; display:grid; place-items:center; border-radius:999px; border:1px solid var(--line);
   background:#fff; color:var(--ink); cursor:pointer; position:relative; text-decoration:none;
   transition:transform .18s ease, border-color .18s ease, color .18s ease, background-color .18s ease; }
 .icon-btn:hover{ transform:translateY(-1px); border-color:var(--neon); color:var(--neon-deep); background:var(--accent-soft); }
 .icon-btn:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:2px; }
 .icon-btn svg{ width:18px; height:18px; }
+/* account button: same pill, widened to carry a label (desktop) */
+.acct-btn{ width:auto; grid-auto-flow:column; gap:8px; padding:0 15px; }
+.acct-label{ font-family:var(--body); font-size:14px; font-weight:600; line-height:1; color:inherit;
+  max-width:10ch; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.acct-dot{ display:none; position:absolute; top:-1px; right:-1px; width:9px; height:9px; border-radius:999px;
+  background:var(--neon); border:2px solid #fff; }
 
 .cart-remove{ display:grid; place-items:center; width:30px; height:30px; border-radius:8px; border:1px solid var(--line);
   background:#fff; color:var(--mute); cursor:pointer; padding:0; transition:border-color .18s ease, color .18s ease, background-color .18s ease; }
@@ -489,6 +495,10 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
   .catnav-inner{ padding-left:16px; padding-right:16px; gap:20px; }
   /* touch targets >= 44px */
   .icon-btn{ width:44px; height:44px; }
+  /* no room for a label in the single-row header — icon only, green dot marks a signed-in session */
+  .acct-btn{ width:44px; padding:0; }
+  .acct-label{ display:none; }
+  .acct-btn.is-in .acct-dot{ display:block; }
   .lang-toggle{ height:44px; padding:0 13px; display:inline-flex; align-items:center; }
   .chip{ padding:10px 16px; }
   .cat-tile{ padding:15px 16px; }

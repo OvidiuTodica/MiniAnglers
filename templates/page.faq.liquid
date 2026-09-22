@@ -10,35 +10,40 @@
 {%- endif -%}
 <div class="page-wrap">
   <div class="page-head">
-    <span class="eyebrow glow">Întrebări frecvente</span>
-    <h1>Ce trebuie să știi.</h1>
+    <span class="eyebrow glow" data-i18n="faq.eyebrow">Întrebări frecvente</span>
+    <h1 data-i18n="faq.heading">Ce trebuie să știi.</h1>
   </div>
 
   <div class="faq">
     <details class="faq-item">
-      <summary>Cum funcționează personalizarea (gravarea)?</summary>
-      <p>Pe pagina fiecărui produs ai un câmp de gravare. Scrii numele, clubul sau codul echipei (max 16 caractere), vezi o previzualizare live, apoi adaugi în coș. Gravarea este o opțiune contra cost ({{ eng_price_display }}), adăugată automat ca linie separată în coș.</p>
+      <summary data-i18n="faq.q1">Cum funcționează personalizarea (gravarea)?</summary>
+      {%- comment -%} carries a Liquid-rendered price, so the EN twin lives in the attribute (see ma-i18n.js) {%- endcomment -%}
+      <p data-i18n-en="On every product page there is an engraving field. You type the name, club or team code (16 characters max), see a live preview, then add it to the cart. Engraving is a paid option ({{ eng_price_display }}), added automatically as a separate cart line.">Pe pagina fiecărui produs ai un câmp de gravare. Scrii numele, clubul sau codul echipei (max 16 caractere), vezi o previzualizare live, apoi adaugi în coș. Gravarea este o opțiune contra cost ({{ eng_price_display }}), adăugată automat ca linie separată în coș.</p>
     </details>
     <details class="faq-item">
-      <summary>Cât durează până primesc comanda?</summary>
-      <p>Fiecare produs e imprimat 3D la comandă. Modelul standard ajunge în <strong>4–5 zile lucrătoare</strong>, iar cel cu gravare personalizată în <strong>8–10 zile lucrătoare</strong>. Detalii pe pagina <a href="/pages/procesul">Procesul</a>.</p>
+      <summary data-i18n="faq.q2">Cât durează până primesc comanda?</summary>
+      <p data-i18n="faq.a2">Fiecare produs e imprimat 3D la comandă. Modelul standard ajunge în <strong>4–5 zile lucrătoare</strong>, iar cel cu gravare personalizată în <strong>8–10 zile lucrătoare</strong>. Detalii pe pagina <a href="/pages/procesul">Procesul</a>.</p>
     </details>
     <details class="faq-item">
-      <summary>Din ce sunt făcute produsele?</summary>
-      <p>Sunt imprimate 3D din PETG — un material rezistent la umezeală, la razele UV și la manevrarea de pe mal — proiectate și fabricate de noi, în România. Detalii pe pagina <a href="/pages/procesul">Procesul</a>.</p>
+      <summary data-i18n="faq.q3">Din ce sunt făcute produsele?</summary>
+      <p data-i18n="faq.a3">Sunt imprimate 3D din PETG — un material rezistent la umezeală, la razele UV și la manevrarea de pe mal — proiectate și fabricate de noi, în România. Detalii pe pagina <a href="/pages/procesul">Procesul</a>.</p>
     </details>
     <details class="faq-item">
-      <summary>Pot cere o dimensiune sau o configurație specială?</summary>
-      <p>Da. Pentru cereri speciale (alt număr de compartimente, alt finisaj), scrie-ne pe pagina de <a href="/pages/contact">Contact</a> și găsim o soluție.</p>
+      <summary data-i18n="faq.q4">Pot cere o dimensiune sau o configurație specială?</summary>
+      <p data-i18n="faq.a4">Da. Pentru cereri speciale (alt număr de compartimente, alt finisaj), scrie-ne pe pagina de <a href="/pages/contact">Contact</a> și găsim o soluție.</p>
     </details>
     <details class="faq-item">
-      <summary>Pot returna un produs personalizat?</summary>
-      <p>Produsele gravate sunt făcute special pentru tine, așa că nu intră sub dreptul de retragere de 14 zile — dar rămân acoperite de garanția legală dacă ajung defecte. Detalii complete în <a href="/pages/retur-si-rambursare">Politica de Retur și Rambursare</a>.</p>
+      <summary data-i18n="faq.q5">Pot returna un produs personalizat?</summary>
+      <p data-i18n="faq.a5">Produsele gravate sunt făcute special pentru tine, așa că nu intră sub dreptul de retragere de 14 zile — dar rămân acoperite de garanția legală dacă ajung defecte. Detalii complete în <a href="/pages/retur-si-rambursare">Politica de Retur și Rambursare</a>.</p>
+    </details>
+    <details class="faq-item">
+      <summary data-i18n="faq.q6">Cum îmi fac cont și cum mă conectez?</summary>
+      <p data-i18n="faq.a6">Nu ai nevoie de parolă. Introduci adresa de email, primești pe email un cod de 6 cifre și intri în <a href="/account">contul tău</a>. Acolo vezi comenzile tale, statusul livrării și adresele salvate. Poți comanda și fără cont.</p>
     </details>
   </div>
 
   <div class="page-cta">
-    <a class="btn btn-ghost btn-lg" href="/pages/contact">Mai ai o întrebare? Scrie-ne</a>
+    <a class="btn btn-ghost btn-lg" href="/pages/contact" data-i18n="faq.cta">Mai ai o întrebare? Scrie-ne</a>
   </div>
 
   {%- if page.content != blank -%}<div class="page-block">{{ page.content }}</div>{%- endif -%}
