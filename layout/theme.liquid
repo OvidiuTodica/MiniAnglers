@@ -102,6 +102,8 @@
   {%- comment -%} Brand mark (the "m" from the logo) — SVG for Chrome/Firefox, PNG for Safari, touch icon for home screens {%- endcomment -%}
   <link rel="icon" type="image/svg+xml" href="{{ 'favicon.svg' | asset_url }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ 'favicon-32.png' | asset_url }}">
+  {%- comment -%} Google Search reads PNG/ICO favicons only (no SVG) and wants > 48px {%- endcomment -%}
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ 'favicon-192.png' | asset_url }}">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ 'apple-touch-icon.png' | asset_url }}">
 
   {%- comment -%} Open Graph / social sharing {%- endcomment -%}
