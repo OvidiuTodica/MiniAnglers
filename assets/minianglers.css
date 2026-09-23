@@ -726,3 +726,38 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
 .pdp-sticky-price{ font-family:var(--sans); font-weight:800; font-size:18px; color:var(--cyan); line-height:1.1; }
 .pdp-sticky-add{ margin-left:auto; flex:none; }
 @media (min-width:761px){ .pdp-sticky.show{ display:none !important; } }
+
+/* ============================================================
+   Phones: 3 products per row, homepage grid and catalog / search
+   (owner's call 2026-09-23). The whole card is the link, so the
+   button and the type tag are dropped to keep the tiles readable.
+   ============================================================ */
+@media (max-width:640px){
+  .scards, .product-grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; }
+  .scard, .pcard{ border-radius:12px; }
+  .scard .media{ padding:6px; }
+  .scard .sbody{ padding:8px 8px 10px; }
+  .scard h3{ font-size:12px; line-height:1.2; margin:0; }
+  .scard .cat, .scard .add, .scard .saverow{ display:none; }
+  .scard .foot{ padding-top:4px; }
+  .scard .price{ font-size:13px; }
+  .scard .flags{ top:5px; left:5px; right:5px; gap:3px; }
+  .scard .flag{ font-size:8.5px; padding:3px 6px; }
+  .scard .price .was, .pcard-price .was{ display:block; margin-left:0; font-size:11px; }
+
+  .pcard{ display:flex; flex-direction:column; }
+  .pcard-media{ height:auto; aspect-ratio:1/1; }
+  .pcard-media img{ padding:6px; }
+  .pcard-media .glass-tag, .pcard-foot .btn, .pcard-body .saverow{ display:none; }
+  .pcard-flags{ top:5px; left:5px; right:auto; gap:3px; }
+  .pcard-flags .flag{ font-size:8.5px; padding:3px 6px; }
+  .pcard-body{ flex:1; display:flex; flex-direction:column; padding:8px 8px 10px; }
+  .pcard-body h3{ font-size:12px; line-height:1.2; margin-bottom:4px; }
+  .pcard-foot{ margin-top:auto; }
+  .pcard-price{ font-size:13px; }
+}
+/* touch screens: no sticky hover lift / green border after a tap */
+@media (hover:none){
+  .scard:not(.is-offer):hover, .pcard:not(.is-offer):hover{ transform:none; border-color:var(--line); box-shadow:var(--shadow-glass); }
+  .scard.is-offer:hover, .pcard.is-offer:hover{ transform:none; }
+}
