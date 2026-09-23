@@ -1,0 +1,48 @@
+{%- comment -%}
+  Catalog / search product card. Shows -X% and the crossed-out old price when the
+  product has a Compare-at price, and highlights the set on offer (Theme settings >
+  Offer & sales) with its saving vs. the pieces bought separately.
+  Usage: {% render 'ma-pcard', product: product, cta: 'Vezi produsul' %}
+{%- endcomment -%}
+{%- assign v = product.selected_or_first_available_variant -%}
+{%- assign sale_pct = 0 -%}
+{%- if v.compare_at_price > v.price -%}
+  {%- assign sale_pct = v.compare_at_price | minus: v.price | times: 100.0 | divided_by: v.compare_at_price | round -%}
+{%- endif -%}
+{%- assign offer = settings.offer_product -%}
+{%- assign is_offer = false -%}
+{%- assign offer_save = 0 -%}
+{%- if offer != blank and offer.available and product.id == offer.id -%}
+  {%- assign is_offer = true -%}
+  {%- capture offer_sum -%}{% render 'ma-offer-sum' %}{%- endcapture -%}
+  {%- assign offer_sum = offer_sum | strip | plus: 0 -%}
+  {%- if offer_sum > 0 -%}{%- assign offer_save = offer_sum | minus: offer.price -%}{%- endif -%}
+{%- endif -%}
+<a class="pcard{% if is_offer %} is-offer{% endif %}" href="{{ product.url }}">
+  <div class="pcard-media">
+    {%- if product.type != blank -%}<span class="glass-tag">{{ product.type }}</span>{%- endif -%}
+    {%- if sale_pct > 0 or is_offer -%}
+      <span class="pcard-flags">
+        {%- if sale_pct > 0 -%}<span class="flag sale">-{{ sale_pct }}%</span>{%- endif -%}
+        {%- if is_offer -%}<span class="flag offer" data-i18n="promo.offer_tag">Ofertă</span>{%- endif -%}
+      </span>
+    {%- endif -%}
+    {%- if product.featured_image -%}
+      <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" loading="lazy" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}">
+    {%- else -%}{% render 'ma-placeholder' %}{%- endif -%}
+  </div>
+  <div class="pcard-body">
+    <h3>{{ product.title }}</h3>
+    {%- if is_offer and offer_save > 0 -%}
+      <div class="saverow"><span class="save-chip"><span data-i18n="promo.save">Economisești</span> {{ offer_save | money_without_trailing_zeros }}</span><span class="saverow-note" data-i18n="offer.vs_separate">față de piesele separat</span></div>
+    {%- endif -%}
+    <div class="pcard-foot">
+      {%- if sale_pct > 0 -%}
+        <span class="pcard-price">{{ v.price | money }} <s class="was">{{ v.compare_at_price | money }}</s></span>
+      {%- else -%}
+        <span class="pcard-price">{{ product.price | money }}</span>
+      {%- endif -%}
+      <span class="btn btn-glass btn-sm" data-i18n="products.view">{{ cta | default: 'Vezi produsul' }}</span>
+    </div>
+  </div>
+</a>

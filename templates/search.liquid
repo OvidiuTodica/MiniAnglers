@@ -17,12 +17,7 @@
     <div class="product-grid">
       {%- for item in search.results -%}
         {%- if item.object_type == 'product' and item.handle != eng_handle -%}
-          <a class="pcard" href="{{ item.url }}">
-            <div class="pcard-media">
-              {%- if item.featured_image -%}<img src="{{ item.featured_image | image_url: width: 600 }}" alt="{{ item.title | escape }}" loading="lazy">{%- else -%}{% render 'ma-placeholder' %}{%- endif -%}
-            </div>
-            <div class="pcard-body"><h3>{{ item.title }}</h3><div class="pcard-foot"><span class="pcard-price">{{ item.price | money }}</span><span class="btn btn-glass btn-sm">Vezi</span></div></div>
-          </a>
+          {% render 'ma-pcard', product: item %}
         {%- endif -%}
       {%- endfor -%}
     </div>

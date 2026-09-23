@@ -34,6 +34,9 @@
         .then((res) => { if (!res.ok) throw new Error('cart change failed'); return res.json(); })
         .then((cart) => {
           if (row) row.remove();
+          // the offer nudge counts the set's pieces server-side; drop it rather than show stale numbers
+          const nudge = cartRoot.querySelector('[data-offer-nudge]');
+          if (nudge) nudge.remove();
 
           const subtotalEl = cartRoot.querySelector('[data-cart-subtotal]');
           if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price, moneyFormat);

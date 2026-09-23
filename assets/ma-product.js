@@ -149,6 +149,8 @@
 
     const hiddenId = form.querySelector('input[name="id"]');
     const priceEl = document.querySelector('.product-price');
+    const wasEl = document.querySelector('[data-compare]');
+    const pctEl = document.querySelector('[data-sale-pct]');
     const mediaImg = document.querySelector('[data-main-image]');
     const addBtn = form.querySelector('.product-add');
     if (!hiddenId) return;
@@ -183,6 +185,16 @@
       if (!variant) return;
       hiddenId.value = variant.id;
       if (priceEl) priceEl.textContent = formatMoney(variant.price);
+      // sale: Compare-at price above the price -> old price crossed out + -X%
+      const onSale = variant.compare_at_price > variant.price;
+      if (wasEl) {
+        wasEl.hidden = !onSale;
+        wasEl.textContent = onSale ? formatMoney(variant.compare_at_price) : '';
+      }
+      if (pctEl) {
+        pctEl.hidden = !onSale;
+        if (onSale) pctEl.textContent = '-' + Math.round((variant.compare_at_price - variant.price) * 100 / variant.compare_at_price) + '%';
+      }
       if (mediaImg && variant.featured_image) {
         mediaImg.src = variant.featured_image;
         if (typeof window.maSetActiveThumb === 'function') window.maSetActiveThumb(variant.featured_image);

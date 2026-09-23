@@ -13,6 +13,17 @@
     "color_accent": "#4FD1C5",
     "color_text": "#d7d7db",
     "engraving_product": "gravare",
+    "offer_product": "set-method-masters",
+    "offer_parts": [
+      "bac-xl",
+      "bac-l",
+      "bac-m",
+      "bac-s",
+      "suport-wafters"
+    ],
+    "offer_extra": "Suport gel fluo",
+    "offer_extra_en": "Fluo gel holder",
+    "offer_announce": true,
     "sections": {
       "ma-footer": {
         "type": "ma-footer",

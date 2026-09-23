@@ -22,11 +22,54 @@
             </div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
-            <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">{{ item.final_line_price | money }}</div>
+            <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">
+              {%- if item.variant.compare_at_price > item.final_price -%}
+                <s class="cart-was">{{ item.variant.compare_at_price | times: item.quantity | money }}</s>
+              {%- endif -%}
+              {{ item.final_line_price | money }}
+            </div>
             <button type="button" class="cart-remove" data-cart-remove="{{ forloop.index }}" aria-label="Elimină din coș" data-i18n-aria="cart.remove">{% render 'ma-icon', icon: 'close' %}</button>
           </div>
         </div>
       {%- endfor -%}
+
+      {%- comment -%}
+        Offer nudge: 2+ different pieces of the set on offer in the cart (and not the set
+        itself) -> say how many of its pieces they have, what those cost, and the set price.
+        Hidden by ma-cart.js as soon as a line is removed, so it never shows stale numbers.
+      {%- endcomment -%}
+      {%- assign offer = settings.offer_product -%}
+      {%- if offer != blank and offer.available and settings.offer_parts.size > 0 -%}
+        {%- assign part_ids = settings.offer_parts | map: 'id' -%}
+        {%- assign have_set = false -%}
+        {%- assign seen = '|' -%}
+        {%- assign have_n = 0 -%}
+        {%- assign have_sum = 0 -%}
+        {%- for item in cart.items -%}
+          {%- if item.product_id == offer.id -%}{%- assign have_set = true -%}{%- endif -%}
+          {%- if part_ids contains item.product_id -%}
+            {%- assign have_sum = have_sum | plus: item.final_line_price -%}
+            {%- assign key = item.product_id | append: '|' | prepend: '|' -%}
+            {%- unless seen contains key -%}
+              {%- assign seen = seen | append: item.product_id | append: '|' -%}
+              {%- assign have_n = have_n | plus: 1 -%}
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- assign extra_n = settings.offer_extra | split: ',' | size -%}
+        {%- assign total_n = settings.offer_parts.size | plus: extra_n -%}
+        {%- if have_n >= 2 and have_set == false -%}
+          {%- assign meter = have_n | times: 100 | divided_by: total_n -%}
+          <div class="cart-nudge" data-offer-nudge>
+            <div class="cart-nudge-text">
+              <b><span data-i18n="offer.cart_have">Ai</span> {{ have_n }} <span data-i18n="offer.cart_of">din cele</span> {{ total_n }} <span data-i18n="offer.cart_pieces">piese din</span> {{ offer.title }}.</b>
+              <p><span data-i18n="offer.cart_yours">Piesele tale:</span> {{ have_sum | money_without_trailing_zeros }}. <span data-i18n="offer.cart_full">Setul complet, cu toate</span> {{ total_n }} <span data-i18n="offer.cart_full2">piesele:</span> {{ offer.price | money_without_trailing_zeros }}.</p>
+              <span class="cart-nudge-meter" aria-hidden="true"><i style="width:{{ meter }}%"></i></span>
+            </div>
+            <a class="cart-nudge-btn" href="{{ offer.url }}"><span data-i18n="offer.see">Vezi setul</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
         <div style="display:flex;gap:10px">

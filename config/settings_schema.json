@@ -25,6 +25,19 @@
     ]
   },
   {
+    "name": "Offer & sales",
+    "settings": [
+      { "type": "paragraph", "content": "A set on offer, shown across the shop: homepage banner, top bar, its product card, its product page, the product pages of its pieces and the cart. The saving is the pieces' real prices added up minus the set price, and it only shows once every piece has a price. Leave the product empty to stop the offer everywhere." },
+      { "type": "product", "id": "offer_product", "label": "Set on offer" },
+      { "type": "product_list", "id": "offer_parts", "label": "Pieces sold separately", "limit": 12 },
+      { "type": "text", "id": "offer_extra", "label": "Pieces sold only in the set (optional)", "info": "Shown after the pieces, e.g. Suport gel fluo. Separate several with commas." },
+      { "type": "text", "id": "offer_extra_en", "label": "Pieces sold only in the set (English)" },
+      { "type": "checkbox", "id": "offer_announce", "label": "Show the offer in the top bar", "default": true },
+      { "type": "header", "content": "Sales on any product" },
+      { "type": "paragraph", "content": "To put any product on sale: in Products, set Price to the new price and Compare-at price to the old price. The shop then shows -X% and the old price crossed out on the cards, the product page and in the cart. By law (EU / ANPC) the crossed-out price must be the lowest price you charged in the last 30 days." }
+    ]
+  },
+  {
     "name": "Legal & Contact",
     "settings": [
       { "type": "paragraph", "content": "Feeds the Privacy, Terms, Refund and Shipping pages (Confidențialitate / Termeni / Retur / Livrare). Confirm VAT status and courier before removing the store password — these values go straight onto legally binding pages." },

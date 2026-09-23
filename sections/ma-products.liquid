@@ -45,6 +45,14 @@
     {%- if shown == 0 -%}
       <p class="shop-empty" data-i18n="shop.empty">Primele produse apar în curând.</p>
     {%- else -%}
+    {%- comment -%} The set on offer (Theme settings > Offer & sales) gets a highlighted card with its saving {%- endcomment -%}
+    {%- assign offer = settings.offer_product -%}
+    {%- assign offer_save = 0 -%}
+    {%- if offer != blank and offer.available -%}
+      {%- capture offer_sum -%}{% render 'ma-offer-sum' %}{%- endcapture -%}
+      {%- assign offer_sum = offer_sum | strip | plus: 0 -%}
+      {%- if offer_sum > 0 -%}{%- assign offer_save = offer_sum | minus: offer.price -%}{%- endif -%}
+    {%- endif -%}
     <div class="scards" id="shopGrid">
       {%- assign rendered = 0 -%}
       {%- for product in collections.all.products limit: 50 -%}
@@ -59,10 +67,24 @@
           {%- elsif tl == 'bestseller' or tl == 'best seller' or tl == 'best' -%}{%- assign badge = 'best' -%}{%- endif -%}
         {%- endfor -%}
 
-        <a class="scard" href="{{ product.url }}" data-cat="{{ product.type | handleize }}">
+        {%- assign v = product.selected_or_first_available_variant -%}
+        {%- assign sale_pct = 0 -%}
+        {%- if v.compare_at_price > v.price -%}
+          {%- assign sale_pct = v.compare_at_price | minus: v.price | times: 100.0 | divided_by: v.compare_at_price | round -%}
+        {%- endif -%}
+        {%- assign is_offer = false -%}
+        {%- if offer != blank and offer.available and product.id == offer.id -%}{%- assign is_offer = true -%}{%- endif -%}
+
+        <a class="scard{% if is_offer %} is-offer{% endif %}" href="{{ product.url }}" data-cat="{{ product.type | handleize }}">
           <div class="media">
-            {%- if badge == 'new' -%}<span class="flag new" data-i18n="shop.badge_new">Nou</span>
-            {%- elsif badge == 'best' -%}<span class="flag best" data-i18n="shop.badge_best">Best seller</span>{%- endif -%}
+            {%- if sale_pct > 0 or is_offer or badge != '' -%}
+              <span class="flags">
+                {%- if sale_pct > 0 -%}<span class="flag sale">-{{ sale_pct }}%</span>{%- endif -%}
+                {%- if is_offer -%}<span class="flag offer" data-i18n="promo.offer_tag">Ofertă</span>{%- endif -%}
+                {%- if badge == 'new' -%}<span class="flag new" data-i18n="shop.badge_new">Nou</span>
+                {%- elsif badge == 'best' -%}<span class="flag best" data-i18n="shop.badge_best">Best seller</span>{%- endif -%}
+              </span>
+            {%- endif -%}
             {%- if product.featured_image != blank -%}
               <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" loading="lazy" width="600" height="600">
             {%- else -%}
@@ -72,8 +94,15 @@
           <div class="sbody">
             <h3>{{ product.title }}</h3>
             {%- if product.type != blank -%}<div class="cat">{{ product.type }}</div>{%- endif -%}
+            {%- if is_offer and offer_save > 0 -%}
+              <div class="saverow"><span class="save-chip"><span data-i18n="promo.save">Economisești</span> {{ offer_save | money_without_trailing_zeros }}</span><span class="saverow-note" data-i18n="offer.vs_separate">față de piesele separat</span></div>
+            {%- endif -%}
             <div class="foot">
-              <div class="price">{{ product.price | money }}</div>
+              {%- if sale_pct > 0 -%}
+                <div class="price">{{ v.price | money }} <s class="was">{{ v.compare_at_price | money }}</s></div>
+              {%- else -%}
+                <div class="price">{{ product.price | money }}</div>
+              {%- endif -%}
               <span class="add"><span data-i18n="products.view">Vezi produsul</span></span>
             </div>
           </div>

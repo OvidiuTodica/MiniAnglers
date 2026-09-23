@@ -1,0 +1,24 @@
+{%- comment -%}
+  Outputs the live price sum (in cents) of the offer's pieces sold separately
+  (Theme settings > Offer > Pieces sold separately), or 0 when there are no
+  pieces or any piece has no price / is not for sale — in that case no saving
+  may be claimed anywhere (EU/RO: comparison prices must be real).
+  Usage:
+    {%- capture offer_sum -%}{% render 'ma-offer-sum' %}{%- endcapture -%}
+    {%- assign offer_sum = offer_sum | strip | plus: 0 -%}
+{%- endcomment -%}
+{%- liquid
+  assign sum = 0
+  assign ok = true
+  for part in settings.offer_parts
+    if part.available and part.price > 0
+      assign sum = sum | plus: part.price
+    else
+      assign ok = false
+    endif
+  endfor
+  if settings.offer_parts.size == 0 or ok == false
+    assign sum = 0
+  endif
+  echo sum
+-%}

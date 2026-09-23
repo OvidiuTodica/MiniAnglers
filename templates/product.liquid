@@ -16,6 +16,40 @@
 {%- else -%}
   {%- assign eng_price_display = settings.engraving_price_note | default: '+19 lei' -%}
 {%- endif -%}
+
+{%- comment -%}
+  Sale: a Compare-at price above the price shows -X% and the old price crossed out
+  (updated per variant by ma-product.js). Offer (Theme settings > Offer & sales): the
+  set's page lists its pieces and the saving; each piece's page suggests the set.
+  Savings come from ma-offer-sum, so they only show when every piece has a price.
+{%- endcomment -%}
+{%- assign cur = product.selected_or_first_available_variant -%}
+{%- assign sale_pct = 0 -%}
+{%- if cur.compare_at_price > cur.price -%}
+  {%- assign sale_pct = cur.compare_at_price | minus: cur.price | times: 100.0 | divided_by: cur.compare_at_price | round -%}
+{%- endif -%}
+{%- assign offer = settings.offer_product -%}
+{%- assign is_offer = false -%}
+{%- assign is_part = false -%}
+{%- assign offer_sum = 0 -%}
+{%- assign offer_save = 0 -%}
+{%- if offer != blank and offer.available -%}
+  {%- if product.id == offer.id -%}
+    {%- assign is_offer = true -%}
+  {%- else -%}
+    {%- for part in settings.offer_parts -%}
+      {%- if part.id == product.id -%}{%- assign is_part = true -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if is_offer or is_part -%}
+    {%- capture offer_sum -%}{% render 'ma-offer-sum' %}{%- endcapture -%}
+    {%- assign offer_sum = offer_sum | strip | plus: 0 -%}
+    {%- if offer_sum > 0 -%}{%- assign offer_save = offer_sum | minus: offer.price -%}{%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+{%- assign offer_extras = settings.offer_extra | split: ',' -%}
+{%- assign offer_extras_en = settings.offer_extra_en | split: ',' -%}
+
 <div class="product-page page-wrap">
   <a class="eyebrow" href="{{ routes.all_products_collection_url }}" data-i18n="product.back">← Toate produsele</a>
 
@@ -43,7 +77,43 @@
 
     <div class="product-info">
       <h1>{{ product.title }}</h1>
-      <div class="product-price">{{ product.price | money }}</div>
+      <div class="product-price-row">
+        <div class="product-price">{{ cur.price | money }}</div>
+        <s class="product-was" data-compare{% if sale_pct == 0 %} hidden{% endif %}>{% if sale_pct > 0 %}{{ cur.compare_at_price | money }}{% endif %}</s>
+        <span class="sale-chip" data-sale-pct{% if sale_pct == 0 %} hidden{% endif %}>-{{ sale_pct }}%</span>
+        {%- if is_offer -%}<span class="offer-chip" data-i18n="promo.offer_tag">Ofertă</span>{%- endif -%}
+      </div>
+
+      {%- if is_offer -%}
+        <div class="pdp-offer">
+          <div class="pdp-offer-top">
+            {%- if offer_save > 0 -%}
+              <b><span data-i18n="promo.save">Economisești</span> {{ offer_save | money_without_trailing_zeros }}</b>
+              <span><span data-i18n="promo.separately">Cumpărate separat:</span> {{ offer_sum | money_without_trailing_zeros }}</span>
+            {%- else -%}
+              <b data-i18n="offer.in_set">Ce e în set</b>
+            {%- endif -%}
+          </div>
+          <ul class="pdp-offer-pieces">
+            {%- for part in settings.offer_parts -%}
+              <li>
+                <a href="{{ part.url }}">
+                  <span class="pdp-offer-img">{%- if part.featured_image -%}<img src="{{ part.featured_image | image_url: width: 220 }}" alt="" loading="lazy" width="220" height="147">{%- endif -%}</span>
+                  <span class="pdp-offer-name">{{ part.title }}</span>
+                </a>
+              </li>
+            {%- endfor -%}
+            {%- for x in offer_extras -%}
+              {%- assign x_en = offer_extras_en[forloop.index0] | strip -%}
+              <li class="is-extra">
+                <span class="pdp-offer-img">{% render 'ma-icon', icon: 'layers' %}</span>
+                <span class="pdp-offer-name"{% if x_en != blank %} data-i18n-en="{{ x_en | escape }}"{% endif %}>{{ x | strip }}</span>
+                <small data-i18n="offer.only_in_set">doar în set</small>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
 
       {%- if product.tags.size > 0 -%}
         <div class="tags">
@@ -61,6 +131,7 @@
                 "id": {{ v.id }},
                 "options": {{ v.options | json }},
                 "price": {{ v.price | json }},
+                "compare_at_price": {{ v.compare_at_price | default: 0 | json }},
                 "available": {{ v.available }},
                 "featured_image": {%- if v.featured_image -%}{{ v.featured_image | image_url: width: 900 | json }}{%- else -%}null{%- endif -%}
               }{%- unless forloop.last -%},{%- endunless -%}
@@ -165,6 +236,27 @@
           <span data-i18n="pdp.trust">Printat în Timiș, livrare în 4-5 zile.</span>
         </p>
       {%- endform -%}
+
+      {%- if is_part -%}
+        <a class="pdp-upsell" href="{{ offer.url }}">
+          <span class="pdp-upsell-img">{%- if offer.featured_image -%}<img src="{{ offer.featured_image | image_url: width: 400 }}" alt="" loading="lazy" width="400" height="267">{%- endif -%}</span>
+          <span class="pdp-upsell-body">
+            <span class="pdp-upsell-tag" data-i18n="promo.offer_tag">Ofertă</span>
+            <b class="pdp-upsell-title"><span data-i18n="offer.get_in">Ia-l în</span> {{ offer.title }}</b>
+            <span class="pdp-upsell-list">
+              {%- for part in settings.offer_parts -%}{{ part.title }}{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}
+              {%- for x in offer_extras -%}
+                {%- assign x_en = offer_extras_en[forloop.index0] | strip -%}, <span{% if x_en != blank %} data-i18n-en="{{ x_en | escape }}"{% endif %}>{{ x | strip }}</span>
+              {%- endfor -%}.
+            </span>
+            <span class="pdp-upsell-row">
+              <strong>{{ offer.price | money_without_trailing_zeros }}</strong>
+              {%- if offer_save > 0 -%}<span class="save-chip"><span data-i18n="promo.save">Economisești</span> {{ offer_save | money_without_trailing_zeros }}</span>{%- endif -%}
+              <span class="pdp-upsell-link"><span data-i18n="offer.see">Vezi setul</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+            </span>
+          </span>
+        </a>
+      {%- endif -%}
 
       {%- comment -%}
         Specs come after the buy block (owner's call, 2026-09-23): choose,

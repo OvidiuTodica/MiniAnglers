@@ -2,19 +2,20 @@
   MiniAnglers hero. Two states:
   - No offer product picked: the green banner with the owner's copy (tag / headline / sub
     text / button), copy only, as decided 2026-09-21.
-  - Offer product picked (and available): an offer card for that product (its photo with
-    labels pinned on the real parts, its live price) and, right under it, the owner's copy
-    in a white card so it stays on the homepage (owner's call, 2026-09-23).
-  The "bought separately" line sums the live prices of the linked parts and only shows
-  when every part is for sale and the sum is higher than the set price, so the comparison
-  is always true (EU/RO rule: no invented "old" prices; the owner chose a bundle comparison).
+  - Offer set picked in Theme settings > Offer & sales (and available): an offer card for
+    that product (its photo with labels pinned on the real parts, its live price) and, right
+    under it, the owner's copy in a white card so it stays on the homepage (owner's call,
+    2026-09-23).
+  The "bought separately" line is the live price sum of the offer's pieces (ma-offer-sum)
+  and only shows when every piece is for sale and the sum beats the set price, so the
+  comparison is always true (EU/RO rule: no invented "old" prices).
   Text fields left empty in the theme editor fall back to the standard copy (RO default,
   EN via data-i18n). Anything typed in the editor is shown as typed and is never
   overwritten by the dictionary; each field has an optional "(English)" twin that the
   toggle swaps in via data-i18n-en (ma-i18n.js), empty twin = Romanian shows in EN too.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
-{%- assign offer = s.offer_product -%}
+{%- assign offer = settings.offer_product -%}
 {%- assign offer_on = false -%}
 {%- if offer != blank and offer.available -%}{%- assign offer_on = true -%}{%- endif -%}
 
@@ -27,18 +28,11 @@
 <section class="promo" id="sistem">
   <div class="section">
     {%- if offer_on -%}
-      {%- assign parts_sum = 0 -%}
-      {%- assign parts_ok = true -%}
-      {%- for part in s.offer_parts -%}
-        {%- if part.available and part.price > 0 -%}
-          {%- assign parts_sum = parts_sum | plus: part.price -%}
-        {%- else -%}
-          {%- assign parts_ok = false -%}
-        {%- endif -%}
-      {%- endfor -%}
+      {%- capture parts_sum -%}{% render 'ma-offer-sum' %}{%- endcapture -%}
+      {%- assign parts_sum = parts_sum | strip | plus: 0 -%}
       {%- assign savings = parts_sum | minus: offer.price -%}
       {%- assign show_compare = false -%}
-      {%- if s.offer_parts.size > 0 and parts_ok and savings > 0 -%}{%- assign show_compare = true -%}{%- endif -%}
+      {%- if parts_sum > 0 and savings > 0 -%}{%- assign show_compare = true -%}{%- endif -%}
       {%- assign img = offer.featured_image -%}
 
       <div class="offer-card">
@@ -57,6 +51,9 @@
           {%- endif -%}
           <div class="offer-price">
             <span class="offer-now">{{ offer.price | money_without_trailing_zeros }}</span>
+            {%- if offer.compare_at_price > offer.price -%}
+              <s class="offer-was">{{ offer.compare_at_price | money_without_trailing_zeros }}</s>
+            {%- endif -%}
             {%- if show_compare -%}
               <span class="offer-save"><span data-i18n="promo.save">Economisești</span> {{ savings | money_without_trailing_zeros }}</span>
             {%- endif -%}
@@ -128,9 +125,7 @@
     { "type": "url", "id": "cta_link", "label": "Button link", "info": "Empty = all products." },
 
     { "type": "header", "content": "Offer" },
-    { "type": "paragraph", "content": "Pick a product to show it as an offer at the top of the homepage (photo, labels and live price). Your text above then moves into a white card under the offer. Clear the product to stop the offer and bring the green banner back." },
-    { "type": "product", "id": "offer_product", "label": "Offer product" },
-    { "type": "product_list", "id": "offer_parts", "label": "Pieces sold separately", "limit": 12, "info": "The products inside the set. Their prices are added up and shown as \"Cumpărate separat\" with the saving. The line is hidden if any piece has no price or is not for sale." },
+    { "type": "paragraph", "content": "The set on offer and its pieces are picked in Theme settings > Offer & sales. While an offer is on, this banner shows it (photo, labels, live price) and your text above moves into a white card under it. Stop the offer there to bring the green banner back." },
     { "type": "text", "id": "offer_tag", "label": "Offer tag", "placeholder": "Ofertă" },
     { "type": "text", "id": "offer_tag_en", "label": "Offer tag (English)" },
     { "type": "textarea", "id": "offer_sub", "label": "Offer text", "placeholder": "Patru bacuri și două suporturi care se îmbină într-un singur setup." },

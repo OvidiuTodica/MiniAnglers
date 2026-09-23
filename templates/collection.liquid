@@ -23,21 +23,7 @@
   <div class="product-grid" style="margin-top:8px">
     {%- for product in collection.products -%}
       {%- if product.handle == eng_handle -%}{%- continue -%}{%- endif -%}
-      <a class="pcard" href="{{ product.url }}">
-        <div class="pcard-media">
-          {%- if product.type != blank -%}<span class="glass-tag">{{ product.type }}</span>{%- endif -%}
-          {%- if product.featured_image -%}
-            <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" loading="lazy">
-          {%- else -%}{% render 'ma-placeholder' %}{%- endif -%}
-        </div>
-        <div class="pcard-body">
-          <h3>{{ product.title }}</h3>
-          <div class="pcard-foot">
-            <span class="pcard-price">{{ product.price | money }}</span>
-            <span class="btn btn-glass btn-sm" data-i18n="products.view">Vezi produsul</span>
-          </div>
-        </div>
-      </a>
+      {% render 'ma-pcard', product: product %}
     {%- endfor -%}
     {%- if count == 0 -%}
       <p class="shop-empty" data-i18n="shop.empty">Primele produse apar în curând.</p>

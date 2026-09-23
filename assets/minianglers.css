@@ -151,6 +151,15 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 /* ---------- ANNOUNCEMENT (dark utility bar) ---------- */
 .announce{ background:var(--ink); border-bottom:none; text-align:center; padding:10px 16px; }
 .announce-text{ font-family:var(--body); font-size:12.5px; font-weight:500; letter-spacing:.02em; text-transform:none; color:#E7EAE7; }
+/* top bar while a set is on offer: the whole bar links to it */
+.announce.is-offer{ padding:0; }
+.announce-offer{ display:block; padding:10px 16px; font-family:var(--body); font-size:12.5px; font-weight:500; color:#E7EAE7; text-decoration:none; }
+.announce-offer b{ color:#fff; font-weight:700; }
+.announce-pill{ display:inline-block; margin-right:8px; padding:2px 8px; border-radius:999px; background:var(--neon); color:#fff; font-size:10.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; vertical-align:1px; }
+.announce-link{ margin-left:8px; color:var(--accent-on-dark); font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+.announce-offer:hover .announce-link{ color:#fff; }
+.announce-offer:focus-visible{ outline:2px solid var(--accent-on-dark); outline-offset:-3px; }
+@media (max-width:640px){ .announce-save{ display:none; } }
 
 /* ---------- HERO ---------- */
 .hero{ position:relative; max-width:760px; margin:0 auto; padding:76px 28px 60px; text-align:center; display:flex; flex-direction:column; align-items:center; }
@@ -305,7 +314,58 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .thumb.is-active{ border-color:var(--neon); box-shadow:0 0 0 1px var(--neon); }
 .thumb:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:2px; }
 .product-info h1{ font-size:clamp(28px,3.4vw,40px); margin-bottom:10px; }
-.product-price{ font-family:var(--sans); font-weight:800; font-size:23px; color:var(--cyan); margin-bottom:18px; }
+.product-price{ font-family:var(--sans); font-weight:800; font-size:23px; color:var(--cyan); }
+/* price row: price, old price + -X% when on sale (Compare-at price), Ofertă on the set */
+.product-price-row{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 12px; margin-bottom:18px; }
+.product-was{ font-size:16px; font-weight:600; color:var(--mute); text-decoration-thickness:1.5px; }
+.sale-chip, .offer-chip{ font-family:var(--body); font-size:12px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; padding:5px 10px; border-radius:999px; }
+.sale-chip{ background:var(--ink); color:#fff; }
+.offer-chip{ background:var(--accent-soft); color:var(--neon-deep); }
+.product-was[hidden], .sale-chip[hidden]{ display:none; }
+/* the set's page: saving + its pieces */
+.pdp-offer{ margin:0 0 20px; padding:16px 18px; background:var(--accent-soft); border:1px solid var(--line); border-radius:var(--r-lg); }
+.pdp-offer-top{ display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:4px 12px; }
+.pdp-offer-top b{ font-family:var(--sans); font-size:15px; font-weight:800; color:var(--neon-deep); }
+.pdp-offer-top span{ font-size:13.5px; color:var(--mute); }
+.pdp-offer-pieces{ list-style:none; display:grid; grid-template-columns:repeat(auto-fill, minmax(78px, 1fr)); gap:8px; margin-top:12px; }
+.pdp-offer-pieces li > a, .pdp-offer-pieces li.is-extra{ display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; padding:6px 6px 8px; background:var(--bg2); border:1px solid var(--line); border-radius:var(--r-md); text-align:center; text-decoration:none; transition:border-color .15s ease; }
+.pdp-offer-pieces li > a:hover{ border-color:var(--neon); }
+.pdp-offer-pieces li > a:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:2px; }
+.pdp-offer-img{ display:grid; place-items:center; width:100%; aspect-ratio:3/2; border-radius:6px; overflow:hidden; background:var(--bg); color:var(--neon-deep); }
+.pdp-offer-img img{ display:block; width:100%; height:100%; object-fit:cover; }
+.pdp-offer-img svg{ width:22px; height:22px; }
+.pdp-offer-name{ font-family:var(--sans); font-size:11.5px; font-weight:700; line-height:1.25; color:var(--ink); }
+.pdp-offer-pieces small{ font-size:10.5px; color:var(--mute); }
+/* a piece's page: suggest the set it belongs to */
+.pdp-upsell{ display:grid; grid-template-columns:128px 1fr; gap:16px; align-items:center; margin-top:22px; padding:12px; background:var(--bg2); border:1px solid var(--line); border-radius:var(--r-xl); box-shadow:var(--shadow-glass); color:var(--ink); text-decoration:none; transition:border-color .16s ease, transform .16s ease; }
+.pdp-upsell:hover{ border-color:var(--neon); }
+.pdp-upsell:active{ transform:scale(.99); }
+.pdp-upsell:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:3px; }
+.pdp-upsell-img{ display:block; aspect-ratio:3/2; border-radius:var(--r-md); overflow:hidden; background:var(--bg); }
+.pdp-upsell-img img{ display:block; width:100%; height:100%; object-fit:cover; }
+.pdp-upsell-body{ display:flex; flex-direction:column; min-width:0; }
+.pdp-upsell-tag{ font-family:var(--body); font-size:11.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--neon-deep); }
+.pdp-upsell-title{ font-family:var(--sans); font-size:16px; font-weight:800; margin-top:2px; }
+.pdp-upsell-list{ font-size:13px; line-height:1.45; color:var(--mute); margin-top:2px; }
+.pdp-upsell-row{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; margin-top:8px; }
+.pdp-upsell-row strong{ font-family:var(--sans); font-size:17px; font-weight:800; color:var(--cyan); }
+.pdp-upsell-link{ display:inline-flex; align-items:center; gap:6px; margin-left:auto; font-family:var(--sans); font-size:13.5px; font-weight:700; color:var(--neon-deep); }
+.pdp-upsell-link svg{ transition:transform .15s ease; }
+.pdp-upsell:hover .pdp-upsell-link svg{ transform:translateX(3px); }
+@media (max-width:460px){ .pdp-upsell{ grid-template-columns:96px 1fr; gap:12px; } .pdp-upsell-list{ display:none; } }
+/* cart: crossed-out price on sale lines, and the nudge towards the set on offer */
+.cart-was{ display:block; font-size:13px; font-weight:600; color:var(--mute); text-align:right; }
+.cart-nudge{ display:flex; align-items:center; gap:16px; margin-top:20px; padding:16px 18px; border-radius:var(--r-xl); color:#fff; background:linear-gradient(120deg, #10502F, var(--neon)); }
+.cart-nudge-text{ flex:1; min-width:0; }
+.cart-nudge b{ font-family:var(--sans); font-size:16px; font-weight:800; }
+.cart-nudge p{ font-size:13.5px; color:#E1F0E7; margin-top:3px; }
+.cart-nudge-meter{ display:block; height:6px; margin-top:10px; border-radius:999px; background:rgba(255,255,255,0.2); overflow:hidden; }
+.cart-nudge-meter i{ display:block; height:100%; border-radius:999px; background:#fff; }
+.cart-nudge-btn{ flex:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:0 18px; border-radius:999px; background:#fff; color:var(--neon-deep); font-family:var(--sans); font-size:14px; font-weight:700; text-decoration:none; transition:transform .14s ease, box-shadow .14s ease; }
+.cart-nudge-btn:hover{ box-shadow:0 14px 30px -14px rgba(0,0,0,0.4); }
+.cart-nudge-btn:active{ transform:scale(.98); }
+.cart-nudge-btn:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+@media (max-width:560px){ .cart-nudge{ flex-direction:column; align-items:stretch; } }
 .product-desc{ color:var(--mute); margin-top:28px; padding-top:22px; border-top:1px solid var(--line); line-height:1.8; }
 .product-desc p{ margin-bottom:10px; }
 .product-desc p:last-child{ margin-bottom:0; }
@@ -443,6 +503,7 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .offer-price{ display:flex; align-items:center; flex-wrap:wrap; gap:10px 14px; margin-top:22px; }
 .offer-now{ font-family:var(--sans); font-weight:800; font-size:40px; letter-spacing:-.02em; line-height:1; }
 .offer-save{ font-family:var(--body); font-size:13px; font-weight:700; background:#fff; color:var(--neon-deep); padding:6px 11px; border-radius:999px; }
+.offer-was{ font-weight:600; font-size:19px; color:var(--accent-on-dark); text-decoration-thickness:2px; }
 .offer-sep{ margin-top:10px; font-size:14.5px; font-weight:600; color:var(--accent-on-dark); }
 .offer-card .promo-cta{ align-items:center; gap:10px; }
 .offer-shot{ position:relative; display:block; aspect-ratio:3/2; border-radius:16px; overflow:hidden; background:var(--bg3); }
@@ -517,9 +578,18 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .scard:hover{ transform:translateY(-4px); box-shadow:var(--shadow-float); border-color:var(--neon); }
 .scard .media{ position:relative; background:radial-gradient(70% 70% at 50% 42%, var(--accent-soft), transparent 72%), var(--bg); aspect-ratio:1/1; display:grid; place-items:center; padding:22px; border-bottom:1px solid var(--line-soft); }
 .scard .media img{ width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 10px 18px rgba(24,50,30,0.12)); }
-.scard .flag{ position:absolute; top:12px; left:12px; font-family:var(--body); font-size:11px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; padding:5px 10px; border-radius:999px; }
-.scard .flag.new{ background:var(--neon); color:#fff; }
-.scard .flag.best{ background:var(--ink); color:#fff; }
+/* card badges: -X% (Compare-at price), Ofertă (set on offer), Nou / Best seller (tags) */
+.scard .flags{ position:absolute; top:12px; left:12px; right:12px; display:flex; flex-wrap:wrap; gap:6px; z-index:1; }
+.flag{ font-family:var(--body); font-size:11px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; padding:5px 10px; border-radius:999px; color:#fff; background:var(--ink); }
+.flag.new, .flag.offer{ background:var(--neon); }
+.flag.best, .flag.sale{ background:var(--ink); }
+.scard.is-offer, .pcard.is-offer{ border-color:var(--neon); box-shadow:0 0 0 1px var(--neon), var(--shadow-float); }
+.scard.is-offer:hover, .pcard.is-offer:hover{ box-shadow:0 0 0 1px var(--neon), var(--shadow-float); }
+.scard .price .was, .pcard-price .was{ font-size:13px; font-weight:600; color:var(--mute); margin-left:4px; text-decoration-thickness:1.5px; }
+.saverow{ display:flex; align-items:center; flex-wrap:wrap; gap:4px 8px; margin-top:8px; font-size:12.5px; color:var(--mute); }
+.save-chip{ font-family:var(--body); font-size:12px; font-weight:700; background:var(--accent-soft); color:var(--neon-deep); padding:4px 9px; border-radius:999px; white-space:nowrap; }
+.pcard-body .saverow{ margin:-6px 0 12px; }
+.pcard-flags{ position:absolute; top:14px; right:14px; display:flex; gap:6px; z-index:1; }
 .scard .sbody{ padding:16px; display:flex; flex-direction:column; flex:1; }
 .scard h3{ font-family:var(--sans); font-size:17px; font-weight:700; color:var(--ink); margin:0 0 2px; letter-spacing:-.01em; }
 .scard .cat{ font-size:13px; color:var(--mute); }
@@ -610,7 +680,9 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
   .scard .foot{ padding-top:10px; }
   .scard .price{ font-size:16px; }
   .scard .add{ display:none; }
-  .scard .flag{ font-size:10px; padding:4px 8px; top:8px; left:8px; }
+  .scard .flags{ top:8px; left:8px; right:8px; gap:4px; }
+  .scard .flag{ font-size:10px; padding:4px 8px; }
+  .saverow-note{ display:none; }
   .shop-tools h2{ font-size:22px; }
   /* compact category tiles */
   .cat-tile{ padding:14px; gap:12px; }

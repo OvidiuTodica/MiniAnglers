@@ -1,8 +1,30 @@
-{%- comment -%} MiniAnglers announcement bar (site-wide, rendered above header) {%- endcomment -%}
+{%- comment -%}
+  MiniAnglers announcement bar (site-wide, rendered above header).
+  While a set is on offer (Theme settings > Offer & sales, "Show the offer in the top bar"),
+  the bar links to it: price, and the saving vs. the pieces bought separately when every
+  piece has a price (ma-offer-sum). Otherwise it shows the standard text.
+{%- endcomment -%}
 {%- if section.settings.show -%}
-  <div class="announce">
-    <span class="announce-text" data-i18n="announce.text">{{ section.settings.text | default: 'Gravare personalizată cu numele tău. Livrăm oriunde în țară.' }}</span>
-  </div>
+  {%- assign offer = settings.offer_product -%}
+  {%- if settings.offer_announce and offer != blank and offer.available -%}
+    {%- capture offer_sum -%}{% render 'ma-offer-sum' %}{%- endcapture -%}
+    {%- assign offer_sum = offer_sum | strip | plus: 0 -%}
+    {%- assign offer_save = offer_sum | minus: offer.price -%}
+    <div class="announce is-offer">
+      <a class="announce-offer" href="{{ offer.url }}">
+        <span class="announce-pill" data-i18n="promo.offer_tag">Ofertă</span>
+        <b>{{ offer.title }} <span data-i18n="offer.at">la</span> {{ offer.price | money_without_trailing_zeros }}.</b>
+        {%- if offer_sum > 0 and offer_save > 0 %}
+          <span class="announce-save"><span data-i18n="offer.ann_pre">Cu</span> {{ offer_save | money_without_trailing_zeros }} <span data-i18n="offer.ann_post">mai puțin decât piesele cumpărate separat.</span></span>
+        {%- endif %}
+        <span class="announce-link" data-i18n="offer.see">Vezi setul</span>
+      </a>
+    </div>
+  {%- else -%}
+    <div class="announce">
+      <span class="announce-text" data-i18n="announce.text">{{ section.settings.text | default: 'Gravare personalizată cu numele tău. Livrăm oriunde în țară.' }}</span>
+    </div>
+  {%- endif -%}
 {%- endif -%}
 
 {% schema %}
@@ -10,7 +32,7 @@
   "name": "Announcement bar",
   "settings": [
     { "type": "checkbox", "id": "show", "label": "Show announcement bar", "default": true },
-    { "type": "text", "id": "text", "label": "Text", "default": "Gravare personalizată cu numele tău. Livrăm oriunde în țară." }
+    { "type": "text", "id": "text", "label": "Text", "default": "Gravare personalizată cu numele tău. Livrăm oriunde în țară.", "info": "While a set is on offer (Theme settings > Offer & sales) the bar shows the offer instead." }
   ]
 }
 {% endschema %}
