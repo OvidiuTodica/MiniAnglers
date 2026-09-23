@@ -44,9 +44,6 @@
     <div class="product-info">
       <h1>{{ product.title }}</h1>
       <div class="product-price">{{ product.price | money }}</div>
-      {%- if product.description != blank -%}
-        <div class="product-desc">{{ product.description }}</div>
-      {%- endif -%}
 
       {%- if product.tags.size > 0 -%}
         <div class="tags">
@@ -168,6 +165,15 @@
           <span data-i18n="pdp.trust">Printat în Timiș, livrare în 4-5 zile.</span>
         </p>
       {%- endform -%}
+
+      {%- comment -%}
+        Specs come after the buy block (owner's call, 2026-09-23): choose,
+        add to cart, then read the details. ma-product.js turns the
+        description's "Label: Value" bullets into spec rows.
+      {%- endcomment -%}
+      {%- if product.description != blank -%}
+        <div class="product-desc">{{ product.description }}</div>
+      {%- endif -%}
     </div>
   </div>
 
