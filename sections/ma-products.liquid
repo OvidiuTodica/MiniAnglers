@@ -54,9 +54,12 @@
       {%- if offer_sum > 0 -%}{%- assign offer_save = offer_sum | minus: offer.price -%}{%- endif -%}
     {%- endif -%}
     <div class="scards" id="shopGrid">
+      {%- comment -%} Display order: Theme settings > Shop > Product order (owner-typed list), see ma-product-order {%- endcomment -%}
+      {%- capture order_str -%}{% render 'ma-product-order' %}{%- endcapture -%}
+      {%- assign ordered_handles = order_str | strip | split: '|' -%}
       {%- assign rendered = 0 -%}
-      {%- for product in collections.all.products limit: 50 -%}
-        {%- if product.handle == eng_handle -%}{%- continue -%}{%- endif -%}
+      {%- for handle in ordered_handles -%}
+        {%- assign product = all_products[handle] -%}
         {%- if rendered >= max_cards -%}{%- break -%}{%- endif -%}
         {%- assign rendered = rendered | plus: 1 -%}
 
@@ -136,7 +139,7 @@
 {
   "name": "Products",
   "settings": [
-    { "type": "paragraph", "content": "Shows every published product except the engraving add-on. In Admin: tag a product \"nou\" or \"bestseller\" for a badge; set Product type (e.g. Bacuri / Suporturi) to get filter chips." },
+    { "type": "paragraph", "content": "Shows every published product except the engraving add-on. In Admin: tag a product \"nou\" or \"bestseller\" for a badge; set Product type (e.g. Bacuri / Suporturi) to get filter chips. Display order is set in Theme settings > Shop." },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Toate produsele" },
     { "type": "range", "id": "limit", "label": "Max products shown", "min": 3, "max": 24, "step": 3, "default": 12 }
   ],

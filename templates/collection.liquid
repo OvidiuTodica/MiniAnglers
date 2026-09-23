@@ -21,10 +21,21 @@
   </div>
 
   <div class="product-grid" style="margin-top:8px">
-    {%- for product in collection.products -%}
-      {%- if product.handle == eng_handle -%}{%- continue -%}{%- endif -%}
-      {% render 'ma-pcard', product: product %}
-    {%- endfor -%}
+    {%- if collection.handle == 'all' -%}
+      {%- comment -%} Display order: Theme settings > Shop > Product order (owner-typed list), see ma-product-order.
+        Other, real collections (e.g. a merchant-curated one) keep their own Admin-set order below. {%- endcomment -%}
+      {%- capture order_str -%}{% render 'ma-product-order' %}{%- endcapture -%}
+      {%- assign ordered_handles = order_str | strip | split: '|' -%}
+      {%- for handle in ordered_handles -%}
+        {%- assign product = all_products[handle] -%}
+        {% render 'ma-pcard', product: product %}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for product in collection.products -%}
+        {%- if product.handle == eng_handle -%}{%- continue -%}{%- endif -%}
+        {% render 'ma-pcard', product: product %}
+      {%- endfor -%}
+    {%- endif -%}
     {%- if count == 0 -%}
       <p class="shop-empty" data-i18n="shop.empty">Primele produse apar în curând.</p>
     {%- endif -%}

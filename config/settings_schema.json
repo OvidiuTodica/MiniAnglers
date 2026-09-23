@@ -25,6 +25,13 @@
     ]
   },
   {
+    "name": "Shop",
+    "settings": [
+      { "type": "paragraph", "content": "Sets the order products appear in on the homepage and on /collections/all (\"Toate produsele\"). Shopify has no drag-and-drop order for this automatic \"all products\" listing, so type the exact product name (as it appears in Products), one per line, in the order you want. Those products show first, in that order; every product you don't list still shows, right after, in its usual order. A misspelled name is simply skipped (that product isn't pinned, nothing breaks)." },
+      { "type": "textarea", "id": "product_order", "label": "Product order", "placeholder": "Set Method Masters\nSet Bacuri Nada" }
+    ]
+  },
+  {
     "name": "Offer & sales",
     "settings": [
       { "type": "paragraph", "content": "A set on offer, shown across the shop: homepage banner, top bar, its product card, its product page, the product pages of its pieces and the cart. The saving is the pieces' real prices added up minus the set price, and it only shows once every piece has a price. Leave the product empty to stop the offer everywhere." },

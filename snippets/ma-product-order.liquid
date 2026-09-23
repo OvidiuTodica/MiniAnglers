@@ -1,0 +1,40 @@
+{%- comment -%}
+  Builds the display order for the homepage grid and /collections/all from
+  Theme settings > Shop > "Product order" (owner types product titles, one
+  per line, in Customize — no Admin drag-and-drop exists for the automatic
+  "all products" collection, so this is the low-tech substitute). Matched
+  products come first, in that order; every other published product follows
+  in its normal order. A typo just means that product isn't pinned — it
+  still shows, at the end — so this never hides a product.
+  Outputs product handles separated by a pipe character (trailing pipe).
+  Callers: capture this render into a string, strip and split it on the
+  pipe to get an array of handles, then look each one up via all_products.
+{%- endcomment -%}
+{%- assign eng_handle = settings.engraving_product.handle | default: 'gravare' -%}
+{%- assign wanted_lines = settings.product_order | newline_to_br | split: '<br />' -%}
+{%- assign ordered = '' -%}
+{%- assign seen = '|' -%}
+{%- for line in wanted_lines -%}
+  {%- assign want = line | strip | downcase -%}
+  {%- if want == blank -%}{%- continue -%}{%- endif -%}
+  {%- for product in collections.all.products limit: 50 -%}
+    {%- if product.handle == eng_handle -%}{%- continue -%}{%- endif -%}
+    {%- assign key = '|' | append: product.handle | append: '|' -%}
+    {%- if seen contains key -%}{%- continue -%}{%- endif -%}
+    {%- assign product_title_dc = product.title | strip | downcase -%}
+    {%- if product_title_dc == want -%}
+      {%- assign ordered = ordered | append: product.handle | append: '|' -%}
+      {%- assign seen = seen | append: product.handle | append: '|' -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+{%- for product in collections.all.products limit: 50 -%}
+  {%- if product.handle == eng_handle -%}{%- continue -%}{%- endif -%}
+  {%- assign key = '|' | append: product.handle | append: '|' -%}
+  {%- unless seen contains key -%}
+    {%- assign ordered = ordered | append: product.handle | append: '|' -%}
+    {%- assign seen = seen | append: product.handle | append: '|' -%}
+  {%- endunless -%}
+{%- endfor -%}
+{{- ordered -}}
