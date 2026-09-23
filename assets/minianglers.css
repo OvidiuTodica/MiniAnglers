@@ -203,10 +203,13 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .product-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
 .pcard{ border:1px solid var(--line); border-radius:var(--r-xl); background:var(--bg2); overflow:hidden; text-decoration:none; box-shadow:var(--shadow-glass); transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
 .pcard:hover{ transform:translateY(-4px); border-color:var(--neon); box-shadow:var(--shadow-float); }
-.pcard-media{ position:relative; height:210px; display:grid; place-items:center; border-bottom:1px solid var(--line-soft);
+/* grid-template pins the single cell to the 210px box; with an auto row the
+   img's height:100% sizes as auto and a 3:2 photo grew the row past 210px,
+   spilling over the card title on wide cards */
+.pcard-media{ position:relative; height:210px; display:grid; grid-template:100% / 100%; place-items:center; border-bottom:1px solid var(--line-soft);
   background:radial-gradient(70% 70% at 50% 42%, var(--accent-soft), transparent 72%), var(--bg); }
 .pcard-media img{ width:100%; height:100%; object-fit:contain; padding:16px; box-sizing:border-box; filter:drop-shadow(0 10px 18px rgba(24,50,30,0.12)); }
-.pcard-media .glass-tag{ position:absolute; top:14px; left:14px; }
+.pcard-media .glass-tag{ position:absolute; top:14px; left:14px; z-index:1; } /* above the img, whose filter paints it later */
 .mini-box{ width:120px; height:78px; border-radius:10px; border:1px solid var(--neon); background:var(--accent-soft); }
 .pcard-body{ padding:18px 16px; }
 .pcard-body h3{ font-size:19px; font-weight:700; margin-bottom:14px; color:var(--ink); }
