@@ -6,7 +6,7 @@
 {%- if eng_variant != blank and eng_variant.available -%}
   {%- assign eng_price_display = eng_variant.price | money -%}
 {%- else -%}
-  {%- assign eng_price_display = settings.engraving_price_note | default: '+19 lei' -%}
+  {%- assign eng_price_display = settings.engraving_price_note | default: '+19 RON' -%}
 {%- endif -%}
 <div class="page-wrap">
   <div class="page-head">
