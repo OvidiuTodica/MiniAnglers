@@ -1,0 +1,204 @@
+{%- comment -%}
+  MiniAnglers — "Order confirmation" customer email (Settings > Notifications >
+  Customer notifications > Order confirmation > Edit code). Kept here in git so
+  the version in Shopify can be restored or reviewed; Shopify does not sync
+  notification templates from the theme, so changes are pasted into Admin by hand.
+  Colours follow the storefront tokens (assets/minianglers.css). The white logo
+  sits on the green band so it survives mail apps that force dark mode.
+  Engraving is paid and never described as free.
+{%- endcomment -%}
+{%- assign first_name = customer.first_name | default: billing_address.first_name | default: shipping_address.first_name -%}
+
+{%- assign has_engraving = false -%}
+{%- for line in subtotal_line_items -%}
+  {%- for p in line.properties -%}
+    {%- if p.first == 'Gravare' and p.last != blank -%}{%- assign has_engraving = true -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if line.product.handle == 'gravare' -%}{%- assign has_engraving = true -%}{%- endif -%}
+{%- endfor -%}
+
+{%- assign gateways = transactions | map: 'gateway' | join: ' ' | downcase -%}
+{%- assign gateway_names = transactions | map: 'gateway_display_name' | uniq | join: ', ' -%}
+{%- assign is_cod = false -%}
+{%- if gateways contains 'cash on delivery' or gateways contains '(cod)' or gateways contains 'ramburs' -%}{%- assign is_cod = true -%}{%- endif -%}
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
+  <title>Comanda {{ name }} e confirmată</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light only; supported-color-schemes: light only; }
+    body { margin:0; padding:0; background:#F4F6F4; }
+    a { color:#125E38; }
+    @media (max-width:620px) {
+      .wrap { width:100% !important; }
+      .pad { padding-left:16px !important; padding-right:16px !important; }
+      .hero-pad { padding:26px 22px 24px !important; }
+      .h1 { font-size:24px !important; }
+      .col { display:block !important; width:100% !important; padding:0 0 12px 0 !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#F4F6F4;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Comanda {{ name }} e confirmată. O printăm 3D în Timiș și îți scriem când pleacă spre tine.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F4F6F4" style="background:#F4F6F4;">
+    <tr>
+      <td align="center" class="pad" style="padding:28px 16px 36px;">
+        <table role="presentation" class="wrap" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;font-family:'Plus Jakarta Sans',Arial,Helvetica,sans-serif;color:#181A18;">
+
+          <!-- green band: logo, order number, thank-you, ETA, button -->
+          <tr>
+            <td class="hero-pad" bgcolor="#177A48" style="background:#177A48;border-radius:16px;padding:28px 32px 30px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="left" valign="middle"><a href="{{ shop.url }}" style="text-decoration:none;"><img src="https://cdn.shopify.com/s/files/1/1052/5039/0361/files/minianglers-email-logo-white.png" width="72" height="40" alt="MiniAnglers" style="display:block;border:0;width:72px;height:40px;"></a></td>
+                  <td align="right" valign="middle" style="font-size:13px;font-weight:600;color:#CFE9DA;">Comanda {{ order_name | default: name }}</td>
+                </tr>
+              </table>
+              <h1 class="h1" style="margin:24px 0 0;font-size:27px;line-height:1.2;font-weight:800;color:#FFFFFF;">{% if first_name != blank %}Mulțumim, {{ first_name }}!{% else %}Mulțumim!{% endif %}<br>Comanda ta e confirmată.</h1>
+              <p style="margin:10px 0 0;font-size:15.5px;line-height:1.55;color:#E1F0E7;">O printăm 3D în Timiș și îți scriem din nou când pleacă spre tine.</p>
+              {%- if consolidated_estimated_delivery_time != blank %}
+              <p style="margin:16px 0 0;"><span style="display:inline-block;background:#2B8A5A;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:700;color:#FFFFFF;">Livrare estimată: {{ consolidated_estimated_delivery_time }}</span></p>
+              {%- endif %}
+              {%- if order_status_url %}
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:20px;">
+                <tr><td bgcolor="#FFFFFF" style="background:#FFFFFF;border-radius:999px;"><a href="{{ order_status_url }}" style="display:inline-block;padding:13px 24px;font-size:15px;font-weight:800;color:#125E38;text-decoration:none;border-radius:999px;">Vezi comanda</a></td></tr>
+              </table>
+              {%- endif %}
+            </td>
+          </tr>
+
+          <tr><td style="height:14px;line-height:14px;font-size:0;">&nbsp;</td></tr>
+
+          <!-- what happens next: a real sequence, so the steps are numbered -->
+          <tr>
+            <td bgcolor="#FFFFFF" style="background:#FFFFFF;border:1px solid #E5E8E5;border-radius:16px;padding:22px 24px 12px;">
+              <p style="margin:0 0 6px;font-size:16px;font-weight:800;color:#181A18;">Ce urmează</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="42" valign="top" style="padding:10px 0;"><div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:#E7F3EC;color:#125E38;font-weight:800;font-size:14px;text-align:center;">1</div></td>
+                  <td valign="top" style="padding:10px 0;"><p style="margin:0;font-size:14.5px;font-weight:700;color:#181A18;">Printăm piesele</p><p style="margin:2px 0 0;font-size:13.5px;line-height:1.5;color:#6E736D;">{% if has_engraving %}În 8–10 zile lucrătoare, pentru că le gravăm cu textul ales de tine.{% else %}În 4–5 zile lucrătoare.{% endif %}</p></td>
+                </tr>
+                <tr>
+                  <td width="42" valign="top" style="padding:10px 0;border-top:1px solid #EDEFED;"><div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:#E7F3EC;color:#125E38;font-weight:800;font-size:14px;text-align:center;">2</div></td>
+                  <td valign="top" style="padding:10px 0;border-top:1px solid #EDEFED;"><p style="margin:0;font-size:14.5px;font-weight:700;color:#181A18;">Le predăm curierului</p><p style="margin:2px 0 0;font-size:13.5px;line-height:1.5;color:#6E736D;">Primești un email cu numărul AWB, ca să urmărești coletul.</p></td>
+                </tr>
+                <tr>
+                  <td width="42" valign="top" style="padding:10px 0;border-top:1px solid #EDEFED;"><div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:#E7F3EC;color:#125E38;font-weight:800;font-size:14px;text-align:center;">3</div></td>
+                  <td valign="top" style="padding:10px 0;border-top:1px solid #EDEFED;">
+                    {%- if is_cod %}
+                    <p style="margin:0;font-size:14.5px;font-weight:700;color:#181A18;">Plătești la livrare</p><p style="margin:2px 0 0;font-size:13.5px;line-height:1.5;color:#6E736D;">{{ total_price | money }} ramburs, direct curierului.</p>
+                    {%- elsif has_pending_payment %}
+                    <p style="margin:0;font-size:14.5px;font-weight:700;color:#181A18;">Confirmăm plata</p><p style="margin:2px 0 0;font-size:13.5px;line-height:1.5;color:#6E736D;">Plata e în curs de procesare. Îți scriem când e confirmată.</p>
+                    {%- else %}
+                    <p style="margin:0;font-size:14.5px;font-weight:700;color:#181A18;">Ajunge la tine</p><p style="margin:2px 0 0;font-size:13.5px;line-height:1.5;color:#6E736D;">Plata de {{ total_price | money }} a fost primită, nu mai ai nimic de făcut.</p>
+                    {%- endif %}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="height:14px;line-height:14px;font-size:0;">&nbsp;</td></tr>
+
+          <!-- order lines and totals -->
+          <tr>
+            <td bgcolor="#FFFFFF" style="background:#FFFFFF;border:1px solid #E5E8E5;border-radius:16px;padding:22px 24px;">
+              <p style="margin:0 0 8px;font-size:16px;font-weight:800;color:#181A18;">Comanda ta</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                {%- for line in subtotal_line_items %}
+                <tr>
+                  <td width="76" valign="middle" style="padding:10px 0;{% unless forloop.first %}border-top:1px solid #EDEFED;{% endunless %}">
+                    {%- if line.image %}<img src="{{ line | img_url: 'compact_cropped' }}" width="64" height="64" alt="" style="display:block;width:64px;height:64px;border-radius:10px;background:#EEEEEE;border:0;">{%- else %}<div style="width:64px;height:64px;border-radius:10px;background:#E7F3EC;"></div>{%- endif %}
+                  </td>
+                  <td valign="middle" style="padding:10px 12px 10px 0;{% unless forloop.first %}border-top:1px solid #EDEFED;{% endunless %}">
+                    <p style="margin:0;font-size:14.5px;font-weight:700;color:#181A18;">{{ line.product.title | default: line.title }}</p>
+                    <p style="margin:2px 0 0;font-size:13px;color:#6E736D;">{% if line.variant.title != blank and line.variant.title != 'Default Title' %}{{ line.variant.title }} · {% endif %}Cant. {{ line.quantity }}</p>
+                    {%- for p in line.properties %}
+                      {%- assign p_first_char = p.first | slice: 0 %}
+                      {%- if p.last != blank and p_first_char != '_' %}
+                    <p style="margin:6px 0 0;"><span style="display:inline-block;font-size:12px;font-weight:700;color:#125E38;background:#E7F3EC;border-radius:999px;padding:3px 9px;">{{ p.first }}: {{ p.last }}</span></p>
+                      {%- endif %}
+                    {%- endfor %}
+                  </td>
+                  <td align="right" valign="middle" style="padding:10px 0;white-space:nowrap;font-size:14.5px;font-weight:700;color:#181A18;{% unless forloop.first %}border-top:1px solid #EDEFED;{% endunless %}">
+                    {%- if line.original_line_price > line.final_line_price %}<span style="font-size:12.5px;font-weight:600;color:#6E736D;text-decoration:line-through;">{{ line.original_line_price | money }}</span><br>{% endif %}{{ line.final_line_price | money }}
+                  </td>
+                </tr>
+                {%- endfor %}
+              </table>
+
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:8px;border-top:1px solid #E5E8E5;">
+                <tr><td style="padding:12px 0 4px;font-size:14px;color:#6E736D;">Subtotal</td><td align="right" style="padding:12px 0 4px;font-size:14px;color:#6E736D;">{{ subtotal_price | money }}</td></tr>
+                {%- if requires_shipping %}
+                <tr><td style="padding:4px 0;font-size:14px;color:#6E736D;">Livrare (curier)</td><td align="right" style="padding:4px 0;font-size:14px;color:#6E736D;">{% if shipping_price == 0 %}Gratuită{% else %}{{ shipping_price | money }}{% endif %}</td></tr>
+                {%- endif %}
+                {%- if tax_price > 0 %}
+                <tr><td style="padding:4px 0;font-size:14px;color:#6E736D;">{% if taxes_included %}din care TVA{% else %}TVA{% endif %}</td><td align="right" style="padding:4px 0;font-size:14px;color:#6E736D;">{{ tax_price | money }}</td></tr>
+                {%- endif %}
+                <tr><td style="padding:10px 0 0;font-size:17px;font-weight:800;color:#181A18;">Total</td><td align="right" style="padding:10px 0 0;font-size:17px;font-weight:800;color:#146B3F;">{{ total_price | money }}</td></tr>
+                {%- if total_discounts > 0 %}
+                <tr><td colspan="2" align="right" style="padding:4px 0 0;font-size:12.5px;color:#125E38;">Include o reducere de {{ total_discounts | money }}.</td></tr>
+                {%- endif %}
+              </table>
+
+              {%- if is_cod or gateway_names != blank %}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px;">
+                <tr><td bgcolor="#F4F6F4" style="background:#F4F6F4;border-radius:10px;padding:11px 14px;font-size:13.5px;color:#181A18;">
+                  {%- if is_cod %}Plată: <b style="color:#125E38;">ramburs</b>, la primirea coletului.{% else %}Plată: <b style="color:#125E38;">{{ gateway_names }}</b>{% endif -%}
+                </td></tr>
+              </table>
+              {%- endif %}
+            </td>
+          </tr>
+
+          <tr><td style="height:14px;line-height:14px;font-size:0;">&nbsp;</td></tr>
+
+          <!-- address + contact, side by side on desktop, stacked on phones -->
+          <tr>
+            <td>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  {%- if requires_shipping and shipping_address %}
+                  <td class="col" width="50%" valign="top" style="padding-right:7px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#FFFFFF" style="background:#FFFFFF;border:1px solid #E5E8E5;border-radius:16px;padding:20px 22px;">
+                      <p style="margin:0 0 10px;font-size:15px;font-weight:800;color:#181A18;">Livrăm la</p>
+                      {%- comment -%} format_address emits its own <p>/<br> markup, so style a wrapper div (a <p> here would be split by the nested <p>) {%- endcomment -%}
+                      <div style="margin:0;font-size:13.5px;line-height:1.6;color:#181A18;">{{ shipping_address | format_address | replace: '<p>', '<div style="margin:0;font-size:13.5px;line-height:1.6;color:#181A18;">' | replace: '</p>', '</div>' }}</div>
+                    </td></tr></table>
+                  </td>
+                  {%- endif %}
+                  <td class="col" width="50%" valign="top" style="padding-left:7px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#FFFFFF" style="background:#FFFFFF;border:1px solid #E5E8E5;border-radius:16px;padding:20px 22px;">
+                      <p style="margin:0 0 10px;font-size:15px;font-weight:800;color:#181A18;">Te anunțăm pe</p>
+                      <p style="margin:0;font-size:13.5px;line-height:1.6;color:#181A18;">{{ email }}</p>
+                      <p style="margin:10px 0 0;font-size:13.5px;line-height:1.6;color:#6E736D;">Poți vedea oricând starea comenzii din <a href="{{ order_status_url | default: shop.url }}" style="color:#125E38;font-weight:700;">pagina comenzii</a>.</p>
+                    </td></tr></table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:24px 8px 0;font-size:14px;line-height:1.6;color:#181A18;">Ai o întrebare? Răspunde direct la acest email sau <a href="{{ shop.url }}/pages/contact" style="color:#125E38;font-weight:700;">scrie-ne</a>.</td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:16px 8px 0;font-size:11.5px;line-height:1.7;color:#8A8F89;">
+              MiniAnglers, bacuri de nadă și suporturi printate 3D în Timiș<br>
+              PFA Todica Ovidiu-Victor-Nicușor · CUI 52748161<br>
+              <a href="{{ shop.url }}/pages/retur-si-rambursare" style="color:#6E736D;">Retur și rambursare</a> · <a href="{{ shop.url }}/pages/termeni-si-conditii" style="color:#6E736D;">Termeni și condiții</a>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
