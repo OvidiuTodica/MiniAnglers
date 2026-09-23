@@ -20,8 +20,41 @@
         "subtext_en": "Forget scattered boxes. Our modular systems give you a perfectly compartmented setup, made for anglers who care about the details.",
         "cta_label": "",
         "cta_label_en": "",
-        "cta_link": ""
-      }
+        "cta_link": "",
+        "offer_product": "set-method-masters",
+        "offer_parts": [
+          "bac-xl",
+          "bac-l",
+          "bac-m",
+          "bac-s",
+          "suport-wafters"
+        ],
+        "offer_tag": "",
+        "offer_tag_en": "",
+        "offer_sub": "",
+        "offer_sub_en": "",
+        "offer_cta": "",
+        "offer_cta_en": ""
+      },
+      "blocks": {
+        "pin_xl": {
+          "type": "pin",
+          "settings": { "label": "Bac XL", "label_en": "", "note": "21 × 13 cm", "x": 30, "y": 62, "side": "left" }
+        },
+        "pin_lms": {
+          "type": "pin",
+          "settings": { "label": "Bac L, M și S", "label_en": "Bac L, M and S", "note": "", "x": 27, "y": 14, "side": "left" }
+        },
+        "pin_wafters": {
+          "type": "pin",
+          "settings": { "label": "3 waftere", "label_en": "3 wafters", "note": "", "x": 73, "y": 14, "side": "right" }
+        },
+        "pin_gel": {
+          "type": "pin",
+          "settings": { "label": "Gel fluo", "label_en": "Fluo gel", "note": "", "x": 72, "y": 77, "side": "right" }
+        }
+      },
+      "block_order": ["pin_xl", "pin_lms", "pin_wafters", "pin_gel"]
     },
     "products": {
       "type": "ma-products",

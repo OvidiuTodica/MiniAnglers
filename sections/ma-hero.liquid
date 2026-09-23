@@ -1,22 +1,114 @@
 {%- comment -%}
-  MiniAnglers hero — the green promo banner. Owner's call (2026-09-21): this banner is
-  reserved for offers and deals — plain brand green, copy only (no illustration, photo or video).
+  MiniAnglers hero. Two states:
+  - No offer product picked: the green banner with the owner's copy (tag / headline / sub
+    text / button), copy only, as decided 2026-09-21.
+  - Offer product picked (and available): an offer card for that product (its photo with
+    labels pinned on the real parts, its live price) and, right under it, the owner's copy
+    in a white card so it stays on the homepage (owner's call, 2026-09-23).
+  The "bought separately" line sums the live prices of the linked parts and only shows
+  when every part is for sale and the sum is higher than the set price, so the comparison
+  is always true (EU/RO rule: no invented "old" prices; the owner chose a bundle comparison).
   Text fields left empty in the theme editor fall back to the standard copy (RO default,
   EN via data-i18n). Anything typed in the editor is shown as typed and is never
   overwritten by the dictionary; each field has an optional "(English)" twin that the
-  toggle swaps in via data-i18n-en (ma-i18n.js) — empty twin = Romanian shows in EN too.
+  toggle swaps in via data-i18n-en (ma-i18n.js), empty twin = Romanian shows in EN too.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
+{%- assign offer = s.offer_product -%}
+{%- assign offer_on = false -%}
+{%- if offer != blank and offer.available -%}{%- assign offer_on = true -%}{%- endif -%}
+
+{%- capture brand_tag -%}<span class="promo-tag"{% if s.tag == blank %} data-i18n="promo.tag"{% elsif s.tag_en != blank %} data-i18n-en="{{ s.tag_en | escape }}"{% endif %}>{{ s.tag | default: 'Printat 3D în Timiș' }}</span>{%- endcapture -%}
+{%- capture brand_title -%}<h1{% if s.title == blank %} data-i18n="promo.title"{% elsif s.title_en != blank %} data-i18n-en="{{ s.title_en | escape }}"{% endif %}>{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>{%- endcapture -%}
+{%- capture brand_sub -%}<p{% if s.subtext == blank %} data-i18n="promo.sub"{% elsif s.subtext_en != blank %} data-i18n-en="{{ s.subtext_en | escape }}"{% endif %}>{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei.' }}</p>{%- endcapture -%}
+{%- capture brand_cta_label -%}<span{% if s.cta_label == blank %} data-i18n="promo.cta"{% elsif s.cta_label_en != blank %} data-i18n-en="{{ s.cta_label_en | escape }}"{% endif %}>{{ s.cta_label | default: 'Vezi produsele' }}</span>{%- endcapture -%}
+{%- assign brand_cta_href = s.cta_link | default: routes.all_products_collection_url -%}
+
 <section class="promo" id="sistem">
   <div class="section">
-    <div class="promo-card">
-      <div class="promo-copy">
-        <span class="promo-tag"{% if s.tag == blank %} data-i18n="promo.tag"{% elsif s.tag_en != blank %} data-i18n-en="{{ s.tag_en | escape }}"{% endif %}>{{ s.tag | default: 'Printat 3D în Timiș' }}</span>
-        <h1{% if s.title == blank %} data-i18n="promo.title"{% elsif s.title_en != blank %} data-i18n-en="{{ s.title_en | escape }}"{% endif %}>{{ s.title | default: 'Toată nada ta, la locul ei.' }}</h1>
-        <p{% if s.subtext == blank %} data-i18n="promo.sub"{% elsif s.subtext_en != blank %} data-i18n-en="{{ s.subtext_en | escape }}"{% endif %}>{{ s.subtext | default: 'Cutii și suporturi pentru wafters, gel și pop-up, printate 3D. Le gravăm cu numele tău, dacă vrei.' }}</p>
-        <a class="promo-cta" href="{{ s.cta_link | default: routes.all_products_collection_url }}"><span{% if s.cta_label == blank %} data-i18n="promo.cta"{% elsif s.cta_label_en != blank %} data-i18n-en="{{ s.cta_label_en | escape }}"{% endif %}>{{ s.cta_label | default: 'Vezi produsele' }}</span></a>
+    {%- if offer_on -%}
+      {%- assign parts_sum = 0 -%}
+      {%- assign parts_ok = true -%}
+      {%- for part in s.offer_parts -%}
+        {%- if part.available and part.price > 0 -%}
+          {%- assign parts_sum = parts_sum | plus: part.price -%}
+        {%- else -%}
+          {%- assign parts_ok = false -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- assign savings = parts_sum | minus: offer.price -%}
+      {%- assign show_compare = false -%}
+      {%- if s.offer_parts.size > 0 and parts_ok and savings > 0 -%}{%- assign show_compare = true -%}{%- endif -%}
+      {%- assign img = offer.featured_image -%}
+
+      <div class="offer-card">
+        <div class="offer-copy">
+          <span class="promo-tag"{% if s.offer_tag == blank %} data-i18n="promo.offer_tag"{% elsif s.offer_tag_en != blank %} data-i18n-en="{{ s.offer_tag_en | escape }}"{% endif %}>{{ s.offer_tag | default: 'Ofertă' }}</span>
+          <h2 class="offer-title">{{ offer.title }}</h2>
+          <p class="offer-sub"{% if s.offer_sub == blank %} data-i18n="promo.offer_sub"{% elsif s.offer_sub_en != blank %} data-i18n-en="{{ s.offer_sub_en | escape }}"{% endif %}>{{ s.offer_sub | default: 'Patru bacuri și două suporturi care se îmbină într-un singur setup.' }}</p>
+          {%- if section.blocks.size > 0 -%}
+            <ul class="offer-chips">
+              {%- for block in section.blocks -%}
+                {%- if block.settings.label != blank -%}
+                  <li {{ block.shopify_attributes }}><span{% if block.settings.label_en != blank %} data-i18n-en="{{ block.settings.label_en | escape }}"{% endif %}>{{ block.settings.label }}</span></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          <div class="offer-price">
+            <span class="offer-now">{{ offer.price | money_without_trailing_zeros }}</span>
+            {%- if show_compare -%}
+              <span class="offer-save"><span data-i18n="promo.save">Economisești</span> {{ savings | money_without_trailing_zeros }}</span>
+            {%- endif -%}
+          </div>
+          {%- if show_compare -%}
+            <p class="offer-sep"><span data-i18n="promo.separately">Cumpărate separat:</span> {{ parts_sum | money_without_trailing_zeros }}</p>
+          {%- endif -%}
+          <a class="promo-cta" href="{{ offer.url }}">
+            <span{% if s.offer_cta == blank %} data-i18n="promo.offer_cta"{% elsif s.offer_cta_en != blank %} data-i18n-en="{{ s.offer_cta_en | escape }}"{% endif %}>{{ s.offer_cta | default: 'Vreau setul' }}</span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <a class="offer-shot" href="{{ offer.url }}" tabindex="-1" aria-hidden="true">
+          {%- if img != blank -%}
+            <img src="{{ img | image_url: width: 1100 }}"
+                 srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1100 }} 1100w, {{ img | image_url: width: 1400 }} 1400w"
+                 sizes="(max-width: 760px) calc(100vw - 60px), 560px"
+                 width="{{ img.width }}" height="{{ img.height }}" alt="" fetchpriority="high">
+          {%- else -%}
+            {% render 'ma-placeholder' %}
+          {%- endif -%}
+          {%- for block in section.blocks -%}
+            {%- if block.settings.label != blank -%}
+              <span class="offer-pin{% if block.settings.side == 'left' %} is-left{% endif %}" style="left:{{ block.settings.x }}%;top:{{ block.settings.y }}%;--i:{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                <span class="offer-pin-in"><i></i><em><span{% if block.settings.label_en != blank %} data-i18n-en="{{ block.settings.label_en | escape }}"{% endif %}>{{ block.settings.label }}</span>{%- if block.settings.note != blank %} <small>{{ block.settings.note }}</small>{% endif -%}</em></span>
+              </span>
+            {%- endif -%}
+          {%- endfor -%}
+        </a>
       </div>
-    </div>
+
+      <div class="promo-note">
+        <div class="promo-note-head">
+          {{ brand_tag }}
+          {{ brand_title }}
+        </div>
+        <div class="promo-note-body">
+          {{ brand_sub }}
+          <a class="promo-note-link" href="{{ brand_cta_href }}">{{ brand_cta_label }}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    {%- else -%}
+      <div class="promo-card">
+        <div class="promo-copy">
+          {{ brand_tag }}
+          {{ brand_title }}
+          {{ brand_sub }}
+          <a class="promo-cta" href="{{ brand_cta_href }}">{{ brand_cta_label }}</a>
+        </div>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
@@ -24,7 +116,7 @@
 {
   "name": "Hero (promo)",
   "settings": [
-    { "type": "paragraph", "content": "Offers & deals banner. Leave a field empty to keep the standard text (shown in RO and EN). Anything you type here replaces it, exactly as typed. The \"(English)\" fields are shown when a visitor switches to EN — leave them empty and the Romanian text shows in both languages." },
+    { "type": "paragraph", "content": "Green banner with your text. Leave a field empty to keep the standard text (shown in RO and EN). Anything you type here replaces it, exactly as typed. The \"(English)\" fields are shown when a visitor switches to EN — leave them empty and the Romanian text shows in both languages." },
     { "type": "text", "id": "tag", "label": "Tag", "placeholder": "Printat 3D în Timiș" },
     { "type": "text", "id": "tag_en", "label": "Tag (English)" },
     { "type": "text", "id": "title", "label": "Headline", "placeholder": "Toată nada ta, la locul ei." },
@@ -33,8 +125,38 @@
     { "type": "textarea", "id": "subtext_en", "label": "Sub text (English)" },
     { "type": "text", "id": "cta_label", "label": "Button label", "placeholder": "Vezi produsele" },
     { "type": "text", "id": "cta_label_en", "label": "Button label (English)" },
-    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Empty = all products." }
+    { "type": "url", "id": "cta_link", "label": "Button link", "info": "Empty = all products." },
+
+    { "type": "header", "content": "Offer" },
+    { "type": "paragraph", "content": "Pick a product to show it as an offer at the top of the homepage (photo, labels and live price). Your text above then moves into a white card under the offer. Clear the product to stop the offer and bring the green banner back." },
+    { "type": "product", "id": "offer_product", "label": "Offer product" },
+    { "type": "product_list", "id": "offer_parts", "label": "Pieces sold separately", "limit": 12, "info": "The products inside the set. Their prices are added up and shown as \"Cumpărate separat\" with the saving. The line is hidden if any piece has no price or is not for sale." },
+    { "type": "text", "id": "offer_tag", "label": "Offer tag", "placeholder": "Ofertă" },
+    { "type": "text", "id": "offer_tag_en", "label": "Offer tag (English)" },
+    { "type": "textarea", "id": "offer_sub", "label": "Offer text", "placeholder": "Patru bacuri și două suporturi care se îmbină într-un singur setup." },
+    { "type": "textarea", "id": "offer_sub_en", "label": "Offer text (English)" },
+    { "type": "text", "id": "offer_cta", "label": "Offer button", "placeholder": "Vreau setul" },
+    { "type": "text", "id": "offer_cta_en", "label": "Offer button (English)" }
   ],
+  "blocks": [
+    {
+      "type": "pin",
+      "name": "Photo label",
+      "settings": [
+        { "type": "paragraph", "content": "A label pinned on the offer photo. Move it with the two sliders until the dot sits on the right piece." },
+        { "type": "text", "id": "label", "label": "Label", "placeholder": "Bac XL" },
+        { "type": "text", "id": "label_en", "label": "Label (English)" },
+        { "type": "text", "id": "note", "label": "Small detail (optional)", "placeholder": "21 × 13 cm" },
+        { "type": "range", "id": "x", "label": "Left to right", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "y", "label": "Top to bottom", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "select", "id": "side", "label": "Text side", "default": "right", "options": [
+          { "value": "right", "label": "Right of the dot" },
+          { "value": "left", "label": "Left of the dot" }
+        ] }
+      ]
+    }
+  ],
+  "max_blocks": 8,
   "presets": [{ "name": "Hero (promo)" }]
 }
 {% endschema %}

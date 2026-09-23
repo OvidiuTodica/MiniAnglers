@@ -432,6 +432,66 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 .promo-cta{ display:inline-flex; margin-top:24px; background:#fff; color:var(--neon-deep); font-family:var(--sans); font-weight:700; font-size:15px; padding:14px 26px; border-radius:999px; text-decoration:none; transition:transform .14s ease, box-shadow .14s ease; }
 .promo-cta:hover{ transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(0,0,0,0.4); }
 .promo-cta:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+.promo-cta:active{ transform:scale(.98); }
+
+/* offer card (hero with an offer product): photo with labels pinned on the real parts + live price */
+.offer-card{ display:grid; grid-template-columns:.92fr 1.08fr; gap:36px; align-items:center; padding:40px 40px 40px 48px; border-radius:20px; color:#fff; background:linear-gradient(120deg, #10502F, var(--neon)); }
+.offer-copy{ min-width:0; }
+.offer-title{ font-family:var(--sans); font-size:clamp(30px,4vw,46px); font-weight:800; line-height:1.04; letter-spacing:-.02em; margin-top:14px; color:#fff; }
+.offer-sub{ color:#E1F0E7; margin-top:12px; max-width:40ch; font-size:17px; }
+.offer-chips{ display:none; list-style:none; }
+.offer-price{ display:flex; align-items:center; flex-wrap:wrap; gap:10px 14px; margin-top:22px; }
+.offer-now{ font-family:var(--sans); font-weight:800; font-size:40px; letter-spacing:-.02em; line-height:1; }
+.offer-save{ font-family:var(--body); font-size:13px; font-weight:700; background:#fff; color:var(--neon-deep); padding:6px 11px; border-radius:999px; }
+.offer-sep{ margin-top:10px; font-size:14.5px; font-weight:600; color:var(--accent-on-dark); }
+.offer-card .promo-cta{ align-items:center; gap:10px; }
+.offer-shot{ position:relative; display:block; aspect-ratio:3/2; border-radius:16px; overflow:hidden; background:var(--bg3); }
+.offer-shot img{ display:block; width:100%; height:100%; object-fit:cover; }
+.offer-pin{ position:absolute; transform:translate(-9px,-50%); pointer-events:none; }
+.offer-pin.is-left{ transform:translate(calc(-100% + 9px),-50%); }
+.offer-pin-in{ display:flex; align-items:center; gap:8px; transform-origin:9px 50%; animation:offer-pin-in .5s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(.35s + var(--i,0) * .14s); }
+.offer-pin.is-left .offer-pin-in{ flex-direction:row-reverse; transform-origin:calc(100% - 9px) 50%; }
+.offer-pin i{ width:18px; height:18px; flex:none; border-radius:50%; background:var(--neon); border:3px solid #fff; box-shadow:0 0 0 1px var(--line), var(--glow); }
+.offer-pin em{ font-style:normal; font-family:var(--sans); font-size:13px; font-weight:700; color:var(--ink); background:#fff; padding:6px 10px; border-radius:999px; box-shadow:var(--shadow-glass); white-space:nowrap; }
+.offer-pin small{ font-size:12px; font-weight:600; color:var(--mute); margin-left:3px; }
+@keyframes offer-pin-in{ from{ opacity:0; transform:scale(.8); } }
+
+/* the owner's banner copy, kept under the offer as a white card */
+.promo-note{ display:grid; grid-template-columns:1.1fr 1fr; gap:14px 48px; align-items:end; margin-top:16px; padding:34px 48px; background:var(--bg2); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow-glass); }
+.promo-note .promo-tag{ background:var(--accent-soft); color:var(--neon-deep); }
+.promo-note h1{ font-family:var(--sans); font-size:clamp(26px,3vw,34px); font-weight:800; line-height:1.12; letter-spacing:-.015em; margin-top:12px; color:var(--ink); }
+.promo-note p{ color:var(--mute); font-size:16px; line-height:1.65; max-width:52ch; }
+.promo-note-link{ display:inline-flex; align-items:center; gap:8px; margin-top:12px; font-family:var(--sans); font-weight:700; font-size:15px; color:var(--neon-deep); text-decoration:none; }
+.promo-note-link svg{ transition:transform .15s ease; }
+.promo-note-link:hover{ text-decoration:underline; text-underline-offset:4px; }
+.promo-note-link:hover svg{ transform:translateX(3px); }
+.promo-note-link:active svg{ transform:translateX(1px); }
+.promo-note-link:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:3px; border-radius:4px; }
+
+@media (max-width:900px){
+  /* labels on the photo get cramped: list the pieces as chips instead */
+  .offer-card{ grid-template-columns:1fr 1fr; gap:26px; padding:32px; }
+  .offer-pin{ display:none; }
+  .offer-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+  .offer-chips li{ font-family:var(--body); font-size:12px; font-weight:700; background:rgba(255,255,255,0.14); padding:5px 10px; border-radius:999px; }
+  .promo-note{ padding:28px 32px; gap:10px 32px; }
+}
+@media (max-width:760px){
+  .offer-card{ grid-template-columns:1fr; gap:0; padding:12px 12px 22px; border-radius:16px; }
+  .offer-shot{ order:-1; border-radius:12px; }
+  .offer-copy{ padding:18px 8px 0; }
+  .promo-note{ grid-template-columns:1fr; align-items:start; padding:24px 22px; border-radius:16px; margin-top:12px; }
+  .promo-note-link{ min-height:44px; margin-top:4px; }
+}
+@media (max-width:560px){
+  .offer-title{ font-size:26px; line-height:1.12; margin-top:10px; }
+  .offer-sub{ display:none; }
+  .offer-now{ font-size:32px; }
+  .offer-price{ margin-top:16px; }
+  .promo-note{ padding:20px 18px; }
+  .promo-note h1{ font-size:22px; margin-top:10px; }
+  .promo-note p{ font-size:14.5px; }
+}
 .engrave-preview[hidden]{ display:none; }
 
 /* category tiles */
