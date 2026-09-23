@@ -761,3 +761,5 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
   .scard:not(.is-offer):hover, .pcard:not(.is-offer):hover{ transform:none; border-color:var(--line); box-shadow:var(--shadow-glass); }
   .scard.is-offer:hover, .pcard.is-offer:hover{ transform:none; }
 }
+
+/* cache bust 20260923T095718Z */
