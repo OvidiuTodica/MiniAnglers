@@ -355,6 +355,8 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
 @media (max-width:460px){ .pdp-upsell{ grid-template-columns:96px 1fr; gap:12px; } .pdp-upsell-list{ display:none; } }
 /* cart: crossed-out price on sale lines, and the nudge towards the set on offer */
 .cart-was{ display:block; font-size:13px; font-weight:600; color:var(--mute); text-align:right; }
+.cart-row.is-updating{ opacity:.55; transition:opacity .15s ease; }
+@media (prefers-reduced-motion:reduce){ .cart-row.is-updating{ transition:none; } }
 .cart-nudge{ display:flex; align-items:center; gap:16px; margin-top:20px; padding:16px 18px; border-radius:var(--r-xl); color:#fff; background:linear-gradient(120deg, #10502F, var(--neon)); }
 .cart-nudge-text{ flex:1; min-width:0; }
 .cart-nudge b{ font-family:var(--sans); font-size:16px; font-weight:800; }

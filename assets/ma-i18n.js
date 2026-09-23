@@ -71,7 +71,7 @@
       'footer.legal1': 'Confidențialitate', 'footer.legal2': 'Termeni și condiții', 'footer.legal3': 'Retur și rambursare', 'footer.legal4': 'Livrare',
       'footer.anpc_sal': 'ANPC – SAL', 'footer.anpc_sol': 'SOL – Soluționarea online a litigiilor',
       'cart.title': 'Construcția ta', 'cart.empty': 'Coșul tău este gol.', 'cart.start': 'Începe personalizarea',
-      'cart.qty': 'Cant.', 'cart.update': 'Actualizează', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Finalizează comanda', 'cart.remove': 'Elimină din coș',
+      'cart.qty': 'Cant.', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Finalizează comanda', 'cart.remove': 'Elimină din coș',
       // faq page (q1 has a Liquid price, so its answer uses data-i18n-en in the template)
       'faq.eyebrow': 'Întrebări frecvente',
       'faq.heading': 'Ce trebuie să știi.',
@@ -180,7 +180,7 @@
       'footer.legal1': 'Privacy', 'footer.legal2': 'Terms & Conditions', 'footer.legal3': 'Returns & Refunds', 'footer.legal4': 'Shipping',
       'footer.anpc_sal': 'ANPC – ADR (consumer disputes)', 'footer.anpc_sol': 'EU online dispute resolution (ODR)',
       'cart.title': 'Your build', 'cart.empty': 'Your cart is empty.', 'cart.start': 'Start customizing',
-      'cart.qty': 'Qty', 'cart.update': 'Update', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Checkout', 'cart.remove': 'Remove from cart',
+      'cart.qty': 'Qty', 'cart.subtotal': 'Subtotal', 'cart.checkout': 'Checkout', 'cart.remove': 'Remove from cart',
       // faq page (q1 has a Liquid price, so its answer uses data-i18n-en in the template)
       'faq.eyebrow': 'Frequently asked',
       'faq.heading': 'What you need to know.',

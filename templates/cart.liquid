@@ -8,7 +8,12 @@
   {%- else -%}
     <form action="{{ routes.cart_url }}" method="post" novalidate>
       {%- for item in cart.items -%}
-        <div class="cart-row" data-cart-row style="display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line-soft)">
+        {%- comment -%}
+          data-key is the line's stable Ajax Cart API id (variant + properties hash) —
+          not its position, which shifts once another line is removed. ma-cart.js reads
+          it straight off the row for both remove and the auto quantity update below.
+        {%- endcomment -%}
+        <div class="cart-row" data-cart-row data-key="{{ item.key }}" data-compare-unit="{{ item.variant.compare_at_price | default: 0 }}" style="display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--line-soft)">
           {%- if item.image -%}<img src="{{ item.image | image_url: width: 120 }}" alt="{{ item.title | escape }}" style="width:80px;height:80px;object-fit:cover;border-radius:var(--r-sm);border:1px solid var(--line)">{%- endif -%}
           <div style="flex:1">
             <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">{{ item.product.title }}</div>
@@ -18,17 +23,15 @@
               {%- endunless -%}
             {%- endfor -%}
             <div style="color:var(--steel-500);font-size:13px;margin-top:6px"><span data-i18n="cart.qty">Cant.</span>
-              <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" style="width:60px;background:var(--bg-0);border:1px solid var(--line);color:var(--steel-200);border-radius:8px;padding:8px 10px;margin-left:6px;font-size:16px">
+              <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric" data-cart-qty style="width:60px;background:var(--bg-0);border:1px solid var(--line);color:var(--steel-200);border-radius:8px;padding:8px 10px;margin-left:6px;font-size:16px">
             </div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px">
             <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">
-              {%- if item.variant.compare_at_price > item.final_price -%}
-                <s class="cart-was">{{ item.variant.compare_at_price | times: item.quantity | money }}</s>
-              {%- endif -%}
-              {{ item.final_line_price | money }}
+              <s class="cart-was" data-cart-was{% unless item.variant.compare_at_price > item.final_price %} hidden{% endunless %}>{% if item.variant.compare_at_price > item.final_price %}{{ item.variant.compare_at_price | times: item.quantity | money }}{% endif %}</s>
+              <span data-cart-line-price>{{ item.final_line_price | money }}</span>
             </div>
-            <button type="button" class="cart-remove" data-cart-remove="{{ forloop.index }}" aria-label="Elimină din coș" data-i18n-aria="cart.remove">{% render 'ma-icon', icon: 'close' %}</button>
+            <button type="button" class="cart-remove" data-cart-remove aria-label="Elimină din coș" data-i18n-aria="cart.remove">{% render 'ma-icon', icon: 'close' %}</button>
           </div>
         </div>
       {%- endfor -%}
@@ -71,10 +74,12 @@
         {%- endif -%}
       {%- endif -%}
 
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:24px">
-        <div style="display:flex;gap:10px">
-          <button type="submit" name="update" class="btn btn-ghost btn-md" data-i18n="cart.update">Actualizează</button>
-        </div>
+      {%- comment -%}
+        No "Actualizează" button: quantity changes save themselves (ma-cart.js, on the
+        input's change). updates[] stays as a no-JS fallback — Shopify applies it on any
+        /cart POST, so "Finalizează comanda" still carries a hand-typed quantity through.
+      {%- endcomment -%}
+      <div style="display:flex;justify-content:flex-end;margin-top:24px">
         <div style="text-align:right">
           <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel-500)" data-i18n="cart.subtotal">Subtotal</div>
           <div style="font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--steel-100)" data-cart-subtotal>{{ cart.total_price | money }}</div>
