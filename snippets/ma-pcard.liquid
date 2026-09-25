@@ -28,7 +28,12 @@
       </span>
     {%- endif -%}
     {%- if product.featured_image -%}
-      <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.featured_image.alt | escape | default: product.title }}" loading="lazy" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}">
+      {%- comment -%} sizes = the photo's real width: ~106px on a phone (3 per row), at most ~270px (the 210px-tall media box) above that {%- endcomment -%}
+      {%- assign img_alt = product.featured_image.alt | default: product.title -%}
+      {{ product.featured_image | image_url: width: 640 | image_tag:
+           widths: '160, 240, 320, 400, 480, 640',
+           sizes: '(max-width: 640px) calc(33vw - 30px), 270px',
+           loading: 'lazy', alt: img_alt }}
     {%- else -%}{% render 'ma-placeholder' %}{%- endif -%}
   </div>
   <div class="pcard-body">

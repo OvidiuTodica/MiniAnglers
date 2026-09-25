@@ -68,6 +68,7 @@ assets/minianglers.css       — the entire stylesheet, single file
 assets/ma-i18n.js            — custom RO/EN toggle (see §3)
 assets/ma-product.js         — product page logic (engraving config, variant/price updates)
 assets/ma-cart.js            — cart drawer/line-item logic
+assets/plus-jakarta-sans*.woff2 — the self-hosted brand font (see "Font loading" below)
 assets/favicon.svg           — the logo's black "m" mark on a white tile (+ favicon-32.png, favicon-192.png for Google Search, apple-touch-icon.png, og-image.png; all generated from minianglers-logo.svg)
 ```
 
@@ -83,11 +84,28 @@ with this — `ma-<purpose>.liquid` / `ma-<purpose>.js`.
   url, image at 1200px on product pages), Twitter summary_large_image card.
   Match this pattern for any new page type — don't skip OG tags on new
   templates.
-- Font loading: Google Fonts preconnect + a single stylesheet link for
-  Plus Jakarta Sans (display + body). The `--font-mono` token is a system
-  monospace stack, used only for small spec readouts. See §4 for how these
-  map to CSS tokens. Don't add another font without updating both this link
-  and the `--font-*` tokens together.
+- Font loading: Plus Jakarta Sans (display + body) is **self-hosted** — no
+  Google Fonts request (it was a render-blocking stylesheet on a third-party
+  domain — Lighthouse flagged it as the main render-blocking request on phones). An inline
+  `<style>` holds two `@font-face` rules and the main file is preloaded:
+  `assets/plus-jakarta-sans.woff2` (~20 KB: variable weight 400–800, Basic
+  Latin + Latin-1 + every Romanian letter ă ș ț incl. cedilla ş ţ, punctuation,
+  €, arrows) and `assets/plus-jakarta-sans-ext.woff2` (rest of Latin Extended,
+  only downloaded when a page uses one of those letters; its `unicode-range`
+  must not overlap the main file's). Both were cut from the official variable
+  font (`google/fonts` repo, `ofl/plusjakartasans/PlusJakartaSans[wght].ttf`,
+  OFL) with fonttools: `instancer` limited wght to 400–800, then `pyftsubset
+  --unicodes=<the unicode-range in theme.liquid> --layout-features+=tnum
+  --flavor=woff2`. Regenerate them the same way if a weight below 400 or a new
+  script is ever needed. The `--font-mono` token is a system monospace stack,
+  used only for small spec readouts. See §4 for how these map to CSS tokens.
+  Don't add another font without updating both the `@font-face` block and the
+  `--font-*` tokens together.
+- Images: use `image_url | image_tag` with `widths:` and a `sizes:` that
+  matches the image's real rendered width per breakpoint (phones show 3
+  product cards per row, ~106px each). Only the homepage hero photo (the LCP
+  element) gets `preload: true` + `fetchpriority: 'high'`; everything below the
+  fold gets `loading: 'lazy'`.
 - Script load order: `ma-i18n.js` → `ma-product.js` → `ma-cart.js`, all
   `defer`, all at the end of `<body>`. Preserve this order — `ma-product.js`
   and `ma-cart.js` both listen for the `ma:lang` event `ma-i18n.js` fires.

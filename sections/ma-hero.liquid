@@ -69,10 +69,15 @@
 
         <a class="offer-shot" href="{{ offer.url }}" tabindex="-1" aria-hidden="true">
           {%- if img != blank -%}
-            <img src="{{ img | image_url: width: 1100 }}"
-                 srcset="{{ img | image_url: width: 600 }} 600w, {{ img | image_url: width: 900 }} 900w, {{ img | image_url: width: 1100 }} 1100w, {{ img | image_url: width: 1400 }} 1400w"
-                 sizes="(max-width: 760px) calc(100vw - 60px), 560px"
-                 width="{{ img.width }}" height="{{ img.height }}" alt="" fetchpriority="high">
+            {%- comment -%}
+              The page's largest element (LCP). preload: true makes Shopify send it as an early
+              Link header, so the phone starts downloading the photo before the HTML arrives.
+              sizes = the photo's real width per breakpoint, so a phone gets ~700px, not 900+.
+            {%- endcomment -%}
+            {{ img | image_url: width: 1400 | image_tag:
+                 widths: '400, 550, 700, 900, 1100, 1400',
+                 sizes: '(max-width: 760px) calc(100vw - 60px), (max-width: 900px) calc(50vw - 67px), (max-width: 1200px) calc(54vw - 97px), 560px',
+                 alt: '', fetchpriority: 'high', preload: true }}
           {%- else -%}
             {% render 'ma-placeholder' %}
           {%- endif -%}
