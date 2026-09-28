@@ -45,6 +45,19 @@
     ]
   },
   {
+    "name": "Shipping prices",
+    "settings": [
+      { "type": "paragraph", "content": "The courier prices shown on product pages, in the cart and on the Livrare page. They only change what the site shows: checkout charges what is set in Settings → Shipping and delivery, so when you change a price here, change it there too (same name, same price). Leave a courier's name empty to hide it." },
+      { "type": "text", "id": "ship_1_name", "label": "Courier 1", "default": "DPD" },
+      { "type": "number", "id": "ship_1_price", "label": "Courier 1 price (lei)", "default": 15 },
+      { "type": "text", "id": "ship_2_name", "label": "Courier 2", "default": "FAN Courier" },
+      { "type": "number", "id": "ship_2_price", "label": "Courier 2 price (lei)", "default": 19 },
+      { "type": "text", "id": "ship_3_name", "label": "Courier 3 (optional)" },
+      { "type": "number", "id": "ship_3_price", "label": "Courier 3 price (lei)" },
+      { "type": "number", "id": "ship_free_over", "label": "Free shipping from (lei)", "default": 190, "info": "Leave empty or 0 if there's no free shipping." }
+    ]
+  },
+  {
     "name": "Legal & Contact",
     "settings": [
       { "type": "paragraph", "content": "Feeds the Privacy, Terms, Refund and Shipping pages (Confidențialitate / Termeni / Retur / Livrare). Confirm VAT status and courier before removing the store password — these values go straight onto legally binding pages." },

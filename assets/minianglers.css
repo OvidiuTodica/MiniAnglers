@@ -710,6 +710,24 @@ a, button{ -webkit-tap-highlight-color:rgba(0,0,0,0); }
 /* trust line under add-to-cart */
 .pdp-trust{ display:flex; align-items:center; gap:8px; margin-top:14px; font-family:var(--body); font-size:13px; font-weight:600; color:var(--mute); }
 .pdp-trust svg{ color:var(--neon-deep); flex:none; }
+/* courier prices under add-to-cart (snippets/ma-ship-rates.liquid) */
+.pdp-ship{ margin-top:14px; padding:12px 14px; background:var(--bg3); border:1px solid var(--line); border-radius:var(--r-md); }
+.pdp-ship-head{ display:flex; align-items:center; gap:8px; font-family:var(--sans); font-size:13.5px; font-weight:700; color:var(--ink); }
+.pdp-ship-head svg{ width:17px; height:17px; flex:none; color:var(--neon-deep); }
+.pdp-ship-list{ list-style:none; margin:8px 0 0; padding:0; }
+.pdp-ship-list li{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:7px 0; border-top:1px solid var(--line-soft); font-size:13.5px; color:var(--ink); }
+.pdp-ship-list b{ font-weight:700; color:var(--cyan); white-space:nowrap; }
+.pdp-ship-free{ display:inline-block; margin-top:8px; padding:4px 10px; border-radius:999px; background:var(--accent-soft); color:var(--neon-deep); font-size:12.5px; font-weight:700; }
+/* the same prices in the cart, with how far the cart is from free shipping */
+.cart-ship{ margin-top:16px; padding:14px 16px; background:var(--bg3); border:1px solid var(--line); border-radius:var(--r-md); font-size:14px; line-height:1.5; color:var(--ink); }
+.cart-ship p{ display:flex; align-items:flex-start; gap:9px; margin:0; }
+.cart-ship svg{ width:18px; height:18px; flex:none; margin-top:1px; color:var(--neon-deep); }
+.cart-ship b{ font-weight:700; white-space:nowrap; }
+.cart-ship-free, .cart-ship-left{ margin-top:8px !important; padding-left:27px; font-weight:600; color:var(--neon-deep); }
+.cart-ship-free{ padding-left:0; }
+.cart-ship .cart-ship-left{ display:block; } /* plain text line: no flex gaps between its words */
+.cart-ship-left b{ color:var(--cyan); }
+.cart-ship [hidden]{ display:none !important; }
 /* cleaner spec rows (specs come from the description bullet list) */
 .product-desc .spec{ margin:16px 0; padding:0; border-top:1px solid var(--line); }
 .product-desc .spec li{ padding:11px 0; border-bottom:1px solid var(--line-soft); }

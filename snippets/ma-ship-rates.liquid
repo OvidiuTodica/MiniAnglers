@@ -1,0 +1,71 @@
+{%- comment -%}
+  Courier prices, from Theme settings > Shipping prices (ship_1..3 name/price,
+  ship_free_over). They only mirror what checkout charges (Settings > Shipping and
+  delivery), so the two have to be kept in step by hand.
+  Usage: {% render 'ma-ship-rates', layout: 'pdp' %}  under the add-to-cart button
+         {% render 'ma-ship-rates', layout: 'cart', total: cart.total_price %}
+  The cart layout says how far the cart is from free shipping; ma-cart.js updates
+  that line when a quantity changes (data-ship-free-cents / data-ship-left).
+{%- endcomment -%}
+{%- liquid
+  assign free_cents = settings.ship_free_over | default: 0 | times: 100 | round
+  assign n_rates = 0
+  for i in (1..3)
+    assign name_key = 'ship_' | append: i | append: '_name'
+    assign price_key = 'ship_' | append: i | append: '_price'
+    if settings[name_key] != blank and settings[price_key] != blank
+      assign n_rates = n_rates | plus: 1
+    endif
+  endfor
+-%}
+{%- if n_rates > 0 -%}
+  {%- if layout == 'cart' -%}
+    {%- assign total = total | default: 0 -%}
+    {%- assign left = free_cents | minus: total -%}
+    <div class="cart-ship" data-ship-free-cents="{{ free_cents }}">
+      <p class="cart-ship-rates">
+        {% render 'ma-icon', icon: 'truck' %}
+        <span>
+          <span data-i18n="ship.cart_lead">Livrare prin curier:</span>
+          {%- assign shown = 0 -%}
+          {%- for i in (1..3) -%}
+            {%- assign name_key = 'ship_' | append: i | append: '_name' -%}
+            {%- assign price_key = 'ship_' | append: i | append: '_price' -%}
+            {%- if settings[name_key] != blank and settings[price_key] != blank -%}
+              {%- assign shown = shown | plus: 1 -%}
+              {%- if shown > 1 -%}{%- if shown == n_rates %} <span data-i18n="ship.or">sau</span>{%- else -%},{%- endif -%}{%- endif %}
+              <b>{{ settings[name_key] }} {{ settings[price_key] | times: 100 | round | money_without_trailing_zeros }}</b>
+            {%- endif -%}
+          {%- endfor -%}.
+          <span data-i18n="ship.cart_choose">Alegi curierul la pasul următor.</span>
+        </span>
+      </p>
+      {%- if free_cents > 0 -%}
+        <p class="cart-ship-free" data-ship-free-yes{% if left > 0 %} hidden{% endif %}>
+          {% render 'ma-icon', icon: 'check' %}<span data-i18n="ship.free_yes">Livrarea e gratuită pentru comanda ta.</span>
+        </p>
+        <p class="cart-ship-left" data-ship-free-no{% if left <= 0 %} hidden{% endif %}>
+          <span data-i18n="ship.free_left">Mai adaugă</span> <b data-ship-left>{% if left > 0 %}{{ left | money_without_trailing_zeros }}{% endif %}</b> <span data-i18n="ship.free_left2">și livrarea e gratuită.</span>
+        </p>
+      {%- endif -%}
+    </div>
+  {%- else -%}
+    <div class="pdp-ship">
+      <p class="pdp-ship-head">
+        {% render 'ma-icon', icon: 'truck' %}<span data-i18n="ship.title">Livrare la adresă, prin curier</span>
+      </p>
+      <ul class="pdp-ship-list">
+        {%- for i in (1..3) -%}
+          {%- assign name_key = 'ship_' | append: i | append: '_name' -%}
+          {%- assign price_key = 'ship_' | append: i | append: '_price' -%}
+          {%- if settings[name_key] != blank and settings[price_key] != blank -%}
+            <li><span>{{ settings[name_key] }}</span><b>{{ settings[price_key] | times: 100 | round | money_without_trailing_zeros }}</b></li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      {%- if free_cents > 0 -%}
+        <p class="pdp-ship-free"><span data-i18n="ship.free_from">Gratuită pentru comenzile de la</span> {{ free_cents | money_without_trailing_zeros }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

@@ -24,9 +24,26 @@
     const qtyTimers = new WeakMap(); // input -> debounce timeout
     const qtyTokens = new WeakMap(); // row -> latest request token, so a slow response can't clobber a newer one
 
+    function applyFreeShipping(total) {
+      // "add X more for free shipping" under the subtotal (snippets/ma-ship-rates.liquid)
+      const box = cartRoot.querySelector('[data-ship-free-cents]');
+      if (!box) return;
+      const freeCents = parseInt(box.dataset.shipFreeCents || '0', 10);
+      if (!freeCents) return;
+      const left = freeCents - total;
+      const yes = box.querySelector('[data-ship-free-yes]');
+      const no = box.querySelector('[data-ship-free-no]');
+      if (yes) yes.hidden = left > 0;
+      if (no) no.hidden = left <= 0;
+      const leftEl = box.querySelector('[data-ship-left]');
+      // same look as Liquid's money_without_trailing_zeros: 31 RON, not 31,00 RON
+      if (leftEl && left > 0) leftEl.textContent = formatMoney(left, moneyFormat).replace(/[.,]00(?!\d)/, '');
+    }
+
     function applyCartTotals(cart) {
       const subtotalEl = cartRoot.querySelector('[data-cart-subtotal]');
       if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price, moneyFormat);
+      applyFreeShipping(cart.total_price);
       const countEl = document.getElementById('cartCount');
       if (countEl) countEl.textContent = cart.item_count;
       if (cart.item_count === 0) window.location.reload();
