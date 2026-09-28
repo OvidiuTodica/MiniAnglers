@@ -9,6 +9,9 @@ temporary screenshots/
 .shopify/
 *.tmp.*
 
+# Launch videos made with /brag (large media, not part of the theme)
+brag-output*/
+
 # Throwaway design mockups + source 3D files (not part of the Shopify theme)
 mockups/
 mockups_stl/
