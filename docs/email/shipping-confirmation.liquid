@@ -20,6 +20,13 @@
 {%- assign carrier_dc = carrier | downcase -%}
 {%- assign awb = fulfillment.tracking_numbers.first -%}
 {%- assign track_url = fulfillment.tracking_url -%}
+{%- comment -%} Shopify's "Other" carrier would print as "curierului Other"; name the courier from the link or the AWB instead {%- endcomment -%}
+{%- if carrier_dc == 'other' or carrier_dc == 'altul' or carrier_dc == 'alt curier' -%}{%- assign carrier = '' -%}{%- assign carrier_dc = '' -%}{%- endif -%}
+{%- assign url_dc = track_url | downcase -%}
+{%- assign awb_head = awb | slice: 0, 4 | upcase -%}
+{%- if carrier == blank -%}
+  {%- if url_dc contains 'sameday' or awb_head == '1ONB' -%}{%- assign carrier = 'Sameday' -%}{%- assign carrier_dc = 'sameday' -%}{%- endif -%}
+{%- endif -%}
 {%- if track_url == blank and awb != blank and carrier_dc contains 'sameday' -%}
   {%- assign track_url = 'https://sameday.ro/status-colet/?awb=' | append: awb -%}
 {%- endif -%}
