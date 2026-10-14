@@ -4,14 +4,11 @@
       faces, the 2 wafter holders, the gel holder), its 4 corners on the picture as fractions
       of its width/height. Each zone gets a canvas with the text drawn the way the
       configurator draws it (same fonts, same fitting), mapped onto those corners with a CSS
-      perspective transform (matrix3d).
-   2. On phones the two cards sit in a swipe row; the two buttons above it jump between them
-      and show which one is in view. */
+      perspective transform (matrix3d). */
 (function () {
   const card = document.querySelector('[data-champ]');
   if (!card) return;
 
-  /* ---------- 1. name on the pieces ---------- */
   const etch = card.querySelector('[data-champ-etch]');
   const input = card.querySelector('[data-champ-input]');
   let zones = [];
@@ -147,21 +144,4 @@
     if (ready) draw();
   });
   document.addEventListener('ma:lang', () => { if (ready) draw(); });
-
-  /* ---------- 2. phones: switch between the two cards ---------- */
-  const row = document.querySelector('[data-hero-split]');
-  const pick = document.querySelector('[data-hero-pick]');
-  if (!row || !pick) return;
-  const btns = [...pick.querySelectorAll('[data-pick]')];
-  const mark = (i) => btns.forEach((b, k) => b.setAttribute('aria-current', String(k === i)));
-  btns.forEach((b, i) => b.addEventListener('click', () => {
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    row.scrollTo({ left: i ? row.scrollWidth : 0, behavior: reduce ? 'auto' : 'smooth' }); // two cards: start or end
-    mark(i);
-  }));
-  let tick = 0;
-  row.addEventListener('scroll', () => {
-    cancelAnimationFrame(tick);
-    tick = requestAnimationFrame(() => mark(row.scrollLeft > (row.scrollWidth - row.clientWidth) / 2 ? 1 : 0));
-  }, { passive: true });
 })();

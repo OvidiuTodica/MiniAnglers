@@ -12,6 +12,7 @@
   --ink:#181A18; --neon:#177A48; --neon-deep:#125E38; --cyan:#146B3F;
   --signal:#E9A21B; --mute:#6E736D;
   --accent-soft:#E7F3EC; --accent-on-dark:#7FD3A6;
+  --photo:#EEEEEE; /* the studio background of the product photos; surfaces that sit behind them */
   --grid:transparent; --gridb:rgba(24,26,24,0.10);
   --line:#E5E8E5; --line-soft:#EDEFED;
   --glow:0 8px 20px -10px rgba(28,138,84,0.40);
@@ -555,82 +556,81 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
   .promo-note h1{ font-size:22px; margin-top:10px; }
   .promo-note p{ font-size:14.5px; }
 }
-/* hero split: the offer (left) and Method Champions (right), when Theme settings > Method Champions
-   has a page. Both cards share one structure: picture on top (16:10), copy below, the price/name
-   row pinned to the bottom so the two buttons line up. Phones: one card at a time in a swipe row,
-   with two buttons above it to switch (ma-champions.js). */
-.hero-pick{ display:none; }
-.hero-split{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:stretch; }
+/* hero split, when Theme settings > Method Champions has a page (owner's pick 2026-10-14,
+   mockup variant 4): the offer in a narrow green column, Method Champions large on the photo
+   grey with the name box under the set. Up to 900px: Method Champions first, the offer as one
+   green row under it (the whole row is the link). */
+.hero-split{ display:grid; grid-template-columns:5fr 7fr; gap:16px; align-items:stretch; }
 .hero-slot{ display:flex; min-width:0; }
 .hero-slot > *{ flex:1; min-width:0; }
-.is-split .offer-card{ display:flex; flex-direction:column; gap:0; padding:14px 14px 28px; }
-.is-split .offer-shot{ order:-1; aspect-ratio:16/10; border-radius:14px; }
-.is-split .offer-copy{ display:flex; flex-direction:column; flex:1; padding:22px 18px 0; }
-.is-split .offer-copy > .promo-tag{ align-self:flex-start; }
-.is-split .offer-title{ font-size:clamp(28px,2.7vw,38px); margin-top:14px; }
-.is-split .offer-sub{ font-size:15.5px; line-height:1.55; margin-top:10px; }
-.is-split .offer-price{ margin-top:auto; padding-top:20px; }
-.is-split .offer-now{ font-size:36px; }
-.is-split .offer-card .promo-cta{ align-self:flex-start; margin-top:18px; }
-.is-split .promo-card{ display:flex; align-items:flex-end; min-height:100%; padding:40px 36px; }
 
-.champ-card{ display:flex; flex-direction:column; padding:14px 14px 28px; border-radius:20px; background:var(--bg2); border:1px solid var(--line); box-shadow:var(--shadow-glass); }
-.champ-shot{ position:relative; display:block; aspect-ratio:16/10; border-radius:14px; overflow:hidden; isolation:isolate;
-  background:radial-gradient(110% 95% at 50% 22%, var(--bg2) 0%, var(--bg3) 40%, var(--bg) 78%, var(--accent-soft) 100%); }
+.is-split .offer-card{ display:flex; flex-direction:column; align-items:stretch; gap:0; padding:12px 12px 26px; border-radius:22px; }
+.is-split .offer-shot{ order:-1; aspect-ratio:16/11; border-radius:14px; background:var(--photo); }
+.is-split .offer-pin, .is-split .offer-sub, .is-split .offer-chips, .is-split .offer-sep{ display:none; }
+.is-split .offer-copy{ display:flex; flex-direction:column; flex:1; padding:20px 14px 0; }
+.is-split .offer-copy > .promo-tag{ align-self:flex-start; }
+.is-split .offer-title{ font-size:clamp(26px,2.5vw,32px); line-height:1.06; margin-top:10px; }
+.is-split .offer-price{ margin-top:auto; padding-top:18px; }
+.is-split .offer-now{ font-size:34px; }
+.is-split .offer-card .promo-cta{ align-self:flex-start; margin-top:16px; }
+.is-split .promo-card{ display:flex; align-items:flex-end; padding:40px 36px; }
+
+.champ-card{ display:flex; flex-direction:column; padding-bottom:22px; border-radius:22px; background:var(--photo); overflow:hidden; }
+.champ-head{ position:relative; z-index:1; padding:30px 32px 0; }
+.champ-tag{ background:var(--bg2); color:var(--neon-deep); }
+.champ-title{ font-family:var(--sans); font-size:clamp(30px,3.2vw,40px); font-weight:800; line-height:1.03; letter-spacing:-.03em; margin-top:10px; color:var(--ink); }
+.champ-sub{ margin-top:8px; max-width:40ch; font-size:16px; line-height:1.5; color:color-mix(in srgb, var(--ink) 80%, var(--photo)); }
+.champ-price{ margin-top:6px; font-size:14px; color:color-mix(in srgb, var(--ink) 80%, var(--photo)); }
+.champ-price b{ font-weight:800; color:var(--cyan); }
+.champ-shot{ position:relative; display:block; width:100%; aspect-ratio:16/10; margin-top:-6px; }
 .champ-shot img{ position:absolute; inset:0; display:block; width:100%; height:100%; }
 .champ-etch{ position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .4s ease; }
 .champ-card.is-etched .champ-etch{ opacity:1; }
 .champ-etch canvas{ position:absolute; left:0; top:0; transform-origin:0 0; }
-.champ-copy{ display:flex; flex-direction:column; flex:1; padding:22px 18px 0; }
-.champ-tag{ align-self:flex-start; background:var(--accent-soft); color:var(--neon-deep); }
-.champ-title{ font-family:var(--sans); font-size:clamp(28px,2.7vw,38px); font-weight:800; line-height:1.04; letter-spacing:-.02em; margin-top:14px; color:var(--ink); }
-.champ-sub{ margin-top:10px; max-width:44ch; font-size:15.5px; line-height:1.55; color:var(--mute); }
-.champ-facts{ display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; list-style:none; }
-.champ-facts li{ padding:5px 11px; border-radius:999px; background:var(--bg); border:1px solid var(--line-soft); font-size:12.5px; font-weight:650; color:var(--ink); }
-.champ-try{ margin-top:auto; padding-top:20px; }
-.champ-label{ display:block; margin-bottom:8px; font-size:13.5px; font-weight:650; color:var(--ink); }
-.champ-row{ display:flex; flex-wrap:wrap; gap:8px; }
-.champ-input{ flex:1 1 150px; min-width:0; min-height:50px; padding:12px 18px; font:650 16px/1.2 var(--body); color:var(--ink);
-  background:var(--bg3); border:1px solid var(--line); border-radius:999px; transition:border-color .18s ease, background-color .18s ease, box-shadow .18s ease; }
-.champ-input::placeholder{ color:var(--mute); opacity:.8; font-weight:500; }
-.champ-input:hover{ border-color:color-mix(in srgb, var(--neon) 45%, var(--line)); }
-.champ-input:focus{ outline:none; border-color:var(--neon); background:var(--bg2); box-shadow:0 0 0 3px var(--accent-soft); }
-.champ-cta{ display:inline-flex; align-items:center; justify-content:center; gap:10px; flex:0 0 auto; min-height:50px; padding:0 22px; border:0; border-radius:999px;
+.champ-try{ position:relative; z-index:1; display:flex; align-items:center; gap:6px; width:min(500px, calc(100% - 48px)); margin:-34px auto 0; padding:6px;
+  background:var(--bg2); border-radius:999px; box-shadow:var(--shadow-float); transition:box-shadow .18s ease; }
+.champ-try:focus-within{ box-shadow:var(--shadow-float), 0 0 0 3px var(--accent-soft); }
+.champ-label{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.champ-input{ flex:1; min-width:0; height:48px; padding:0 16px; border:0; border-radius:999px; background:transparent; font:700 16px/1.2 var(--body); color:var(--ink); }
+.champ-input::placeholder{ color:var(--mute); font-weight:600; opacity:1; }
+.champ-input:focus{ outline:none; }
+.champ-cta{ display:inline-flex; align-items:center; justify-content:center; gap:10px; flex:0 0 auto; height:48px; padding:0 22px; border:0; border-radius:999px;
   background:var(--neon); color:#fff; font:700 15px/1 var(--sans); white-space:nowrap; cursor:pointer; box-shadow:var(--glow); transition:transform .14s ease, background-color .14s ease; }
 .champ-cta svg{ transition:transform .15s ease; }
-.champ-cta:hover{ background:var(--neon-deep); transform:translateY(-1px); }
+.champ-cta:hover{ background:var(--neon-deep); }
 .champ-cta:hover svg{ transform:translateX(3px); }
 .champ-cta:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:3px; }
 .champ-cta:active{ transform:scale(.98); }
-.champ-price{ margin-top:12px; font-size:14px; color:var(--mute); }
-.champ-price b{ font-weight:800; color:var(--cyan); }
 
 @media (max-width:900px){
-  .is-split .offer-card, .champ-card{ padding:12px 12px 22px; }
-  .is-split .offer-copy, .champ-copy{ padding:18px 10px 0; }
-  .champ-cta{ flex:1 0 auto; }
-}
-@media (max-width:760px){
-  .hero-pick{ display:flex; gap:4px; margin-bottom:10px; padding:4px; background:var(--bg2); border:1px solid var(--line); border-radius:999px; box-shadow:var(--shadow-glass); }
-  .hero-pick button{ flex:1; min-width:0; min-height:44px; padding:0 10px; border:0; border-radius:999px; background:transparent; color:var(--mute);
-    font:700 14px/1.15 var(--sans); cursor:pointer; transition:background-color .18s ease, color .18s ease; }
-  .hero-pick button:hover{ color:var(--neon-deep); }
-  .hero-pick button:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:2px; }
-  .hero-pick button:active{ transform:scale(.98); }
-  .hero-pick button[aria-current="true"]{ background:var(--neon); color:#fff; box-shadow:var(--glow); }
-  .hero-split{ display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; overscroll-behavior-x:contain; scrollbar-width:none;
-    margin:0 -18px; padding:0 18px; scroll-padding:0 18px; }
-  .hero-split::-webkit-scrollbar{ display:none; }
-  .hero-slot{ flex:0 0 calc(100% - 22px); scroll-snap-align:start; }
-  .is-split .offer-card, .champ-card{ border-radius:16px; }
-  .is-split .offer-shot, .champ-shot{ border-radius:12px; }
-}
-@media (max-width:560px){
-  .is-split .offer-title, .champ-title{ font-size:26px; line-height:1.12; margin-top:10px; }
-  .champ-sub{ font-size:14.5px; }
-  .champ-facts{ display:none; }
-  .is-split .offer-now{ font-size:32px; }
-  .is-split .offer-price{ padding-top:16px; }
+  .hero-split{ grid-template-columns:1fr; gap:10px; }
+  .hero-slot-champ{ order:-1; }
+  .champ-card{ padding-bottom:12px; border-radius:18px; }
+  .champ-head{ padding:20px 18px 0; }
+  .champ-title{ font-size:27px; line-height:1.08; margin-top:8px; }
+  .champ-sub{ font-size:14.5px; margin-top:6px; }
+  .champ-shot{ max-width:640px; margin:0 auto; }
+  .champ-try{ display:grid; gap:6px; width:auto; margin:2px 12px 0; padding:0; background:none; border-radius:0; box-shadow:none; }
+  .champ-try:focus-within{ box-shadow:none; }
+  .champ-input{ background:var(--bg2); padding:0 18px; transition:box-shadow .18s ease; }
+  .champ-input:focus{ box-shadow:0 0 0 1px var(--neon), 0 0 0 4px var(--accent-soft); }
+  .champ-cta{ width:100%; }
+
+  /* the offer as one green row: photo, name, price, arrow */
+  .is-split .offer-card{ position:relative; display:grid; grid-template-columns:112px 1fr; align-items:center; gap:14px; padding:8px 58px 8px 8px; border-radius:18px; }
+  .is-split .offer-shot{ aspect-ratio:auto; height:84px; border-radius:12px; }
+  .is-split .offer-shot img{ object-fit:contain; padding:4px; }
+  .is-split .offer-copy{ padding:0; }
+  .is-split .offer-copy > .promo-tag{ font-size:10.5px; padding:4px 9px; }
+  .is-split .offer-title{ font-size:16.5px; line-height:1.2; letter-spacing:-.01em; margin-top:6px; }
+  .is-split .offer-price{ margin-top:2px; padding-top:0; }
+  .is-split .offer-now{ font-size:16px; }
+  .is-split .offer-save{ display:none; }
+  .is-split .offer-card .promo-cta{ position:absolute; inset:0; align-self:stretch; justify-self:stretch; margin:0; padding:0; border-radius:inherit; background:transparent; box-shadow:none; }
+  .is-split .offer-card .promo-cta > span{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  .is-split .offer-card .promo-cta svg{ position:absolute; right:14px; top:50%; width:34px; height:34px; margin-top:-17px; padding:9px; border-radius:50%; background:rgba(255,255,255,.16); color:#fff; }
+  .is-split .offer-card .promo-cta:hover, .is-split .offer-card .promo-cta:active{ transform:none; box-shadow:none; }
+  .is-split .offer-card .promo-cta:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:3px; }
 }
 .engrave-preview[hidden]{ display:none; }
 

@@ -82,8 +82,9 @@ assets/ma-configurator.js/.css — the configurator (3D stage + options panel; o
 assets/ma-three.js           — three.js r169 + GLTFLoader/OrbitControls/RoomEnvironment/RoundedBoxGeometry, one minified ES module
 assets/ma-cfg-set.glb        — the set's 3D models (from the owner's Bambu Studio 3MF/STL files); ma-engr-*.woff2 = engraving fonts
 assets/ma-champions.js       — homepage banner, Method Champions card: lays the typed name on the render
-                               (ma-champions-set*.webp; zone corners in data-zones) + the phone switch between the two cards.
-                               The banner splits only when Theme settings > Method Champions > Configurator page is set
+                               (ma-champions-set*.webp; zone corners in data-zones). The banner splits only when Theme
+                               settings > Method Champions > Configurator page is set: offer in a narrow green column,
+                               Method Champions large (owner's pick, mockup variant 4); phones: Champions first, offer as a row
 assets/favicon.svg           — the logo's black "m" mark on a white tile (+ favicon-32.png, favicon-192.png for Google Search, apple-touch-icon.png, og-image.png; all generated from minianglers-logo.svg)
 ```
 
@@ -191,6 +192,7 @@ these, never hard-code a hex value inline):
 | `--cyan` | `#146B3F` | price + label green (deep, passes AA on white) |
 | `--accent-soft` | `#E7F3EC` | green tint (eyebrow/tag/tile-icon backgrounds) |
 | `--accent-on-dark` | `#7FD3A6` | green accent used on the dark footer |
+| `--photo` | `#EEEEEE` | the studio grey behind the product photos — only for surfaces that sit behind/around them (owner approved via the banner mockups, 2026-10-14) |
 | `--mute` | `#6E736D` | secondary/muted text |
 | `--line` / `--line-soft` | `#E5E8E5` / `#EDEFED` | borders/dividers |
 | `--signal` / `--coral` | `#E9A21B` / `#D6362A` | warning / error, sparing |

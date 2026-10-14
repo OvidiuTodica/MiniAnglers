@@ -10,11 +10,12 @@
   and only shows when every piece is for sale and the sum beats the set price, so the
   comparison is always true (EU/RO rule: no invented "old" prices).
   Method Champions (Theme settings > Method Champions > page picked): the banner splits in
-  two, side by side on desktop and one at a time on phones (two buttons switch between them):
-  the offer (or, with no offer, the green copy banner) on the left, Method Champions on the
-  right. Its picture is a render of the real 3D models; ma-champions.js lays the name typed
-  in the card onto every piece (corners of each engraving zone, measured on that render, in
-  data-zones), and the form opens the configurator page with the name (?nume=).
+  two (owner's pick, mockup variant 4, 2026-10-14): the offer in a narrow green column on the
+  left, Method Champions large on the right. Phones: Method Champions first, the offer as one
+  green row under it. The Method Champions picture is a render of the real 3D models;
+  ma-champions.js lays the name typed in the card onto every piece (corners of each engraving
+  zone, measured on that render, in data-zones), and the form opens the configurator page with
+  the name (?nume=).
   Text fields left empty in the theme editor fall back to the standard copy (RO default,
   EN via data-i18n). Anything typed in the editor is shown as typed and is never
   overwritten by the dictionary; each field has an optional "(English)" twin that the
@@ -116,39 +117,30 @@
   {%- capture champ_card -%}
     {%- assign cp = settings.champions_product -%}
     <article class="champ-card" data-champ data-font="{{ 'ma-engr-archivo-black-400-latin.woff2' | asset_url }}" data-font-ext="{{ 'ma-engr-archivo-black-400-latin-ext.woff2' | asset_url }}">
+      <div class="champ-head">
+        <span class="promo-tag champ-tag"{% if s.champ_tag == blank %} data-i18n="promo.champ_tag"{% elsif s.champ_tag_en != blank %} data-i18n-en="{{ s.champ_tag_en | escape }}"{% endif %}>{{ s.champ_tag | default: 'Nou' }}</span>
+        <h2 class="champ-title">Method Champions</h2>
+        <p class="champ-sub"{% if s.champ_sub == blank %} data-i18n="promo.champ_sub"{% elsif s.champ_sub_en != blank %} data-i18n-en="{{ s.champ_sub_en | escape }}"{% endif %}>{{ s.champ_sub | default: 'Setul de concurs. Scrie un nume și vezi-l pe fiecare piesă.' }}</p>
+        {%- if cp != blank and cp.available -%}
+          {%- assign cvs = cp.variants | where: 'available' | sort: 'price' -%}
+          <p class="champ-price"><span data-i18n="promo.champ_from">Setul de la</span> <b>{{ cvs.first.price | money_without_trailing_zeros }}</b></p>
+        {%- endif -%}
+      </div>
       <a class="champ-shot" href="{{ champ_page.url }}" tabindex="-1" aria-hidden="true">
         <img src="{{ 'ma-champions-set.webp' | asset_url }}"
              srcset="{{ 'ma-champions-set-720.webp' | asset_url }} 720w, {{ 'ma-champions-set.webp' | asset_url }} 1200w"
-             sizes="(max-width: 760px) calc(100vw - 72px), (max-width: 1200px) calc(50vw - 50px), 560px"
+             sizes="(max-width: 900px) calc(100vw - 36px), (max-width: 1200px) 56vw, 660px"
              width="1200" height="750" alt="" decoding="async">
         <span class="champ-etch" data-champ-etch data-zones='[{"k":"bac","q":[[0.0482,0.36055],[0.19742,0.37584],[0.21304,0.53638],[0.07166,0.52083]]},{"k":"bac","q":[[0.28246,0.38455],[0.43502,0.40019],[0.43794,0.5611],[0.29356,0.54523]]},{"k":"bac","q":[[0.52197,0.4091],[0.67799,0.4251],[0.66764,0.58637],[0.52018,0.57014]]},{"k":"bac","q":[[0.76692,0.4342],[0.92651,0.45056],[0.90229,0.61216],[0.75165,0.59559]]},{"k":"suport_waftere","q":[[0.16387,0.71437],[0.22056,0.72109],[0.21766,0.744],[0.16068,0.73717]]},{"k":"suport_gel","q":[[0.38096,0.58219],[0.56232,0.60235],[0.56091,0.62911],[0.37831,0.60857]]},{"k":"suport_waftere","q":[[0.70302,0.77831],[0.76263,0.78538],[0.76251,0.8092],[0.70259,0.80203]]}]'></span>
       </a>
-      <div class="champ-copy">
-        <span class="promo-tag champ-tag"{% if s.champ_tag == blank %} data-i18n="promo.champ_tag"{% elsif s.champ_tag_en != blank %} data-i18n-en="{{ s.champ_tag_en | escape }}"{% endif %}>{{ s.champ_tag | default: 'Set de concurs' }}</span>
-        <h2 class="champ-title">Method Champions</h2>
-        <p class="champ-sub"{% if s.champ_sub == blank %} data-i18n="promo.champ_sub"{% elsif s.champ_sub_en != blank %} data-i18n-en="{{ s.champ_sub_en | escape }}"{% endif %}>{{ s.champ_sub | default: '4 bacuri mari, 2 suporturi de waftere și un suport de geluri, cu numele tău pe fiecare piesă.' }}</p>
-        <ul class="champ-facts">
-          <li data-i18n="promo.champ_f1">6 perechi de culori</li>
-          <li data-i18n="promo.champ_f2">3 fonturi pentru nume</li>
-          <li data-i18n="promo.champ_f3">Îl vezi în 3D înainte de comandă</li>
-        </ul>
-        <form class="champ-try" action="{{ champ_page.url }}" method="get">
-          <label class="champ-label" for="champ-name" data-i18n="promo.champ_label">Scrie un nume și vezi-l pe set</label>
-          <div class="champ-row">
-            <input class="champ-input" id="champ-name" name="nume" maxlength="20" placeholder="Numele tău" data-i18n-ph="promo.champ_ph" autocomplete="off" spellcheck="false" enterkeyhint="go" data-champ-input>
-            <button class="champ-cta" type="submit">
-              <span{% if s.champ_cta == blank %} data-i18n="promo.champ_cta"{% elsif s.champ_cta_en != blank %} data-i18n-en="{{ s.champ_cta_en | escape }}"{% endif %}>{{ s.champ_cta | default: 'Configurează setul' }}</span>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </button>
-          </div>
-        </form>
-        {%- if cp != blank and cp.available -%}
-          {%- assign cvs = cp.variants | where: 'available' | sort: 'price' -%}
-          <p class="champ-price"><span data-i18n="promo.champ_from">Setul de la</span> <b>{{ cvs.first.price | money_without_trailing_zeros }}</b>
-            {%- if cvs.size > 1 and cvs.last.price > cvs.first.price -%}. <span data-i18n="promo.champ_name_fee">Numele gravat:</span> +{{ cvs.last.price | minus: cvs.first.price | money_without_trailing_zeros }}{%- endif -%}
-          </p>
-        {%- endif -%}
-      </div>
+      <form class="champ-try" action="{{ champ_page.url }}" method="get">
+        <label class="champ-label" for="champ-name" data-i18n="promo.champ_label">Scrie un nume și vezi-l pe set</label>
+        <input class="champ-input" id="champ-name" name="nume" maxlength="20" placeholder="Numele tău" data-i18n-ph="promo.champ_ph" autocomplete="off" spellcheck="false" enterkeyhint="go" data-champ-input>
+        <button class="champ-cta" type="submit">
+          <span{% if s.champ_cta == blank %} data-i18n="promo.champ_cta"{% elsif s.champ_cta_en != blank %} data-i18n-en="{{ s.champ_cta_en | escape }}"{% endif %}>{{ s.champ_cta | default: 'Configurează setul' }}</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
     </article>
   {%- endcapture -%}
 {%- endif -%}
@@ -156,13 +148,9 @@
 <section class="promo{% if split %} is-split{% endif %}" id="sistem">
   <div class="section">
     {%- if split -%}
-      <div class="hero-pick" data-hero-pick>
-        <button type="button" data-pick="0" aria-controls="hero-a" aria-current="true">{% if offer_on %}{{ offer.title }}{% else %}MiniAnglers{% endif %}</button>
-        <button type="button" data-pick="1" aria-controls="hero-b" aria-current="false">Method Champions</button>
-      </div>
-      <div class="hero-split" data-hero-split>
-        <div class="hero-slot" id="hero-a">{% if offer_on %}{{ offer_card }}{% else %}{{ brand_card }}{% endif %}</div>
-        <div class="hero-slot" id="hero-b">{{ champ_card }}</div>
+      <div class="hero-split">
+        <div class="hero-slot hero-slot-offer">{% if offer_on %}{{ offer_card }}{% else %}{{ brand_card }}{% endif %}</div>
+        <div class="hero-slot hero-slot-champ">{{ champ_card }}</div>
       </div>
     {%- elsif offer_on -%}
       {{ offer_card }}
@@ -212,9 +200,9 @@
 
     { "type": "header", "content": "Method Champions" },
     { "type": "paragraph", "content": "When a page is picked in Theme settings > Method Champions, the banner splits in two: the offer on the left, Method Champions on the right, where visitors type a name and see it on the set. Empty fields keep the standard text." },
-    { "type": "text", "id": "champ_tag", "label": "Tag", "placeholder": "Set de concurs" },
+    { "type": "text", "id": "champ_tag", "label": "Tag", "placeholder": "Nou" },
     { "type": "text", "id": "champ_tag_en", "label": "Tag (English)" },
-    { "type": "textarea", "id": "champ_sub", "label": "Text", "placeholder": "4 bacuri mari, 2 suporturi de waftere și un suport de geluri, cu numele tău pe fiecare piesă." },
+    { "type": "textarea", "id": "champ_sub", "label": "Text", "placeholder": "Setul de concurs. Scrie un nume și vezi-l pe fiecare piesă." },
     { "type": "textarea", "id": "champ_sub_en", "label": "Text (English)" },
     { "type": "text", "id": "champ_cta", "label": "Button", "placeholder": "Configurează setul" },
     { "type": "text", "id": "champ_cta_en", "label": "Button (English)" }
