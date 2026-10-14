@@ -1,7 +1,9 @@
 {%- comment -%}
   Method Champions: the 3D configurator page (template page.method-champions, Admin >
   Pages > the page with that template). ma-configurator.js builds the 3D stage and the
-  options panel; ma-three.js is three.js (vendored, see the top of ma-configurator.js).
+  step-by-step guide ("Showroom, pas cu pas", owner's pick 2026-10-14); ma-three.js is
+  three.js (vendored, see the top of ma-configurator.js). Under the stage: what's in the
+  set (three pictures of the real models with their sizes), then the page's own text.
   Prices and Add to cart come from Theme settings > Method Champions > Set product:
   its cheapest available variant = the set without a name, its dearest = the set with
   the name engraved, so the cart charges exactly what the page shows. A product with one
@@ -85,8 +87,28 @@
 </section>
 <script type="module" src="{{ 'ma-configurator.js' | asset_url }}"></script>
 
+<section class="cfg cfg-parts" aria-labelledby="cfg-parts-h">
+  <h2 id="cfg-parts-h" data-i18n="cfg.parts">Ce primești în set</h2>
+  <div class="cfg-parts-grid">
+    <figure>
+      <span class="cfg-part-img"><img src="{{ 'ma-cfg-part-bacuri.webp' | asset_url }}" width="800" height="600" alt="" loading="lazy" decoding="async"></span>
+      <figcaption><b data-i18n="cfg.p1">4 bacuri de nadă</b><span data-i18n="cfg.p1d">160 × 160 × 100 mm, deschise sus, cu numele pe față</span></figcaption>
+    </figure>
+    <figure>
+      <span class="cfg-part-img"><img src="{{ 'ma-cfg-part-logo.webp' | asset_url }}" width="800" height="600" alt="" loading="lazy" decoding="async"></span>
+      <figcaption><b data-i18n="cfg.p2">Logo-ul MiniAnglers</b><span data-i18n="cfg.p2d">Pe spatele fiecărui bac</span></figcaption>
+    </figure>
+    <figure>
+      <span class="cfg-part-img"><img src="{{ 'ma-cfg-part-suporturi.webp' | asset_url }}" width="800" height="600" alt="" loading="lazy" decoding="async"></span>
+      <figcaption><b data-i18n="cfg.p3">3 suporturi</b><span data-i18n="cfg.p3d">2 pentru waftere (165 × 100 mm), 1 pentru geluri (158 × 100 mm)</span></figcaption>
+    </figure>
+  </div>
+</section>
+
 {%- if page.content != blank -%}
   <div class="cfg-page">{{ page.content }}</div>
+{%- else -%}
+  <div class="cfg-end"></div>
 {%- endif -%}
 
 {% schema %}

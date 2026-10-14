@@ -1,14 +1,18 @@
 /* MiniAnglers — 3D configurator for the Method Champions set (page template
    page.method-champions, section ma-configurator).
+   Layout (owner's pick 2026-10-14, "Showroom, pas cu pas"): the set fills a wide
+   stage on the studio grey; a floating guide asks one thing at a time (name ->
+   colours -> font -> done/cart). On phones the guide is a sheet at the bottom of
+   the stage. Every choice redraws the 3D set at once.
    The real printed bodies come from one GLB (ma-cfg-set.glb, converted from the
    owner's Bambu Studio 3MF/STL files). Name and logo are drawn onto canvas
    textures laid on the flat faces: on the print they are flush colour inlays
    (colour modifiers), so a flat decal is a faithful preview.
-   Three.js is ma-three.js: three r169 + GLTFLoader, OrbitControls,
-   RoomEnvironment and RoundedBoxGeometry in one pre-built minified module
-   (vendored file, not built by the theme). To regenerate it, outside the repo:
-   npm i three@0.169.0 esbuild, an entry.js that re-exports the THREE.* names
-   used below from 'three' plus the four addons from three/examples/jsm/..., then
+   Three.js is ma-three.js: three r169 + GLTFLoader, OrbitControls and
+   RoomEnvironment in one pre-built minified module (vendored file, not built by
+   the theme). To regenerate it, outside the repo: npm i three@0.169.0 esbuild, an
+   entry.js that re-exports the THREE.* names used below from 'three' plus the
+   three addons from three/examples/jsm/..., then
    npx esbuild entry.js --bundle --format=esm --minify --target=es2020 --outfile=ma-three.js
    Prices and the Add to cart come from the product picked in Theme settings >
    Method Champions: its cheapest variant is the set without a name, its dearest
@@ -24,73 +28,60 @@ if (root) {
 }
 
 function start(root, THREE) {
-  const { GLTFLoader, OrbitControls, RoomEnvironment, RoundedBoxGeometry } = THREE;
+  const { GLTFLoader, OrbitControls, RoomEnvironment } = THREE;
   const CFG = JSON.parse(root.querySelector('script[data-cfg]').textContent);
   root.querySelectorAll('[data-boot]').forEach((n) => n.remove()); // server-rendered placeholder
   const FIL = Object.fromEntries(CFG.filaments.map((f) => [f.id, f]));
   const FONTS = Object.fromEntries(CFG.fonts.map((f) => [f.id, f]));
   const BRAND_FONT = { family: 'Archivo Black', weight: 400, style: 'normal' };
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(pointer: fine)').matches;
   const STORE_KEY = 'ma_cfg_' + CFG.code;
 
   /* ---------------- copy (RO default / EN) ---------------- */
   const I18N = {
     ro: {
-      title: 'Method Champions',
-      lead: 'Setul de concurs: 4 bacuri de nadă, 2 suporturi de waftere și un suport de geluri. Alegi culorile și numele, iar modelul se schimbă pe loc.',
+      title: 'Method Champions', sub: 'Setul de concurs, cu numele tău pe fiecare piesă.',
       loading: 'Se încarcă setul…',
-      noGL: 'Browserul tău nu poate afișa modelul 3D. Poți configura setul mai jos, iar rezumatul arată tot ce ai ales.',
-      loadErr: 'Modelul 3D nu s-a putut încărca. Reîncarcă pagina; opțiunile de mai jos funcționează oricum.',
-      hintTouch: 'Trage ca să rotești. Atinge o piesă ca s-o editezi.',
-      hintMouse: 'Trage ca să rotești, rotița face zoom. Click pe o piesă ca s-o editezi.',
-      all: 'Tot setul', overview: 'Vezi tot setul', pieces: 'Piesele setului',
-      bac: 'Bac', waf: 'Suport waftere', gel: 'Suport geluri', wafShort: 'Waftere', gelShort: 'Geluri',
-      dimBac: '160 × 160 × 100 mm, deschis sus', dimWaf: '165 × 100 mm, 2 locașuri', dimGel: '158 × 100 mm, 3 locașuri',
-      colors: 'Culori', comboTpl: '{b} cu gravură {e}',
-      name: 'Numele gravat', namePh: 'ex. Andrei sau numele echipei',
-      nameNote: 'Apare pe fiecare bac și pe suporturi. Pe spatele bacului e logo-ul MiniAnglers.',
-      viewBack: 'Vezi fața cu logo-ul', viewFront: 'Vezi fața cu numele',
-      font: 'Font', optional: 'opțional',
-      top: 'sus', bottom: 'jos',
-      pieceColor: 'O piesă în altă culoare',
-      pcNote: 'Alege piesa, apoi pornește „Culori doar pentru piesa asta”.',
-      remove: 'Elimină',
-      ownColor: 'Culori doar pentru piesa asta',
-      summary: 'Rezumat', base: 'Setul, 7 piese', engraving: 'Gravura numelui', total: 'Total',
-      add: 'Adaugă în coș', adding: 'Se adaugă…',
-      noName: 'fără nume', logoOnly: 'doar MiniAnglers',
-      slipNote: 'Primim configurația exact cum o vezi și printăm setul după ea.',
+      noGL: 'Browserul tău nu poate afișa modelul 3D. Poți configura setul mai jos.',
+      loadErr: 'Modelul 3D nu s-a putut încărca. Reîncarcă pagina; alegerile de mai jos funcționează oricum.',
+      hintMouse: 'Trage ca să rotești setul', hintTouch: 'Trage cu degetul ca să rotești',
+      views: 'Vederi', vName: 'Numele', vLogo: 'Logo-ul', vHolders: 'Suporturile', overview: 'Vezi tot setul',
+      steps: 'Pașii configurării', sName: 'Nume', sColors: 'Culori', sFont: 'Font', sDone: 'Gata', stepOf: 'Pasul {n} din {t}',
+      qName: 'Ce nume scriem pe set?', hName: 'Apare pe fiecare bac și pe suporturi. Poți lăsa gol.', namePh: 'Numele tău', nameLabel: 'Numele de pe set',
+      qColors: 'Ce culori vrei?', hColors: 'Cercul e culoarea piesei, punctul e culoarea gravurii.', engr: 'gravură {e}',
+      qFont: 'Cum să arate numele?', hFont: 'Așa apare gravat pe bacuri și pe suporturi.',
+      qDone: 'Setul tău e gata', hDone: 'Îl printăm exact cum îl vezi.',
+      sumName: 'Numele', sumColors: 'Culorile', sumFont: 'Fontul', noName: 'Fără nume', edit: 'Modifică', pairTpl: '{b} cu {e}',
+      next: 'Continuă', back: 'Înapoi', add: 'Adaugă în coș', adding: 'Se adaugă…',
+      pSet: 'Setul', pNamed: 'Setul cu nume', pTotal: 'Total', pSoon: 'Comenzi în curând',
       soon: 'Comenzile se deschid în curând', ask: 'Scrie-ne',
-      soonNote: 'Setul nu se poate comanda încă online. Configurația ta rămâne salvată pe acest dispozitiv, iar pentru o comandă acum ne poți scrie.',
+      soonNote: 'Setul nu se poate comanda încă online. Configurația ta rămâne salvată pe acest dispozitiv.',
+      extraLink: 'O piesă în altă culoare?', qExtra: 'O piesă în altă culoare', hExtra: 'Alege piesa, apoi culorile ei. Restul setului rămâne cum e.',
+      sameAsSet: 'Ca restul setului', done: 'Gata', ownN: 'Piese în altă culoare: {n}',
+      bac: 'Bac', waf: 'Suport waftere', gel: 'Suport geluri',
       cartErr: 'Nu am putut adăuga setul în coș. Încearcă din nou.',
     },
     en: {
-      title: 'Method Champions',
-      lead: 'The competition set: 4 bait tubs, 2 wafter holders and a gel holder. Pick the colours and the name, and the model updates as you go.',
+      title: 'Method Champions', sub: 'The competition set, with your name on every piece.',
       loading: 'Loading the set…',
-      noGL: 'Your browser can’t show the 3D model. You can still configure the set below; the summary lists everything you picked.',
-      loadErr: 'The 3D model didn’t load. Reload the page; the options below still work.',
-      hintTouch: 'Drag to rotate. Tap a piece to edit it.',
-      hintMouse: 'Drag to rotate, scroll to zoom. Click a piece to edit it.',
-      all: 'Whole set', overview: 'See the whole set', pieces: 'Set pieces',
-      bac: 'Tub', waf: 'Wafter holder', gel: 'Gel holder', wafShort: 'Wafters', gelShort: 'Gels',
-      dimBac: '160 × 160 × 100 mm, open top', dimWaf: '165 × 100 mm, 2 slots', dimGel: '158 × 100 mm, 3 slots',
-      colors: 'Colours', comboTpl: '{b} with {e} engraving',
-      name: 'Engraved name', namePh: 'e.g. Andrei or your team name',
-      nameNote: 'Goes on every tub and on the holders. The MiniAnglers logo sits on the back of each tub.',
-      viewBack: 'Show the logo side', viewFront: 'Show the name side',
-      font: 'Font', optional: 'optional',
-      top: 'top', bottom: 'bottom',
-      pieceColor: 'One piece in another colour',
-      pcNote: 'Pick the piece, then turn on “Colours for this piece only”.',
-      remove: 'Remove',
-      ownColor: 'Colours for this piece only',
-      summary: 'Summary', base: 'The set, 7 pieces', engraving: 'Name engraving', total: 'Total',
-      add: 'Add to cart', adding: 'Adding…',
-      noName: 'no name', logoOnly: 'MiniAnglers only',
-      slipNote: 'We get your configuration exactly as you see it and print the set from it.',
+      noGL: 'Your browser can’t show the 3D model. You can still configure the set below.',
+      loadErr: 'The 3D model didn’t load. Reload the page; the choices below still work.',
+      hintMouse: 'Drag to rotate the set', hintTouch: 'Drag with a finger to rotate',
+      views: 'Views', vName: 'Name', vLogo: 'Logo', vHolders: 'Holders', overview: 'See the whole set',
+      steps: 'Configuration steps', sName: 'Name', sColors: 'Colours', sFont: 'Font', sDone: 'Done', stepOf: 'Step {n} of {t}',
+      qName: 'What name goes on the set?', hName: 'It goes on every tub and on the holders. You can leave it empty.', namePh: 'Your name', nameLabel: 'Name on the set',
+      qColors: 'Which colours?', hColors: 'The circle is the piece colour, the dot is the engraving colour.', engr: '{e} engraving',
+      qFont: 'How should the name look?', hFont: 'This is how it’s engraved on the tubs and holders.',
+      qDone: 'Your set is ready', hDone: 'We print it exactly as you see it.',
+      sumName: 'Name', sumColors: 'Colours', sumFont: 'Font', noName: 'No name', edit: 'Change', pairTpl: '{b} with {e}',
+      next: 'Continue', back: 'Back', add: 'Add to cart', adding: 'Adding…',
+      pSet: 'The set', pNamed: 'Set with name', pTotal: 'Total', pSoon: 'Orders open soon',
       soon: 'Orders open soon', ask: 'Write to us',
-      soonNote: 'The set can’t be ordered online yet. Your configuration stays saved on this device, and to order now you can write to us.',
+      soonNote: 'The set can’t be ordered online yet. Your configuration stays saved on this device.',
+      extraLink: 'One piece in another colour?', qExtra: 'One piece in another colour', hExtra: 'Pick the piece, then its colours. The rest of the set stays as it is.',
+      sameAsSet: 'Same as the set', done: 'Done', ownN: 'Pieces in another colour: {n}',
+      bac: 'Tub', waf: 'Wafter holder', gel: 'Gel holder',
       cartErr: 'We couldn’t add the set to your cart. Please try again.',
     },
   };
@@ -100,11 +91,13 @@ function start(root, THREE) {
   const money = (n) => n.toLocaleString('ro-RO', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' ' + CFG.currency;
   const P = CFG.prices; // null until the set product exists in Shopify
   const filName = (id) => FIL[id][lang()];
-  // "Negru cu gravură albă" / "Black with white engraving"
-  const comboText = (b, e) => t('comboTpl').replace('{b}', filName(b)).replace('{e}', lang() === 'ro' ? FIL[e].roF : FIL[e].en.toLowerCase());
+  const engrName = (id) => (lang() === 'ro' ? FIL[id].roF : FIL[id].en.toLowerCase());
+  const engrText = (e) => t('engr').replace('{e}', engrName(e));
+  const pairText = (b, e) => t('pairTpl').replace('{b}', filName(b)).replace('{e}', lang() === 'ro' ? FIL[e].ro.toLowerCase() : FIL[e].en.toLowerCase());
   const COMBOS = CFG.combos.map(([b, e]) => ({ b, e, v: b + '|' + e }));
   const isCombo = (b, e) => COMBOS.some((c) => c.b === b && c.e === e);
   const fontName = (id) => FONTS[id][lang()];
+  const fontStyle = (f) => `font-family:'${f.family}';font-weight:${f.weight};font-style:${f.style}`;
 
   /* ---------------- the set ---------------- */
   // Laid out like a side tray at the peg: tubs in a row at the back, holders in front.
@@ -117,9 +110,7 @@ function start(root, THREE) {
     { id: 'gel', kind: 'suport_gel', n: 0, pos: [0, 0, 104] },
     { id: 'waf2', kind: 'suport_waftere', n: 2, pos: [186, 0, 104] },
   ];
-  const BACS = PIECES.filter((p) => p.kind === 'bac').map((p) => p.id);
-  const pieceName = (p) => p.kind === 'bac' ? `${t('bac')} ${p.n}` : p.kind === 'suport_gel' ? t('gel') : `${t('waf')} ${p.n}`;
-  const chipName = (p) => p.kind === 'bac' ? `${t('bac')} ${p.n}` : p.kind === 'suport_gel' ? t('gelShort') : `${t('wafShort')} ${p.n}`;
+  const pieceName = (p) => (p.kind === 'bac' ? `${t('bac')} ${p.n}` : p.kind === 'suport_gel' ? t('gel') : `${t('waf')} ${p.n}`);
   const byId = Object.fromEntries(PIECES.map((p) => [p.id, p]));
 
   // Engraving zones measured on the real meshes (mm, piece frame: Y up, engraving face toward +Z).
@@ -147,10 +138,7 @@ function start(root, THREE) {
   const HOLDER_ORDER = { suport_waftere: 'brandTop', suport_gel: 'nameTop' };
 
   /* ---------------- state ---------------- */
-  const fresh = () => ({
-    base: COMBOS[0].b, engr: COMBOS[0].e, name: '', font: CFG.fonts[0].id,
-    overrides: {},
-  });
+  const fresh = () => ({ base: COMBOS[0].b, engr: COMBOS[0].e, name: '', font: CFG.fonts[0].id, overrides: {} });
   let state = fresh();
   try {
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
@@ -161,52 +149,66 @@ function start(root, THREE) {
       Object.entries(saved.overrides || {}).forEach(([id, o]) => { if (byId[id] && ok(o)) state.overrides[id] = { base: o.base, engr: o.engr }; });
     }
   } catch (e) { /* storage blocked: start fresh */ }
-  let selected = null;
-  let bacFace = 'front'; // which face of the selected tub the camera shows
   let saveTimer = 0;
   const save = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { } }, 300); };
-
   const colorsOf = (id) => state.overrides[id] || { base: state.base, engr: state.engr };
   const differs = (id) => { const o = state.overrides[id]; return !!o && (o.base !== state.base || o.engr !== state.engr); };
   const cleanText = (s, max) => s.replace(/[^\p{L}\p{N} .\-&'’!#]/gu, '').replace(/\s{2,}/g, ' ').slice(0, max);
   // a name typed on the homepage card arrives as ?nume=
   const fromUrl = new URLSearchParams(location.search).get('nume');
   if (fromUrl) { state.name = cleanText(fromUrl, CFG.maxChars).trim(); save(); }
+  const realName = () => state.name.trim();
+
+  // the guide: 0 name, 1 colours, 2 font, 3 done (+ the "one piece in another colour" page of step 3)
+  const STEP_KEYS = ['sName', 'sColors', 'sFont', 'sDone'];
+  let step = 0;
+  let extra = false;      // showing the per-piece colours page
+  let extraPiece = null;  // piece picked there
+  let focused = null;     // piece the camera is looking at (tap on the model)
+  let view = 'name';      // camera view: name / logo / holders
+  const fontOff = () => !realName(); // no name, nothing to set in a font
+  // while the name step is open and the field is empty, the tubs show a faint "Numele tău"
+  const ghost = () => step === 0 && !extra && !realName();
+  const shownName = () => realName() || (ghost() ? t('namePh') : '');
 
   function quote() {
     if (!P) return null;
-    const lines = [{ key: 'base', label: t('base'), amount: P.base }];
-    if (state.name.trim() && P.name) lines.push({ key: 'name', label: t('engraving'), amount: P.name });
-    return { lines, total: lines.reduce((s, l) => s + l.amount, 0) };
+    const named = !!realName() && !!P.name;
+    return { named, total: P.base + (named ? P.name : 0), lines: [{ key: 'base', amount: P.base }].concat(named ? [{ key: 'name', amount: P.name }] : []) };
   }
 
   /* ---------------- DOM skeleton ---------------- */
   root.insertAdjacentHTML('beforeend', `
     <div class="cfg-stage" data-stage>
-      <canvas class="cfg-canvas" aria-label="Set MiniAnglers 3D" role="img"></canvas>
+      <canvas class="cfg-canvas" aria-label="Method Champions 3D" role="img"></canvas>
+      <div class="cfg-top" data-top>
+        <div class="cfg-titles"><h1 class="cfg-title" data-t="title"></h1><p class="cfg-sub" data-t="sub"></p></div>
+        <p class="cfg-price-m" data-price-m></p>
+        <div class="cfg-tools">
+          <div class="cfg-views" role="group" data-views></div>
+          <p class="cfg-hint" data-hint></p>
+        </div>
+      </div>
       <button type="button" class="cfg-overview" data-act="overview" hidden>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg><span data-t="overview"></span>
       </button>
-      <button type="button" class="cfg-overview cfg-flip" data-act="flip" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.7M20 4v4.7h-4.7M20 12a8 8 0 0 1-13.7 5.6L4 15.3M4 20v-4.7h4.7"/></svg><span data-flip-label></span>
-      </button>
-      <p class="cfg-hint" data-hint></p>
       <div class="cfg-loading" data-loading><span class="cfg-spin" aria-hidden="true"></span><span data-t="loading"></span></div>
-      <div class="cfg-chips" data-chips role="toolbar"></div>
-    </div>
-    <div class="cfg-panel" data-panel></div>`);
+      <div class="cfg-dock" data-dock></div>
+    </div>`);
   const $ = (s) => root.querySelector(s);
   const stage = $('[data-stage]');
   const canvas = $('.cfg-canvas');
-  const panel = $('[data-panel]');
+  const topBar = $('[data-top]');
+  const dock = $('[data-dock]');
 
-  // keep the sticky stage under the site's sticky header (+ the category strip, sticky on desktop only)
+  // the stage fills the screen under the site's sticky header (+ the category strip, sticky on desktop only)
   const nav = document.querySelector('[data-nav]');
   const catnav = document.querySelector('.catnav');
   const syncTop = () => {
     let h = nav ? nav.getBoundingClientRect().height : 0;
     if (catnav && getComputedStyle(catnav).position === 'sticky') h += catnav.getBoundingClientRect().height;
     root.style.setProperty('--cfg-top', Math.round(h) + 'px');
+    root.style.setProperty('--cfg-offset', Math.round(root.getBoundingClientRect().top + window.scrollY) + 'px');
   };
   syncTop();
   if ('ResizeObserver' in window) [nav, catnav].forEach((el) => el && new ResizeObserver(syncTop).observe(el));
@@ -232,13 +234,16 @@ function start(root, THREE) {
   }
 
   // draw lines centred on (cx, cyFromBottom) mm; returns the block for the order JSON
-  function drawLines(d, fit, f, cx, cy, color) {
+  function drawLines(d, fit, f, cx, cy, color, alpha = 1) {
     const { ctx, ppm, w, h } = d;
     const cap = capEm(f) * fit.em, gap = fit.em * 1.1, n = fit.lines.length;
+    ctx.save();
+    ctx.globalAlpha = alpha;
     ctx.font = fontCss(f, fit.em * ppm);
     ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     const top = cy - cap / 2 + (n - 1) * gap / 2; // first baseline, so the block is centred on cy
     fit.lines.forEach((line, i) => ctx.fillText(line, (cx + w / 2) * ppm, (h - (top - i * gap)) * ppm));
+    ctx.restore();
     return { lines: fit.lines, font: f.family, fontSizeMm: +fit.em.toFixed(1), capHeightMm: +cap.toFixed(1), centerXmm: cx, centerFromBottomMm: cy };
   }
 
@@ -275,7 +280,7 @@ function start(root, THREE) {
   } catch (e) { renderer = null; }
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(30, 1, 10, 8000);
+  const camera = new THREE.PerspectiveCamera(28, 1, 10, 8000);
   const pieces = {}; // id -> { def, group, mesh, mat, decals, ring, layout }
   let controls = null;
   let needsRender = true;
@@ -287,6 +292,7 @@ function start(root, THREE) {
 
   if (renderer) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setClearColor(0x000000, 0); // the stage's studio grey shows through
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.NeutralToneMapping; // keeps filament colours honest
     renderer.toneMappingExposure = 1.0;
@@ -301,7 +307,7 @@ function start(root, THREE) {
     sun.position.set(-320, 820, 520);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
-    Object.assign(sun.shadow.camera, { left: -480, right: 480, top: 300, bottom: -300, near: 200, far: 2200 });
+    Object.assign(sun.shadow.camera, { left: -520, right: 520, top: 340, bottom: -340, near: 200, far: 2200 });
     sun.shadow.bias = -0.0004;
     sun.shadow.normalBias = 0.8;
     scene.add(sun);
@@ -309,39 +315,26 @@ function start(root, THREE) {
     fill.position.set(380, 420, -700);
     scene.add(fill);
 
-    // the side tray the set sits on: anodised-aluminium plate with a low lip
-    const trayMat = new THREE.MeshStandardMaterial({ color: 0x9EA5A0, roughness: 0.5, metalness: 0.3 });
-    const tray = new THREE.Mesh(new RoundedBoxGeometry(800, 14, 420, 4, 6), trayMat);
-    tray.position.set(0, -7, 10);
-    tray.receiveShadow = true;
-    scene.add(tray);
-    const lipShape = roundedRect(800, 420, 14);
-    lipShape.holes.push(roundedRect(788, 408, 9));
-    const lip = new THREE.Mesh(new THREE.ExtrudeGeometry(lipShape, { depth: 9, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 1, bevelSegments: 2, curveSegments: 10 }), trayMat);
-    lip.rotation.x = -Math.PI / 2; lip.position.set(0, -1.2, 10);
-    lip.castShadow = lip.receiveShadow = true;
-    scene.add(lip);
-    // soft contact shadow under the tray
-    const sc = document.createElement('canvas'); sc.width = sc.height = 128;
-    const sg = sc.getContext('2d'); const grad = sg.createRadialGradient(64, 64, 8, 64, 64, 64);
-    grad.addColorStop(0, 'rgba(20,40,28,0.28)'); grad.addColorStop(1, 'rgba(20,40,28,0)');
-    sg.fillStyle = grad; sg.fillRect(0, 0, 128, 128);
-    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1150, 640), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
-    shadow.rotation.x = -Math.PI / 2; shadow.position.set(0, -16.5, 18);
-    scene.add(shadow);
+    // studio floor: invisible, it only catches the soft shadows (same look as the homepage picture)
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(4000, 4000), new THREE.ShadowMaterial({ opacity: 0.24 }));
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
 
     controls = new OrbitControls(camera, canvas);
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
+    // a mouse wheel over the big stage scrolls the page; pinch-zoom stays on touch screens
+    controls.enableZoom = !finePointer;
     controls.minDistance = 180;
-    controls.maxDistance = 2600;
+    controls.maxDistance = 6000; // a phone held upright needs the camera far back to fit the whole set
     controls.minPolarAngle = THREE.MathUtils.degToRad(8);
     controls.maxPolarAngle = THREE.MathUtils.degToRad(84);
     controls.screenSpacePanning = true;
     controls.rotateSpeed = 0.7;
     controls.addEventListener('start', () => { anim = null; userMoved = true; hideHint(); });
     controls.addEventListener('change', () => {
-      const tg = controls.target; // keep panning on the tray
+      const tg = controls.target; // keep panning on the set
       tg.x = THREE.MathUtils.clamp(tg.x, -380, 380); tg.z = THREE.MathUtils.clamp(tg.z, -200, 220); tg.y = THREE.MathUtils.clamp(tg.y, 0, 120);
       needsRender = true;
     });
@@ -376,9 +369,9 @@ function start(root, THREE) {
     return s;
   }
   function ringGeo([w, d, r]) {
-    const pad = 7, t = 3.2;
+    const pad = 7, th = 3.2;
     const outer = roundedRect(w + pad * 2, d + pad * 2, r + pad);
-    outer.holes.push(roundedRect(w + (pad - t) * 2, d + (pad - t) * 2, r + pad - t));
+    outer.holes.push(roundedRect(w + (pad - th) * 2, d + (pad - th) * 2, r + pad - th));
     const g = new THREE.ShapeGeometry(outer, 10);
     g.rotateX(-Math.PI / 2);
     return g;
@@ -420,11 +413,14 @@ function start(root, THREE) {
     p.mat.color.set(renderHex(base));
     const col = renderHex(engr);
     const f = FONTS[state.font];
-    const name = state.name.trim();
+    const name = shownName();
     const fr = p.decals.front, bk = p.decals.back;
     clearDecal(fr); clearDecal(bk);
     const L = {};
-    if (name) L.name = drawLines(fr, fitText(name, f, 98, 26, 17, 15), f, 0, 58, col);
+    if (name) {
+      const block = drawLines(fr, fitText(name, f, 98, 26, 17, 15), f, 0, 58, col, ghost() ? 0.42 : 1);
+      if (realName()) L.name = block;
+    }
     L.logo = drawLogo(bk, col);
     fr.tex.needsUpdate = bk.tex.needsUpdate = true;
     p.layout = L;
@@ -436,12 +432,15 @@ function start(root, THREE) {
     const col = renderHex(engr);
     const { top, bottom } = p.decals;
     clearDecal(top); clearDecal(bottom);
-    const name = state.name.trim();
+    const name = shownName();
     const brandTop = HOLDER_ORDER[p.def.kind] === 'brandTop';
     // each text fills its zone; a long name may take two lines when the zone is tall enough
-    const block = (d, text, f, k) => drawLines(d, fitText(text, f, d.w - 4, d.h * k, d.h / 1.95, d.h * k * 0.72), f, 0, d.h / 2, col);
-    const L = { brand: Object.assign(block(brandTop ? top : bottom, 'MiniAnglers', BRAND_FONT, 0.68), { zone: brandTop ? 'sus' : 'jos' }) };
-    if (name) L.name = Object.assign(block(brandTop ? bottom : top, name, FONTS[state.font], 0.8), { zone: brandTop ? 'jos' : 'sus' });
+    const block = (d, text, f, k, a) => drawLines(d, fitText(text, f, d.w - 4, d.h * k, d.h / 1.95, d.h * k * 0.72), f, 0, d.h / 2, col, a);
+    const L = { brand: Object.assign(block(brandTop ? top : bottom, 'MiniAnglers', BRAND_FONT, 0.68, 1), { zone: brandTop ? 'sus' : 'jos' }) };
+    if (name) {
+      const b = Object.assign(block(brandTop ? bottom : top, name, FONTS[state.font], 0.8, ghost() ? 0.42 : 1), { zone: brandTop ? 'jos' : 'sus' });
+      if (realName()) L.name = b;
+    }
     p.layout = L;
     top.tex.needsUpdate = bottom.tex.needsUpdate = true;
   }
@@ -459,37 +458,34 @@ function start(root, THREE) {
   // engraving fonts must be loaded (with the subsets for the typed letters) before canvas can use them
   function ensureFonts(sample) {
     if (!document.fonts || !document.fonts.load) return;
-    const text = (sample || '') + 'MiniAnglers×ĂÂÎȘȚăâîșț0123456789';
+    const text = (sample || '') + t('namePh') + 'MiniAnglers×ĂÂÎȘȚăâîșț0123456789';
     Promise.all([BRAND_FONT, ...CFG.fonts].map((f) => document.fonts.load(fontCss(f, 40), text))).then(redrawAll, redrawAll);
   }
 
   /* ---------------- camera ---------------- */
   const V3 = THREE.Vector3;
   const UP = new V3(0, 1, 0);
-  const PAD = { top: 14, bottom: 78 }; // px of the stage covered by overlays (piece chips at the bottom)
+  const PAD = { top: 0, bottom: 0 }; // px of the stage covered by the title bar (top) and the guide (bottom)
   function pieceBox(id) {
     const p = byId[id], [w, d] = FOOT[p.kind], h = p.kind === 'bac' ? 100 : 40;
     return new THREE.Box3(new V3(p.pos[0] - w / 2, 0, p.pos[2] - d / 2), new V3(p.pos[0] + w / 2, h, p.pos[2] + d / 2));
   }
-  function OVERVIEW() {
-    const box = new THREE.Box3();
-    PIECES.forEach((p) => box.union(pieceBox(p.id)));
-    const portrait = camera.aspect < 0.85;
-    return { box, dir: new V3(0, portrait ? 0.95 : camera.aspect < 1.35 ? 0.8 : 0.62, 1).normalize(), margin: 1.02 };
-  }
-  function viewFor(id) {
-    const p = byId[id];
-    if (p.kind === 'bac') {
-      const back = bacFace === 'back';
-      return { box: pieceBox(id), dir: new V3(back ? -0.12 : 0.12, back ? 0.5 : 0.62, back ? -1 : 1).normalize(), margin: 1.12 };
-    }
-    return { box: pieceBox(id), dir: new V3(0.06, 1.3, 1).normalize(), margin: 1.14 };
-  }
+  const boxOf = (ids) => ids.reduce((b, id) => b.union(pieceBox(id)), new THREE.Box3());
+  const ALL = PIECES.map((p) => p.id);
+  const TUBS = PIECES.filter((p) => p.kind === 'bac').map((p) => p.id);
+  const HOLDERS = PIECES.filter((p) => p.kind !== 'bac').map((p) => p.id);
+  const VIEWS = {
+    name: () => ({ box: boxOf(ALL), dir: new V3(0.1, camera.aspect < 0.85 ? 0.95 : camera.aspect < 1.35 ? 0.85 : 0.72, 1).normalize(), margin: 1.04 }),
+    logo: () => ({ box: boxOf(TUBS), dir: new V3(-0.16, 0.5, -1).normalize(), margin: 1.12 }),
+    holders: () => ({ box: boxOf(HOLDERS), dir: new V3(0.04, 1.55, 1).normalize(), margin: 1.08 }),
+  };
+  const viewFor = (id) => ({ box: pieceBox(id), dir: (byId[id].kind === 'bac' ? new V3(0.12, 0.62, 1) : new V3(0.06, 1.3, 1)).normalize(), margin: 1.14 });
+  const currentView = () => (focused ? viewFor(focused) : VIEWS[view]());
   // distance at which the whole box fits the free part of the stage, looking along -dir at the box centre
   function fitDist(v, target) {
     const h = stage.clientHeight || 1;
     const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
-    const tv = tanV * Math.max(0.3, (h - PAD.top - PAD.bottom) / h), th = tanV * camera.aspect;
+    const tv = tanV * Math.max(0.25, (h - PAD.top - PAD.bottom) / h), th = tanV * camera.aspect;
     const f = v.dir.clone().negate(), r = new V3().crossVectors(f, UP).normalize(), u = new V3().crossVectors(r, f);
     const { min, max } = v.box;
     let D = 0;
@@ -501,7 +497,7 @@ function start(root, THREE) {
     return D * v.margin;
   }
   function applyViewOffset() {
-    // shift the picture up so the box centre sits in the middle of the area above the chips
+    // shift the picture so the box centre sits in the middle of the free area between title bar and guide
     const w = stage.clientWidth, h = stage.clientHeight;
     camera.setViewOffset(w, h, 0, (PAD.bottom - PAD.top) / 2, w, h);
   }
@@ -515,6 +511,18 @@ function start(root, THREE) {
     needsRender = true;
   }
   const ease = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+  function measurePad() {
+    const sr = stage.getBoundingClientRect();
+    if (!sr.height) return false;
+    const db = dock.getBoundingClientRect();
+    // the title row, plus the camera views when they sit under it (phones)
+    const tb = Math.max(topBar.getBoundingClientRect().bottom, $('.cfg-tools').getBoundingClientRect().bottom);
+    const top = Math.max(0, Math.round(tb - sr.top) + 6);
+    const bottom = Math.max(0, Math.round(sr.bottom - db.top) + 10);
+    const changed = top !== PAD.top || bottom !== PAD.bottom;
+    PAD.top = top; PAD.bottom = bottom;
+    return changed;
+  }
 
   /* ---------------- picking ---------------- */
   const ray = new THREE.Raycaster();
@@ -523,8 +531,7 @@ function start(root, THREE) {
     const r = canvas.getBoundingClientRect();
     ndc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    const objs = Object.values(pieces).map((p) => p.mesh);
-    const hit = ray.intersectObjects(objs, false)[0];
+    const hit = ray.intersectObjects(Object.values(pieces).map((p) => p.mesh), false)[0];
     return hit ? hit.object.userData.pieceId : null;
   }
   if (renderer) {
@@ -533,7 +540,7 @@ function start(root, THREE) {
     canvas.addEventListener('pointerup', (e) => {
       if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 6) {
         const id = pickAt(e.clientX, e.clientY);
-        if (id) select(id);
+        if (id) focusPiece(id);
       }
       down = null;
     });
@@ -553,8 +560,9 @@ function start(root, THREE) {
     canvas.addEventListener('pointerleave', () => { if (hovered) { hovered = null; updateRings(); } });
   }
   function updateRings() {
+    const sel = extra ? extraPiece : focused;
     Object.values(pieces).forEach((p) => {
-      const on = p.def.id === selected, hov = p.def.id === hovered;
+      const on = p.def.id === sel, hov = p.def.id === hovered;
       p.ring.visible = on || hov;
       p.ring.material = on ? ringMat : hoverMat;
     });
@@ -579,191 +587,203 @@ function start(root, THREE) {
     if (controls && controls.update()) changed = true;
     if (changed || needsRender) { renderer.render(scene, camera); needsRender = false; }
   }
+  let ready = false;
   function resize() {
     if (!renderer) return;
     const w = stage.clientWidth, h = stage.clientHeight;
     if (!w || !h) return;
+    measurePad();
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     applyViewOffset();
     camera.updateProjectionMatrix();
-    if (!userMoved && !anim) goTo(selected ? viewFor(selected) : OVERVIEW(), { instant: true });
+    if (ready && !userMoved && !anim) goTo(currentView(), { instant: true });
     needsRender = true;
   }
   if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stage);
+  // the guide changes height from step to step: re-frame the set to the space left above it
+  function refit() {
+    if (!renderer || !measurePad()) return;
+    applyViewOffset();
+    camera.updateProjectionMatrix();
+    if (ready && !userMoved) goTo(currentView(), { dur: 600 });
+    needsRender = true;
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(() => requestAnimationFrame(refit)).observe(dock);
 
-  /* ---------------- selection ---------------- */
-  function select(id) {
-    selected = id;
-    bacFace = 'front';
-    userMoved = false;
-    hideHint();
-    updateRings();
-    goTo(id ? viewFor(id) : OVERVIEW());
-    renderChips();
-    renderPanel();
-    $('.cfg-overview').hidden = !id;
-    renderFlip();
-    if (id) {
-      const card = panel.querySelector('[data-piece-card]');
-      if (card) card.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
-    }
+  /* ---------------- camera actions ---------------- */
+  function setView(v) {
+    view = v; focused = null; userMoved = false;
+    updateRings(); renderViews(); renderOverview();
+    goTo(currentView());
+  }
+  function focusPiece(id) {
+    focused = id; userMoved = false;
+    if (extra) { extraPiece = id; renderDock(); }
+    updateRings(); renderOverview();
+    goTo(currentView());
+  }
+  function overview() {
+    focused = null; userMoved = false;
+    updateRings(); renderOverview();
+    goTo(currentView());
   }
 
   /* ---------------- UI ---------------- */
-  function renderFlip() {
-    const b = $('[data-act="flip"]');
-    b.hidden = !(selected && byId[selected].kind === 'bac');
-    b.querySelector('[data-flip-label]').textContent = t(bacFace === 'back' ? 'viewFront' : 'viewBack');
-  }
+  const ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  const BACK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>';
+  const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+
   function hideHint() { const h = $('[data-hint]'); if (h) h.classList.add('is-gone'); }
   function renderStatic() {
     root.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
-    const fine = matchMedia('(pointer: fine)').matches;
-    $('[data-hint]').textContent = t(fine ? 'hintMouse' : 'hintTouch');
+    $('[data-hint]').textContent = t(finePointer ? 'hintMouse' : 'hintTouch');
+    renderViews();
   }
-
-  function renderChips() {
-    const chips = [{ id: '', label: t('all') }, ...PIECES.map((p) => ({ id: p.id, label: chipName(p) }))];
-    const box = $('[data-chips]');
-    box.setAttribute('aria-label', t('pieces'));
-    box.innerHTML = chips.map((c) => `<button type="button" class="cfg-chip" data-act="pick" data-id="${c.id}" aria-pressed="${(selected || '') === c.id}">${esc(c.label)}</button>`).join('');
-    const on = box.querySelector('[aria-pressed="true"]');
-    if (on) on.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'auto' });
+  function renderViews() {
+    const box = $('[data-views]');
+    box.setAttribute('aria-label', t('views'));
+    box.innerHTML = [['name', 'vName'], ['logo', 'vLogo'], ['holders', 'vHolders']].map(([v, k]) =>
+      `<button type="button" data-act="view" data-view="${v}" aria-pressed="${!focused && view === v}">${esc(t(k))}</button>`).join('');
   }
+  function renderOverview() { $('.cfg-overview').hidden = !focused; renderViews(); }
 
-  // the curated colour pairs (piece + engraving) as one radio group
-  function combos(group, cur) {
-    return `<div class="cfg-field">
-      <div class="cfg-field-top"><span class="cfg-label" id="lbl-${group}">${esc(t('colors'))}</span><span class="cfg-value">${esc(comboText(cur.base, cur.engr))}</span></div>
-      <div class="cfg-combos" role="radiogroup" aria-labelledby="lbl-${group}">
-        ${COMBOS.map((c) => `<label class="cfg-combo">
-          <input type="radio" name="${group}" value="${c.v}" data-act="${group}" ${c.b === cur.base && c.e === cur.engr ? 'checked' : ''}>
-          <span class="cfg-dot" style="--a:${FIL[c.b].hex};--b:${FIL[c.e].hex}" aria-hidden="true"></span>
-          <span class="cfg-combo-name"><span class="cfg-sr">${esc(comboText(c.b, c.e))}</span><span aria-hidden="true">${esc(filName(c.b))} + ${esc(filName(c.e))}</span></span></label>`).join('')}
-      </div></div>`;
-  }
-  const fee = (amount) => (amount ? `<span class="cfg-fee">+${money(amount)}</span>` : '');
-  // folded optional section; stays open across re-renders once the customer opens it
-  const openMore = { colors: Object.keys(state.overrides).length > 0 };
-  const more = (key, title, price, body) => `<details class="cfg-more" data-more="${key}"${openMore[key] ? ' open' : ''}>
-      <summary><span class="cfg-more-t">${esc(t(title))} <i>(${esc(t('optional'))})</i></span>${price}</summary>
-      <div class="cfg-more-body">${body}</div></details>`;
-
-  // "sus MiniAnglers, jos „Ovi”" for one holder type
-  function holderText(kind) {
-    const name = state.name.trim();
-    if (!name) return t('logoOnly');
-    return HOLDER_ORDER[kind] === 'brandTop'
-      ? `${t('top')} MiniAnglers, ${t('bottom')} „${name}”` : `${t('top')} „${name}”, ${t('bottom')} MiniAnglers`;
-  }
-
-  function pieceCard() {
-    const p = byId[selected];
-    const own = !!state.overrides[p.id];
-    const ov = colorsOf(p.id);
-    const dim = p.kind === 'bac' ? t('dimBac') : p.kind === 'suport_gel' ? t('dimGel') : t('dimWaf');
-    return `<section class="cfg-sec cfg-piece" data-piece-card aria-label="${esc(pieceName(p))}">
-      <div class="cfg-piece-top">
-        <div><h2 class="cfg-h">${esc(pieceName(p))}</h2><p class="cfg-note">${esc(dim)}</p></div>
-        <button type="button" class="btn btn-ghost btn-sm" data-act="overview">${esc(t('overview'))}</button>
-      </div>
-      <label class="cfg-switch"><input type="checkbox" data-act="own" data-id="${p.id}" ${own ? 'checked' : ''}><span class="cfg-switch-ui" aria-hidden="true"></span><span>${esc(t('ownColor'))}</span></label>
-      ${own ? `<div class="cfg-own">${combos('ocombo', ov)}</div>` : ''}
-    </section>`;
-  }
-
-  function renderPanel() {
-    const ovr = PIECES.filter((p) => state.overrides[p.id]);
-    panel.innerHTML = `
-      <header class="cfg-head">
-        <h1 class="cfg-title">${esc(t('title'))}</h1>
-        <p class="cfg-lead">${esc(t('lead'))}</p>
-      </header>
-      ${selected ? pieceCard() : ''}
-      <section class="cfg-sec cfg-main">
-        <div class="cfg-field">
-          <div class="cfg-field-top"><label class="cfg-label" for="cfg-name">${esc(t('name'))}</label>${P ? fee(P.name) : ''}</div>
-          <div class="cfg-input-wrap">
-            <input class="cfg-input cfg-input-name" id="cfg-name" data-act="name" maxlength="${CFG.maxChars}" value="${esc(state.name)}" placeholder="${esc(t('namePh'))}" autocomplete="off" spellcheck="false" enterkeyhint="done">
-            <span class="cfg-count" data-count>${state.name.length}/${CFG.maxChars}</span>
-          </div>
-          <p class="cfg-note">${esc(t('nameNote'))}</p>
-        </div>
-        ${combos('combo', state)}
-        <div class="cfg-field">
-          <span class="cfg-label" id="lbl-font">${esc(t('font'))}</span>
-          <div class="cfg-pills" role="radiogroup" aria-labelledby="lbl-font">
-            ${CFG.fonts.map((f) => `<label class="cfg-pill">
-              <input type="radio" name="font" value="${f.id}" data-act="font" ${f.id === state.font ? 'checked' : ''}>
-              <span style="font-family:'${f.family}';font-weight:${f.weight};font-style:${f.style}">${esc(fontName(f.id))}</span></label>`).join('')}
-          </div>
-        </div>
-      </section>
-      <section class="cfg-sec cfg-extras">
-        ${more('colors', 'pieceColor', '', `
-          <p class="cfg-note">${esc(t('pcNote'))}</p>
-          <div class="cfg-pick-list">${PIECES.map((p) => `<button type="button" class="cfg-preset${state.overrides[p.id] ? ' has-own' : ''}" data-act="pick" data-id="${p.id}" aria-pressed="${selected === p.id}">
-            ${state.overrides[p.id] ? `<span class="cfg-mini" style="--a:${FIL[colorsOf(p.id).base].hex};--b:${FIL[colorsOf(p.id).engr].hex}"></span>` : ''}${esc(chipName(p))}</button>`).join('')}</div>
-          ${ovr.length ? `<ul class="cfg-ovr">${ovr.map((p) => { const c = colorsOf(p.id); return `<li>
-            <span><b>${esc(pieceName(p))}</b> ${esc(comboText(c.base, c.engr))}</span>
-            <button type="button" class="cfg-link" data-act="unown" data-id="${p.id}">${esc(t('remove'))}</button></li>`; }).join('')}</ul>` : ''}`)}
-      </section>
-      <section class="cfg-sec cfg-summary" data-summary></section>
-      ${P ? `<div class="cfg-buy">
-        <div class="cfg-buy-total"><span>${esc(t('total'))}</span><strong data-total></strong></div>
-        <button type="button" class="btn btn-lg cfg-add" data-act="add">${esc(t('add'))}</button>
-        <p class="cfg-buy-err" data-cart-err role="alert" hidden></p>
-      </div>` : `<div class="cfg-buy is-soon">
-        <div class="cfg-buy-total"><strong class="cfg-soon">${esc(t('soon'))}</strong></div>
-        <a class="btn btn-ghost btn-lg cfg-add" href="${esc(CFG.contact)}">${esc(t('ask'))}</a>
-      </div>`}`;
-    renderSummary();
-  }
-
-  function renderSummary() {
+  function priceLine() {
     const q = quote();
-    const name = state.name.trim();
-    const rows = PIECES.map((p) => {
-      const c = colorsOf(p.id);
-      let text;
-      if (p.kind === 'bac') {
-        text = name ? `„${name}”` : t('noName');
-      } else {
-        text = holderText(p.kind);
-      }
-      return `<tr${differs(p.id) ? ' class="is-own"' : ''}><th scope="row">${esc(pieceName(p))}</th>
-        <td><span class="cfg-mini" style="--a:${FIL[c.base].hex};--b:${FIL[c.engr].hex}"></span>${esc(filName(c.base))} + ${esc(filName(c.engr))}</td><td>${esc(text)}</td></tr>`;
-    }).join('');
-    const box = panel.querySelector('[data-summary]');
-    if (box) box.innerHTML = `
-      <h2 class="cfg-h">${esc(t('summary'))}</h2>
-      <p class="cfg-note">${esc(t('font'))}: ${esc(fontName(state.font))}</p>
-      <div class="cfg-slip-wrap"><table class="cfg-slip"><tbody>${rows}</tbody></table></div>
-      ${q ? `<dl class="cfg-lines">${q.lines.map((l) => `<div><dt>${esc(l.label)}</dt><dd>${money(l.amount)}</dd></div>`).join('')}</dl>
-      <div class="cfg-total"><span>${esc(t('total'))}</span><strong>${money(q.total)}</strong></div>` : ''}
-      <p class="cfg-note">${esc(t(q ? 'slipNote' : 'soonNote'))}</p>`;
-    const tot = panel.querySelector('[data-total]');
-    if (tot && q) tot.textContent = money(q.total);
+    if (!q) return { label: '', value: t('pSoon') };
+    return { label: step === 3 ? t('pTotal') : t(q.named ? 'pNamed' : 'pSet'), value: money(q.total) };
+  }
+  function renderPrice() {
+    const p = priceLine();
+    const tot = dock.querySelector('[data-total]');
+    if (tot) tot.innerHTML = p.label ? `<span>${esc(p.label)}</span><b>${esc(p.value)}</b>` : `<span class="is-soon">${esc(p.value)}</span>`;
+    const m = $('[data-price-m]');
+    m.innerHTML = p.label ? `<b>${esc(p.value)}</b><span>${esc(p.label)}</span>` : `<span class="is-soon">${esc(p.value)}</span>`;
   }
 
-  function refreshLight() {
-    // updates that don't rebuild the panel (keeps focus while typing)
-    const c = panel.querySelector('[data-count]');
-    if (c) c.textContent = `${state.name.length}/${CFG.maxChars}`;
-    renderSummary();
+  // the colour pairs as one radio group of cards
+  function colorCards(group, cur, withSame) {
+    const cards = COMBOS.map((c) => `<label class="cfg-card">
+        <input type="radio" name="${group}" value="${c.v}" data-act="${group}" ${cur && c.b === cur.base && c.e === cur.engr ? 'checked' : ''}>
+        <span class="cfg-sw" style="--a:${FIL[c.b].hex};--b:${FIL[c.e].hex}" aria-hidden="true"></span>
+        <span class="cfg-card-t">${esc(filName(c.b))}<small>${esc(engrText(c.e))}</small></span></label>`);
+    if (withSame) cards.unshift(`<label class="cfg-card">
+        <input type="radio" name="${group}" value="same" data-act="${group}" ${!cur ? 'checked' : ''}>
+        <span class="cfg-sw" style="--a:${FIL[state.base].hex};--b:${FIL[state.engr].hex}" aria-hidden="true"></span>
+        <span class="cfg-card-t">${esc(t('sameAsSet'))}<small>${esc(pairText(state.base, state.engr))}</small></span></label>`);
+    return `<div class="cfg-cards cfg-colors" role="radiogroup" aria-label="${esc(t('qColors'))}">${cards.join('')}</div>`;
   }
+
+  function stepsBar() {
+    const items = STEP_KEYS.map((k, i) => {
+      const off = i === 2 && fontOff();
+      const cls = i === step ? 'is-cur' : off ? 'is-off' : i < step ? 'is-done' : '';
+      return `<li><button type="button" class="${cls}" data-act="go" data-step="${i}" ${i === step ? 'aria-current="step"' : ''} ${off ? 'disabled' : ''}>
+        <em>${i < step && !off ? CHECK : i + 1}</em><span>${esc(t(k))}</span></button></li>`;
+    }).join('');
+    const bars = STEP_KEYS.map((_, i) => `<i class="${i <= step ? 'is-on' : ''}"></i>`).join('');
+    return `<div class="cfg-dock-head">
+        <ol class="cfg-steps" aria-label="${esc(t('steps'))}">${items}</ol>
+        <div class="cfg-bars" aria-hidden="true">${bars}</div>
+        <p class="cfg-stepof">${esc(t('stepOf').replace('{n}', step + 1).replace('{t}', STEP_KEYS.length))}</p>
+        <p class="cfg-total" data-total></p>
+      </div>`;
+  }
+
+  function bodyFor() {
+    const q = quote();
+    const backBtn = `<button type="button" class="cfg-back" data-act="back" aria-label="${esc(t('back'))}">${BACK}</button>`;
+    const nextBtn = `<button type="button" class="btn cfg-next" data-act="next">${esc(t('next'))}${ARROW}</button>`;
+    if (extra) {
+      const p = extraPiece ? byId[extraPiece] : null;
+      return {
+        q: t('qExtra'), h: t('hExtra'),
+        opts: `<div class="cfg-pieces">${PIECES.map((x) => `<button type="button" class="cfg-piece${differs(x.id) ? ' has-own' : ''}" data-act="piece" data-id="${x.id}" aria-pressed="${extraPiece === x.id}">${differs(x.id) ? `<span class="cfg-mini" style="--a:${FIL[colorsOf(x.id).base].hex};--b:${FIL[colorsOf(x.id).engr].hex}"></span>` : ''}${esc(pieceName(x))}</button>`).join('')}</div>
+          ${p ? colorCards('ocombo', state.overrides[p.id] || null, true) : ''}`,
+        act: `<button type="button" class="btn cfg-next" data-act="extra-done">${esc(t('done'))}</button>`,
+      };
+    }
+    if (step === 0) return {
+      q: t('qName'), h: t('hName'),
+      opts: `<label class="cfg-sr" for="cfg-name">${esc(t('nameLabel'))}</label>
+        <div class="cfg-name"><input class="cfg-name-in" id="cfg-name" data-act="name" maxlength="${CFG.maxChars}" value="${esc(state.name)}" placeholder="${esc(t('namePh'))}" autocomplete="off" spellcheck="false" enterkeyhint="next"><span class="cfg-count" data-count>${state.name.length}/${CFG.maxChars}</span></div>`,
+      act: nextBtn,
+    };
+    if (step === 1) return { q: t('qColors'), h: t('hColors'), opts: colorCards('combo', state, false), act: backBtn + nextBtn };
+    if (step === 2) return {
+      q: t('qFont'), h: t('hFont'),
+      opts: `<div class="cfg-cards cfg-fonts" role="radiogroup" aria-label="${esc(t('qFont'))}">${CFG.fonts.map((f) => `<label class="cfg-card cfg-font">
+          <input type="radio" name="font" value="${f.id}" data-act="font" ${f.id === state.font ? 'checked' : ''}>
+          <b style="${fontStyle(f)}">${esc(realName() || t('namePh'))}</b><small>${esc(fontName(f.id))}</small></label>`).join('')}</div>`,
+      act: backBtn + nextBtn,
+    };
+    // step 3: done
+    const own = PIECES.filter((p) => differs(p.id)).length;
+    const f = FONTS[state.font];
+    const cell = (label, value, go, style) => `<div class="cfg-sum-c"><span>${esc(label)}</span><b${style ? ` style="${style}"` : ''}>${esc(value)}</b>${go != null ? `<button type="button" class="cfg-link" data-act="go" data-step="${go}">${esc(t('edit'))}</button>` : ''}</div>`;
+    const buy = q
+      ? `<button type="button" class="btn cfg-next cfg-add" data-act="add">${esc(t('add'))}</button>`
+      : `<a class="btn btn-ghost cfg-next" href="${esc(CFG.contact)}">${esc(t('ask'))}</a>`;
+    return {
+      q: q ? t('qDone') : t('soon'),
+      h: q ? t('hDone') : t('soonNote'),
+      extraLink: true,
+      opts: `<div class="cfg-sum">
+          ${cell(t('sumName'), realName() || t('noName'), 0)}
+          ${cell(t('sumColors'), pairText(state.base, state.engr), 1)}
+          ${realName() ? cell(t('sumFont'), realName(), 2, fontStyle(f)) : ''}
+        </div>
+        ${own ? `<p class="cfg-own">${esc(t('ownN').replace('{n}', own))}</p>` : ''}
+        <p class="cfg-err" data-cart-err role="alert" hidden></p>`,
+      act: backBtn + buy,
+    };
+  }
+
+  let lastKey = '';
+  function renderDock(moveFocus) {
+    const b = bodyFor();
+    const key = (extra ? 'x' : '') + step;
+    dock.innerHTML = `${stepsBar()}
+      <div class="cfg-dock-body${key !== lastKey ? ' is-new' : ''}">
+        <div class="cfg-q"><h2 tabindex="-1" data-q>${esc(b.q)}</h2><p>${esc(b.h)}</p>
+          ${b.extraLink ? `<button type="button" class="cfg-link" data-act="extra">${esc(t('extraLink'))}</button>` : ''}</div>
+        <div class="cfg-opts">${b.opts}</div>
+        <div class="cfg-act">${b.act}</div>
+      </div>`;
+    lastKey = key;
+    renderPrice();
+    if (moveFocus) {
+      const first = step === 0 && !extra ? dock.querySelector('#cfg-name') : dock.querySelector('[data-q]');
+      if (first) first.focus({ preventScroll: true });
+    }
+  }
+
+  function go(n) {
+    extra = false; extraPiece = null;
+    step = Math.max(0, Math.min(3, n));
+    if (focused) { focused = null; renderOverview(); updateRings(); }
+    redrawAll(); renderDock(true);
+  }
+  const next = () => go(step === 1 && fontOff() ? 3 : step + 1);
+  const back = () => go(step === 3 && fontOff() ? 1 : step - 1);
 
   /* ---------------- events ---------------- */
   root.addEventListener('input', (e) => {
-    const el = e.target, act = el.dataset.act;
-    if (act === 'name') {
-      const v = cleanText(el.value, CFG.maxChars);
-      if (v !== el.value) el.value = v;
-      state.name = v;
-      ensureFonts(v);
-    } else return;
-    save(); redrawAll(); refreshLight();
+    const el = e.target;
+    if (el.dataset.act !== 'name') return;
+    const v = cleanText(el.value, CFG.maxChars);
+    if (v !== el.value) el.value = v;
+    state.name = v;
+    ensureFonts(v);
+    save(); redrawAll();
+    const c = dock.querySelector('[data-count]');
+    if (c) c.textContent = `${v.length}/${CFG.maxChars}`;
+    // the font step turns on/off with the name; the price switches between set / set with name
+    dock.querySelector('.cfg-dock-head').outerHTML = stepsBar();
+    renderPrice();
+  });
+  root.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.dataset && e.target.dataset.act === 'name') { e.preventDefault(); next(); }
   });
 
   root.addEventListener('change', (e) => {
@@ -772,35 +792,30 @@ function start(root, THREE) {
       [state.base, state.engr] = el.value.split('|');
     } else if (act === 'font') {
       state.font = el.value;
-    } else if (act === 'own') {
-      if (el.checked) state.overrides[el.dataset.id] = { base: state.base, engr: state.engr };
-      else delete state.overrides[el.dataset.id];
     } else if (act === 'ocombo') {
-      const o = state.overrides[selected];
-      if (!o) return;
-      [o.base, o.engr] = el.value.split('|');
+      if (!extraPiece) return;
+      if (el.value === 'same') delete state.overrides[extraPiece];
+      else { const [b, c] = el.value.split('|'); state.overrides[extraPiece] = { base: b, engr: c }; }
     } else return;
-    // keep piece overrides that now equal the set colours (still shown as "own", not charged)
     save(); redrawAll();
-    const focusSel = el.name ? `input[name="${el.name}"][value="${el.value}"]` : null;
-    renderPanel();
-    if (focusSel) { const f = panel.querySelector(focusSel); if (f) f.focus({ preventScroll: true }); }
+    const sel = `input[name="${el.name}"][value="${el.value}"]`;
+    renderDock();
+    const f = dock.querySelector(sel); if (f) f.focus({ preventScroll: true });
   });
-
-  // <details> toggle doesn't bubble: listen in the capture phase
-  root.addEventListener('toggle', (e) => { const d = e.target; if (d.dataset && d.dataset.more) openMore[d.dataset.more] = d.open; }, true);
 
   root.addEventListener('click', (e) => {
     const b = e.target.closest('[data-act]');
     if (!b || b.tagName === 'INPUT') return;
     const act = b.dataset.act;
-    if (act === 'overview') select(null);
-    else if (act === 'flip') { bacFace = bacFace === 'back' ? 'front' : 'back'; userMoved = false; goTo(viewFor(selected)); renderFlip(); }
-    else if (act === 'pick') select(b.dataset.id || null);
-    else if (act === 'unown') {
-      delete state.overrides[b.dataset.id];
-      save(); redrawAll(); renderPanel();
-    } else if (act === 'add') addToCart(b);
+    if (act === 'next') next();
+    else if (act === 'back') back();
+    else if (act === 'go') go(+b.dataset.step);
+    else if (act === 'view') setView(b.dataset.view);
+    else if (act === 'overview') overview();
+    else if (act === 'extra') { extra = true; extraPiece = null; renderDock(true); updateRings(); }
+    else if (act === 'piece') focusPiece(b.dataset.id);
+    else if (act === 'extra-done') { extra = false; extraPiece = null; overview(); renderDock(true); }
+    else if (act === 'add') addToCart(b);
   });
 
   /* ---------------- order payload + cart ---------------- */
@@ -815,7 +830,7 @@ function start(root, THREE) {
       product: CFG.code,
       created: new Date().toISOString(),
       set: {
-        base: fil(state.base), engraving: fil(state.engr), name: state.name.trim(),
+        base: fil(state.base), engraving: fil(state.engr), name: realName(),
         font: { id: f.id, family: f.family, weight: f.weight, style: f.style },
         holdersLayout: {
           suport_waftere: HOLDER_ORDER.suport_waftere === 'brandTop' ? 'MiniAnglers sus, nume jos' : 'nume sus, MiniAnglers jos',
@@ -824,13 +839,14 @@ function start(root, THREE) {
       },
       pieces: PIECES.map((p) => {
         const c = colorsOf(p.id);
-        return Object.assign({
-          id: p.id, type: p.kind, name: pieceName(p),
+        return {
+          id: p.id, type: p.kind, name: `${I18N.ro[p.kind === 'bac' ? 'bac' : p.kind === 'suport_gel' ? 'gel' : 'waf']}${p.kind === 'suport_gel' ? '' : ' ' + p.n}`,
           base: fil(c.base), engraving: fil(c.engr), customColors: differs(p.id),
-        }, { layout: pieces[p.id] ? pieces[p.id].layout : null });
+          layout: pieces[p.id] ? pieces[p.id].layout : null,
+        };
       }),
       notes: { flatZoneMm: 110, faceHeightMm: 98, bacName: 'numele pe o față, centrat (ca în BacuriNadaCompetitionOvi.3mf)', bacLogo: 'logo 37 mm pe fața opusă, centrat', holders: 'sus = banda din spatele locașurilor (partea înaltă), jos = zona din fața lor (partea joasă)' },
-      price: q ? { currency: CFG.currency, total: q.total, lines: q.lines.map((l) => ({ item: l.key, label: l.label, amount: l.amount })) } : null,
+      price: q ? { currency: CFG.currency, total: q.total, lines: q.lines.map((l) => ({ item: l.key, amount: l.amount })) } : null,
     };
   }
 
@@ -856,7 +872,7 @@ function start(root, THREE) {
     const items = [{ id: named && cart.named ? cart.named : cart.plain, quantity: 1, properties: readable(pl) }];
     // product with a single variant: the name is charged by the shop's engraving add-on instead
     if (named && !cart.named && cart.addon) items.push({ id: cart.addon, quantity: 1, properties: { Pentru: `${CFG.title} „${pl.set.name}”` } });
-    const err = panel.querySelector('[data-cart-err]');
+    const err = dock.querySelector('[data-cart-err]');
     if (err) err.hidden = true;
     btn.disabled = true; btn.textContent = t('adding');
     try {
@@ -871,10 +887,9 @@ function start(root, THREE) {
 
   /* ---------------- boot ---------------- */
   renderStatic();
-  renderChips();
-  renderPanel();
+  renderDock();
   ensureFonts(state.name);
-  document.addEventListener('ma:lang', () => { renderStatic(); renderChips(); renderPanel(); renderFlip(); redrawAll(); });
+  document.addEventListener('ma:lang', () => { renderStatic(); renderOverview(); renderDock(); redrawAll(); });
 
   if (!renderer) {
     stage.classList.add('is-nogl');
@@ -887,8 +902,12 @@ function start(root, THREE) {
     buildPieces(gltf);
     $('[data-loading]').hidden = true;
     stage.classList.add('is-ready');
-    // one orchestrated entrance: the camera settles onto the tray
-    const v = OVERVIEW(), c = v.box.getCenter(new V3());
+    ready = true;
+    measurePad();
+    applyViewOffset();
+    camera.updateProjectionMatrix();
+    // one orchestrated entrance: the camera settles onto the set
+    const v = VIEWS.name(), c = v.box.getCenter(new V3());
     const end = c.clone().addScaledVector(v.dir, fitDist(v, c));
     goTo(v, { from: end.clone().add(new V3(140, 260, 380)), dur: 1300 });
     setTimeout(hideHint, 9000);

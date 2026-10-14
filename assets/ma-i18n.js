@@ -114,6 +114,10 @@
       // method champions page
       'cfg.loading': 'Se încarcă setul în 3D…',
       'cfg.noscript': 'Configuratorul are nevoie de JavaScript ca să afișeze setul în 3D.',
+      'cfg.parts': 'Ce primești în set',
+      'cfg.p1': '4 bacuri de nadă', 'cfg.p1d': '160 × 160 × 100 mm, deschise sus, cu numele pe față',
+      'cfg.p2': 'Logo-ul MiniAnglers', 'cfg.p2d': 'Pe spatele fiecărui bac',
+      'cfg.p3': '3 suporturi', 'cfg.p3d': '2 pentru waftere (165 × 100 mm), 1 pentru geluri (158 × 100 mm)',
       // offer (top bar, cards, product pages, cart)
       'offer.at': 'la',
       'offer.ann_pre': 'Cu',
@@ -237,6 +241,10 @@
       // method champions page
       'cfg.loading': 'Loading the set in 3D…',
       'cfg.noscript': 'The configurator needs JavaScript to show the set in 3D.',
+      'cfg.parts': 'What’s in the set',
+      'cfg.p1': '4 bait tubs', 'cfg.p1d': '160 × 160 × 100 mm, open top, with the name on the front',
+      'cfg.p2': 'The MiniAnglers logo', 'cfg.p2d': 'On the back of every tub',
+      'cfg.p3': '3 holders', 'cfg.p3d': '2 for wafters (165 × 100 mm), 1 for gels (158 × 100 mm)',
       // offer (top bar, cards, product pages, cart)
       'offer.at': 'for',
       'offer.ann_pre': "That's",
