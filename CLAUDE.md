@@ -77,7 +77,8 @@ sections/ma-configurator.liquid + templates/product.method-champions.json + page
                              — Method Champions 3D configurator. The product "Method Champions" (Admin > Products, theme template
                                "method-champions") is its main URL; the page "Method Champions" shows the same configurator with its
                                canonical pointing at the product (theme.liquid). Price + Add to cart come from Theme settings > Method
-                               Champions > Set product (cheapest variant = no name, dearest = with name); no product = no price,
+                               Champions > Set product = "method-champions" (variants Fără nume 299 / Cu nume gravat 339, SKUs MC-SET /
+                               MC-SET-NUME, owner's prices 2026-10-14; cheapest variant = no name, dearest = with name); no product = no price,
                                "Comenzile se deschid în curând". Choices go to the cart line as properties: Culori set, Gravare + Font
                                (only with a name, so the order email gives the engraved lead time) or Nume: Fără nume, Cod configurare,
                                + hidden _config JSON (cart.liquid and the emails hide "_" properties)

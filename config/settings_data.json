@@ -26,6 +26,7 @@
     "offer_extra_en": "Fluo gel holder",
     "offer_announce": true,
     "champions_page": "method-champions",
+    "champions_product": "method-champions",
     "sections": {
       "ma-footer": {
         "type": "ma-footer",
