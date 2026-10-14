@@ -80,7 +80,8 @@ sections/ma-configurator.liquid + templates/page.method-champions.json
                                Choices go to the cart line as properties (+ hidden _config JSON; cart.liquid hides "_" properties)
 assets/ma-configurator.js/.css — the configurator, owner's pick "Showroom, pas cu pas" (2026-10-14): the set fills a wide stage on
                                --photo; a floating guide asks name -> colours -> font -> done/cart (phones: a sheet at the stage bottom);
-                               camera views Numele/Logo-ul/Suporturile; owns its RO/EN strings, listens for ma:lang. Under it: "Ce primești"
+                               camera views Numele/Logo-ul/Suporturile; quiet size lines on the model (SVG overlay, toggle "Dimensiuni");
+                               no per-piece colours (owner); owns its RO/EN strings, listens for ma:lang. Under it: "Ce primești"
                                (ma-cfg-part-*.webp renders + sizes)
 assets/ma-three.js           — three.js r169 + GLTFLoader/OrbitControls/RoomEnvironment, one minified ES module
 assets/ma-cfg-set.glb        — the set's 3D models (from the owner's Bambu Studio 3MF/STL files); ma-engr-*.woff2 = engraving fonts

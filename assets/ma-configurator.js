@@ -46,6 +46,7 @@ function start(root, THREE) {
       noGL: 'Browserul tău nu poate afișa modelul 3D. Poți configura setul mai jos.',
       loadErr: 'Modelul 3D nu s-a putut încărca. Reîncarcă pagina; alegerile de mai jos funcționează oricum.',
       hintMouse: 'Trage ca să rotești setul', hintTouch: 'Trage cu degetul ca să rotești',
+      dims: 'Dimensiuni', dimsShow: 'Arată dimensiunile', dimsHide: 'Ascunde dimensiunile',
       views: 'Vederi', vName: 'Numele', vLogo: 'Logo-ul', vHolders: 'Suporturile', overview: 'Vezi tot setul',
       steps: 'Pașii configurării', sName: 'Nume', sColors: 'Culori', sFont: 'Font', sDone: 'Gata', stepOf: 'Pasul {n} din {t}',
       qName: 'Ce nume scriem pe set?', hName: 'Apare pe fiecare bac și pe suporturi. Poți lăsa gol.', namePh: 'Numele tău', nameLabel: 'Numele de pe set',
@@ -66,6 +67,7 @@ function start(root, THREE) {
       noGL: 'Your browser can’t show the 3D model. You can still configure the set below.',
       loadErr: 'The 3D model didn’t load. Reload the page; the choices below still work.',
       hintMouse: 'Drag to rotate the set', hintTouch: 'Drag with a finger to rotate',
+      dims: 'Sizes', dimsShow: 'Show the sizes', dimsHide: 'Hide the sizes',
       views: 'Views', vName: 'Name', vLogo: 'Logo', vHolders: 'Holders', overview: 'See the whole set',
       steps: 'Configuration steps', sName: 'Name', sColors: 'Colours', sFont: 'Font', sDone: 'Done', stepOf: 'Step {n} of {t}',
       qName: 'What name goes on the set?', hName: 'It goes on every tub and on the holders. You can leave it empty.', namePh: 'Your name', nameLabel: 'Name on the set',
@@ -173,11 +175,18 @@ function start(root, THREE) {
   root.insertAdjacentHTML('beforeend', `
     <div class="cfg-stage" data-stage>
       <canvas class="cfg-canvas" aria-label="Method Champions 3D" role="img"></canvas>
+      <svg class="cfg-dims" data-dims aria-hidden="true"></svg>
+      <div class="cfg-dimtags" data-dimtags aria-hidden="true"></div>
       <div class="cfg-top" data-top>
         <div class="cfg-titles"><h1 class="cfg-title" data-t="title"></h1><p class="cfg-sub" data-t="sub"></p></div>
         <p class="cfg-price-m" data-price-m></p>
         <div class="cfg-tools">
-          <div class="cfg-views" role="group" data-views></div>
+          <div class="cfg-tools-row">
+            <button type="button" class="cfg-dims-t" data-act="dims" aria-pressed="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 15.5l12-12 5 5-12 12zM7.5 11.5l2 2M10.5 8.5l2 2M13.5 5.5l2 2"/></svg><span data-t="dims"></span>
+            </button>
+            <div class="cfg-views" role="group" data-views></div>
+          </div>
           <p class="cfg-hint" data-hint></p>
         </div>
       </div>
@@ -576,8 +585,60 @@ function start(root, THREE) {
       changed = true;
     }
     if (controls && controls.update()) changed = true;
-    if (changed || needsRender) { renderer.render(scene, camera); needsRender = false; }
+    if (changed || needsRender) { renderer.render(scene, camera); needsRender = false; updateDims(); }
   }
+  /* ---------------- sizes on the model ---------------- */
+  // Thin technical size lines that turn with the set: tub width/depth float just above the rim,
+  // its height stands at the front corner; holder width/depth lie on the floor beside them.
+  let dimsOn = true;
+  const dimsSvg = $('[data-dims]'), dimsTags = $('[data-dimtags]');
+  const DOFF = 16; // mm between a piece and its size line
+  function dimsFor(id, parts) {
+    const p = byId[id], [w, d] = FOOT[p.kind], [x0, , z0] = p.pos;
+    const L = x0 - w / 2, R = x0 + w / 2, B = z0 - d / 2, F = z0 + d / 2;
+    const out = [];
+    if (p.kind === 'bac') {
+      const H = 100, Y = H + DOFF + 10; // a little higher than the side lines, clear of the rim
+      if (parts.includes('w')) out.push({ a: [L, Y, F], b: [R, Y, F], ext: [[[L, H, F], [L, Y + 5, F]], [[R, H, F], [R, Y + 5, F]]], v: w });
+      if (parts.includes('d')) out.push({ a: [L, Y, B], b: [L, Y, F], ext: [[[L, H, B], [L, Y + 5, B]]], v: d });
+      if (parts.includes('h')) out.push({ a: [L, 0, F + DOFF], b: [L, H, F + DOFF], ext: [[[L, 0, F], [L, 0, F + DOFF + 5]], [[L, H, F], [L, H, F + DOFF + 5]]], v: H });
+    } else {
+      const y = 0.5;
+      if (parts.includes('w')) out.push({ a: [L, y, F + DOFF], b: [R, y, F + DOFF], ext: [[[L, y, F], [L, y, F + DOFF + 5]], [[R, y, F], [R, y, F + DOFF + 5]]], v: w });
+      if (parts.includes('d')) out.push({ a: [L - DOFF, y, B], b: [L - DOFF, y, F], ext: [[[L, y, B], [L - DOFF - 5, y, B]], [[L, y, F], [L - DOFF - 5, y, F]]], v: d });
+    }
+    return out;
+  }
+  function dimSet() {
+    if (!dimsOn || !ready) return [];
+    if (focused) return dimsFor(focused, ['w', 'd', 'h']);
+    if (view === 'logo') return [];
+    if (view === 'holders') return [...dimsFor('waf1', ['w', 'd']), ...dimsFor('gel', ['w']), ...dimsFor('waf2', ['w'])];
+    return [...dimsFor('bac1', ['w', 'd', 'h']), ...dimsFor('waf1', ['w', 'd']), ...dimsFor('gel', ['w'])];
+  }
+  const P3 = new THREE.Vector3();
+  function updateDims() {
+    const W = stage.clientWidth, H = stage.clientHeight;
+    const scr = (pt) => { P3.set(pt[0], pt[1], pt[2]).project(camera); return P3.z > 1 ? null : [(P3.x + 1) / 2 * W, (1 - P3.y) / 2 * H]; };
+    const ln = (a, b, cls) => `<line class="${cls}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}"/>`;
+    let svg = '', tags = '';
+    dimSet().forEach((dm) => {
+      const a = scr(dm.a), b = scr(dm.b);
+      if (!a || !b) return;
+      const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy);
+      if (len < 18) return;
+      dm.ext.forEach(([e1, e2]) => { const p1 = scr(e1), p2 = scr(e2); if (p1 && p2) svg += ln(p1, p2, 'x'); });
+      svg += ln(a, b, 'm');
+      // short end ticks across the line
+      const nx = -dy / len * 4, ny = dx / len * 4;
+      [a, b].forEach((q) => { svg += ln([q[0] - nx, q[1] - ny], [q[0] + nx, q[1] + ny], 'm'); });
+      if (len > 40) tags += `<span class="cfg-dim" style="left:${((a[0] + b[0]) / 2).toFixed(1)}px;top:${((a[1] + b[1]) / 2).toFixed(1)}px">${dm.v} mm</span>`;
+    });
+    dimsSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    dimsSvg.innerHTML = svg;
+    dimsTags.innerHTML = tags;
+  }
+
   let ready = false;
   function resize() {
     if (!renderer) return;
@@ -629,6 +690,7 @@ function start(root, THREE) {
     root.querySelectorAll('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
     $('[data-hint]').textContent = t(finePointer ? 'hintMouse' : 'hintTouch');
     renderViews();
+    renderDimsBtn();
   }
   function renderViews() {
     const box = $('[data-views]');
@@ -637,6 +699,12 @@ function start(root, THREE) {
       `<button type="button" data-act="view" data-view="${v}" aria-pressed="${!focused && view === v}">${esc(t(k))}</button>`).join('');
   }
   function renderOverview() { $('.cfg-overview').hidden = !focused; renderViews(); }
+  function renderDimsBtn() {
+    const b = $('[data-act="dims"]');
+    b.setAttribute('aria-pressed', String(dimsOn));
+    b.setAttribute('title', t(dimsOn ? 'dimsHide' : 'dimsShow'));
+    b.setAttribute('aria-label', t(dimsOn ? 'dimsHide' : 'dimsShow'));
+  }
 
   function priceLine() {
     const q = quote();
@@ -779,6 +847,7 @@ function start(root, THREE) {
     else if (act === 'back') back();
     else if (act === 'go') go(+b.dataset.step);
     else if (act === 'view') setView(b.dataset.view);
+    else if (act === 'dims') { dimsOn = !dimsOn; renderDimsBtn(); updateDims(); }
     else if (act === 'overview') overview();
     else if (act === 'add') addToCart(b);
   });
