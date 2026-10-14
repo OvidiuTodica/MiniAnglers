@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#177A48">
   <script>try{if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}</script>
-  <link rel="canonical" href="{{ canonical_url }}">
+  {%- comment -%} the Method Champions page shows the same configurator as the set's product page: Google gets the product {%- endcomment -%}
+  {%- assign canon = canonical_url -%}
+  {%- if request.page_type == 'page' and template.suffix == 'method-champions' and settings.champions_product != blank -%}
+    {%- assign canon = settings.champions_product.url | prepend: shop.url -%}
+  {%- endif -%}
+  <link rel="canonical" href="{{ canon }}">
   <meta name="google-site-verification" content="lmxcXvklA1Sqy_21HBQYgsdIAO3QZTpvJNZl9OZbWWk">
   {%- comment -%}
     SEO titles + descriptions. Anything set in Admin ("Search engine listing" on a
@@ -114,7 +119,7 @@
   <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
   <meta property="og:title" content="{{ meta_title | default: shop.name }}">
   {% if meta_desc %}<meta property="og:description" content="{{ meta_desc | escape }}">{% endif %}
-  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:url" content="{{ canon }}">
   {%- if request.page_type == 'product' and product.featured_image -%}
     <meta property="og:image" content="https:{{ product.featured_image | image_url: width: 1200 }}">
   {%- else -%}

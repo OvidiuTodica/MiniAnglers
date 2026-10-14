@@ -1,6 +1,7 @@
 {%- comment -%}
-  Method Champions: the 3D configurator page (template page.method-champions, Admin >
-  Pages > the page with that template). ma-configurator.js builds the 3D stage and the
+  Method Champions: the 3D configurator. Used by the set's product page (template
+  product.method-champions, the canonical URL) and by the page "Method Champions"
+  (template page.method-champions, whose canonical points at the product). ma-configurator.js builds the 3D stage and the
   step-by-step guide ("Showroom, pas cu pas", owner's pick 2026-10-14); ma-three.js is
   three.js (vendored, see the top of ma-configurator.js). Under the stage: what's in the
   set (three pictures of the real models with their sizes), then the page's own text.
@@ -11,7 +12,8 @@
   Engraving). No product (or not active) = the set shows with no price and "Orders open
   soon" plus a link to the contact page. The customer's choices go to the cart line as
   properties (readable ones + a hidden _config JSON for production).
-  The page's own text (Admin > Pages > Content) shows under the configurator.
+  Under the configurator: the page's own text (Admin > Pages > Content), or on the
+  product page the product's description.
 {%- endcomment -%}
 {{ 'ma-configurator.css' | asset_url | stylesheet_tag }}
 <style>
@@ -27,6 +29,9 @@
 </style>
 
 {%- assign cp = settings.champions_product -%}
+{%- if cp == blank and product -%}{%- assign cp = product -%}{%- endif -%}
+{%- assign cfg_title = page.title | default: product.title | default: 'Method Champions' -%}
+{%- assign cfg_text = page.content | default: product.description -%}
 {%- assign has_p = false -%}
 {%- if cp != blank and cp.available -%}{%- assign has_p = true -%}{%- endif -%}
 {%- if has_p -%}
@@ -79,7 +84,7 @@
   </script>
   <div class="cfg-boot" data-boot>
     <div>
-      <h1>{{ page.title | default: 'Method Champions' }}</h1>
+      <h1>{{ cfg_title }}</h1>
       <p data-i18n="cfg.loading">Se încarcă setul în 3D…</p>
       <noscript><p data-i18n="cfg.noscript">Configuratorul are nevoie de JavaScript ca să afișeze setul în 3D.</p></noscript>
     </div>
@@ -92,7 +97,7 @@
   <div class="cfg-parts-grid">
     <figure>
       <span class="cfg-part-img"><img src="{{ 'ma-cfg-part-bacuri.webp' | asset_url }}" width="800" height="600" alt="" loading="lazy" decoding="async"></span>
-      <figcaption><b data-i18n="cfg.p1">4 bacuri de nadă</b><span data-i18n="cfg.p1d">160 × 160 × 100 mm, deschise sus, cu numele pe față</span></figcaption>
+      <figcaption><b data-i18n="cfg.p1">4 bacuri de nadă</b><span data-i18n="cfg.p1d">160 × 160 × 100 mm, deschise sus, cu numele tău pe față (opțional)</span></figcaption>
     </figure>
     <figure>
       <span class="cfg-part-img"><img src="{{ 'ma-cfg-part-logo.webp' | asset_url }}" width="800" height="600" alt="" loading="lazy" decoding="async"></span>
@@ -105,8 +110,8 @@
   </div>
 </section>
 
-{%- if page.content != blank -%}
-  <div class="cfg-page">{{ page.content }}</div>
+{%- if cfg_text != blank -%}
+  <div class="cfg-page">{{ cfg_text }}</div>
 {%- else -%}
   <div class="cfg-end"></div>
 {%- endif -%}
@@ -115,7 +120,7 @@
 {
   "name": "Method Champions",
   "settings": [
-    { "type": "paragraph", "content": "The 3D configurator for the Method Champions set. The price and the Add to cart button come from Theme settings > Method Champions > Set product. The page's own text (Pages > this page > Content) shows under the configurator." }
+    { "type": "paragraph", "content": "The 3D configurator for the Method Champions set. The price and the Add to cart button come from Theme settings > Method Champions > Set product (on the product page: that product). Under it: the page's own text, or the product description." }
   ]
 }
 {% endschema %}

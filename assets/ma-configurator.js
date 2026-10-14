@@ -49,7 +49,8 @@ function start(root, THREE) {
       dims: 'Dimensiuni', dimsShow: 'Arată dimensiunile', dimsHide: 'Ascunde dimensiunile',
       views: 'Vederi', vName: 'Numele', vLogo: 'Logo-ul', vHolders: 'Suporturile', overview: 'Vezi tot setul',
       steps: 'Pașii configurării', sName: 'Nume', sColors: 'Culori', sFont: 'Font', sDone: 'Gata', stepOf: 'Pasul {n} din {t}',
-      qName: 'Ce nume scriem pe set?', hName: 'Apare pe fiecare bac și pe suporturi. Poți lăsa gol.', namePh: 'Numele tău', nameLabel: 'Numele de pe set',
+      qName: 'Ce nume scriem pe set?', hName: 'Apare pe fiecare bac și pe suporturi.', namePh: 'Numele tău', nameLabel: 'Numele de pe set',
+      modeLabel: 'Nume pe set', modeName: 'Cu nume', modeNone: 'Fără nume', noNameNote: 'Piesele vin fără nume, doar cu logo-ul MiniAnglers.', nameReq: 'Scrie numele sau alege „Fără nume”.',
       qColors: 'Ce culori vrei?', hColors: 'Cercul e culoarea piesei, punctul e culoarea gravurii.', engr: 'gravură {e}',
       qFont: 'Cum să arate numele?', hFont: 'Așa apare gravat pe bacuri și pe suporturi.',
       qDone: 'Setul tău e gata', hDone: 'Îl printăm exact cum îl vezi.',
@@ -70,7 +71,8 @@ function start(root, THREE) {
       dims: 'Sizes', dimsShow: 'Show the sizes', dimsHide: 'Hide the sizes',
       views: 'Views', vName: 'Name', vLogo: 'Logo', vHolders: 'Holders', overview: 'See the whole set',
       steps: 'Configuration steps', sName: 'Name', sColors: 'Colours', sFont: 'Font', sDone: 'Done', stepOf: 'Step {n} of {t}',
-      qName: 'What name goes on the set?', hName: 'It goes on every tub and on the holders. You can leave it empty.', namePh: 'Your name', nameLabel: 'Name on the set',
+      qName: 'What name goes on the set?', hName: 'It goes on every tub and on the holders.', namePh: 'Your name', nameLabel: 'Name on the set',
+      modeLabel: 'Name on the set', modeName: 'With a name', modeNone: 'No name', noNameNote: 'The pieces come without a name, just the MiniAnglers logo.', nameReq: 'Type a name or pick “No name”.',
       qColors: 'Which colours?', hColors: 'The circle is the piece colour, the dot is the engraving colour.', engr: '{e} engraving',
       qFont: 'How should the name look?', hFont: 'This is how it’s engraved on the tubs and holders.',
       qDone: 'Your set is ready', hDone: 'We print it exactly as you see it.',
@@ -135,13 +137,13 @@ function start(root, THREE) {
   const HOLDER_ORDER = { suport_waftere: 'brandTop', suport_gel: 'nameTop' };
 
   /* ---------------- state ---------------- */
-  const fresh = () => ({ base: COMBOS[0].b, engr: COMBOS[0].e, name: '', font: CFG.fonts[0].id });
+  const fresh = () => ({ base: COMBOS[0].b, engr: COMBOS[0].e, name: '', noName: false, font: CFG.fonts[0].id });
   let state = fresh();
   try {
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
     if (saved && FONTS[saved.font]) {
       const ok = (o) => o && isCombo(o.base, o.engr);
-      state = Object.assign(fresh(), { name: saved.name || '', font: saved.font });
+      state = Object.assign(fresh(), { name: saved.name || '', noName: !!saved.noName, font: saved.font });
       if (ok(saved)) Object.assign(state, { base: saved.base, engr: saved.engr });
     }
   } catch (e) { /* storage blocked: start fresh */ }
@@ -152,8 +154,8 @@ function start(root, THREE) {
   const cleanText = (s, max) => s.replace(/[^\p{L}\p{N} .\-&'’!#]/gu, '').replace(/\s{2,}/g, ' ').slice(0, max);
   // a name typed on the homepage card arrives as ?nume=
   const fromUrl = new URLSearchParams(location.search).get('nume');
-  if (fromUrl) { state.name = cleanText(fromUrl, CFG.maxChars).trim(); save(); }
-  const realName = () => state.name.trim();
+  if (fromUrl) { state.name = cleanText(fromUrl, CFG.maxChars).trim(); state.noName = false; save(); }
+  const realName = () => (state.noName ? '' : state.name.trim());
 
   // the guide: 0 name, 1 colours, 2 font, 3 done
   const STEP_KEYS = ['sName', 'sColors', 'sFont', 'sDone'];
@@ -161,8 +163,8 @@ function start(root, THREE) {
   let focused = null;     // piece the camera is looking at (tap on the model)
   let view = 'name';      // camera view: name / logo / holders
   const fontOff = () => !realName(); // no name, nothing to set in a font
-  // while the name step is open and the field is empty, the tubs show a faint "Numele tău"
-  const ghost = () => step === 0 && !realName();
+  // while the name step is open and the field is empty, the tubs show a faint "Numele tău" (not when "Fără nume" is picked)
+  const ghost = () => step === 0 && !state.noName && !state.name.trim();
   const shownName = () => realName() || (ghost() ? t('namePh') : '');
 
   function quote() {
@@ -750,8 +752,13 @@ function start(root, THREE) {
     const nextBtn = `<button type="button" class="btn cfg-next" data-act="next">${esc(t('next'))}${ARROW}</button>`;
     if (step === 0) return {
       q: t('qName'), h: t('hName'),
-      opts: `<label class="cfg-sr" for="cfg-name">${esc(t('nameLabel'))}</label>
-        <div class="cfg-name"><input class="cfg-name-in" id="cfg-name" data-act="name" maxlength="${CFG.maxChars}" value="${esc(state.name)}" placeholder="${esc(t('namePh'))}" autocomplete="off" spellcheck="false" enterkeyhint="next"><span class="cfg-count" data-count>${state.name.length}/${CFG.maxChars}</span></div>`,
+      opts: `<div class="cfg-mode" role="radiogroup" aria-label="${esc(t('modeLabel'))}">
+          <label><input type="radio" name="namemode" value="name" data-act="namemode" ${state.noName ? '' : 'checked'}><span>${esc(t('modeName'))}</span>${P && P.name ? `<small>+${esc(money(P.name))}</small>` : ''}</label>
+          <label><input type="radio" name="namemode" value="none" data-act="namemode" ${state.noName ? 'checked' : ''}><span>${esc(t('modeNone'))}</span></label>
+        </div>
+        ${state.noName ? `<p class="cfg-noname">${esc(t('noNameNote'))}</p>` : `<label class="cfg-sr" for="cfg-name">${esc(t('nameLabel'))}</label>
+        <div class="cfg-name"><input class="cfg-name-in" id="cfg-name" data-act="name" maxlength="${CFG.maxChars}" value="${esc(state.name)}" placeholder="${esc(t('namePh'))}" autocomplete="off" spellcheck="false" enterkeyhint="next" aria-describedby="cfg-name-err"><span class="cfg-count" data-count>${state.name.length}/${CFG.maxChars}</span></div>
+        <p class="cfg-err" id="cfg-name-err" data-name-err role="alert" hidden></p>`}`,
       act: nextBtn,
     };
     if (step === 1) return { q: t('qColors'), h: t('hColors'), opts: colorCards('combo', state), act: backBtn + nextBtn };
@@ -794,17 +801,26 @@ function start(root, THREE) {
     lastKey = key;
     renderPrice();
     if (moveFocus) {
-      const first = step === 0 ? dock.querySelector('#cfg-name') : dock.querySelector('[data-q]');
+      const first = step === 0 ? dock.querySelector('#cfg-name') || dock.querySelector('input[name="namemode"]:checked') : dock.querySelector('[data-q]');
       if (first) first.focus({ preventScroll: true });
     }
   }
 
   function go(n) {
+    if (step === 0 && n > 0 && !state.noName && !state.name.trim()) { state.noName = true; save(); }
     step = Math.max(0, Math.min(3, n));
     if (focused) { focused = null; renderOverview(); updateRings(); }
     redrawAll(); renderDock(true);
   }
-  const next = () => go(step === 1 && fontOff() ? 3 : step + 1);
+  const next = () => {
+    if (step === 0 && !state.noName && !state.name.trim()) {
+      const er = dock.querySelector('[data-name-err]'), inp = dock.querySelector('#cfg-name');
+      if (er) { er.textContent = t('nameReq'); er.hidden = false; }
+      if (inp) { inp.setAttribute('aria-invalid', 'true'); inp.focus(); }
+      return;
+    }
+    go(step === 1 && fontOff() ? 3 : step + 1);
+  };
   const back = () => go(step === 3 && fontOff() ? 1 : step - 1);
 
   /* ---------------- events ---------------- */
@@ -818,6 +834,8 @@ function start(root, THREE) {
     save(); redrawAll();
     const c = dock.querySelector('[data-count]');
     if (c) c.textContent = `${v.length}/${CFG.maxChars}`;
+    const er = dock.querySelector('[data-name-err]');
+    if (er && !er.hidden && v.trim()) { er.hidden = true; el.removeAttribute('aria-invalid'); }
     // the font step turns on/off with the name; the price switches between set / set with name
     dock.querySelector('.cfg-dock-head').outerHTML = stepsBar();
     renderPrice();
@@ -832,6 +850,9 @@ function start(root, THREE) {
       [state.base, state.engr] = el.value.split('|');
     } else if (act === 'font') {
       state.font = el.value;
+    } else if (act === 'namemode') {
+      state.noName = el.value === 'none';
+      ensureFonts(realName());
     } else return;
     save(); redrawAll();
     const sel = `input[name="${el.name}"][value="${el.value}"]`;
@@ -885,11 +906,8 @@ function start(root, THREE) {
   }
 
   function readable(pl) {
-    const props = {
-      'Culori set': `${pl.set.base.name} + gravură ${pl.set.engraving.name}`,
-      'Nume gravat': pl.set.name || '—',
-      'Font': FONTS[state.font].ro,
-    };
+    const props = { 'Culori set': `${pl.set.base.name} + gravură ${pl.set.engraving.name}` };
+    if (pl.set.name) { props['Gravare'] = pl.set.name; props['Font'] = FONTS[state.font].ro; } else props['Nume'] = 'Fără nume';
     props['Cod configurare'] = pl.ref;
     props['_config'] = JSON.stringify(pl);
     return props;

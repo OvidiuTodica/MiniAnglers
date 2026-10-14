@@ -155,6 +155,20 @@
 .cfg-name-in:focus{ outline:none; border-color:var(--neon); background:var(--bg2); box-shadow:0 0 0 4px var(--accent-soft); }
 .cfg-count{ position:absolute; right:18px; top:50%; transform:translateY(-50%); font-size:13px; font-weight:600; color:var(--mute); font-variant-numeric:tabular-nums; pointer-events:none; }
 
+/* "Cu nume (+40 RON) | Fără nume" above the field */
+.cfg-mode{ display:inline-flex; gap:4px; margin-bottom:10px; padding:4px; border-radius:999px; background:var(--bg); box-shadow:inset 0 0 0 1px var(--line-soft); }
+.cfg-mode label{
+  position:relative; display:inline-flex; align-items:center; gap:7px; min-height:38px; padding:0 16px; border-radius:999px; cursor:pointer;
+  font-size:13.5px; font-weight:700; color:var(--mute); transition:background-color .18s ease, color .18s ease, transform .14s ease;
+}
+.cfg-mode input{ position:absolute; inset:0; margin:0; opacity:0; cursor:pointer; }
+.cfg-mode small{ font-size:12.5px; font-weight:700; color:var(--cyan); font-variant-numeric:tabular-nums; }
+.cfg-mode label:hover{ color:var(--ink); }
+.cfg-mode label:active{ transform:scale(.97); }
+.cfg-mode label:has(input:checked){ background:var(--bg2); color:var(--ink); box-shadow:var(--shadow-glass); }
+.cfg-mode label:has(input:focus-visible){ outline:2px solid var(--neon-deep); outline-offset:2px; }
+.cfg-noname{ display:flex; align-items:center; min-height:60px; padding:8px 20px; border:1.5px dashed var(--line); border-radius:16px; font-size:14px; font-weight:600; line-height:1.4; color:var(--mute); }
+
 /* steps 2 + 3: choice cards (radio groups) */
 .cfg-cards{ display:grid; gap:8px; }
 .cfg-colors, .cfg-fonts{ grid-template-columns:repeat(3, minmax(0,1fr)); }
@@ -238,6 +252,9 @@
   .cfg-q h2{ font-size:21px; }
   .cfg-q p{ margin-top:4px; font-size:13px; }
   .cfg-name-in{ height:54px; font-size:19px; border-radius:14px; }
+  .cfg-mode{ display:flex; margin-bottom:8px; }
+  .cfg-mode label{ flex:1; justify-content:center; min-height:40px; padding:0 10px; }
+  .cfg-noname{ min-height:54px; padding:8px 16px; font-size:13.5px; border-radius:14px; }
   .cfg-colors{ grid-template-columns:1fr 1fr; gap:7px; }
   .cfg-card{ min-height:50px; padding:7px 10px; gap:9px; font-size:13px; }
   .cfg-sw{ width:32px; height:32px; }

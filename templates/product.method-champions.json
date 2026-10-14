@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "ma-configurator",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

@@ -73,13 +73,16 @@ assets/ma-i18n.js            — custom RO/EN toggle (see §3)
 assets/ma-product.js         — product page logic (engraving config, variant/price updates)
 assets/ma-cart.js            — cart drawer/line-item logic
 assets/plus-jakarta-sans*.woff2 — the self-hosted brand font (see "Font loading" below)
-sections/ma-configurator.liquid + templates/page.method-champions.json
-                             — Method Champions 3D configurator page (Admin page "Method Champions" uses that template).
-                               Price + Add to cart come from Theme settings > Method Champions > Set product (cheapest
-                               variant = no name, dearest = with name); no product = no price, "Comenzile se deschid în curând".
-                               Choices go to the cart line as properties (+ hidden _config JSON; cart.liquid hides "_" properties)
+sections/ma-configurator.liquid + templates/product.method-champions.json + page.method-champions.json
+                             — Method Champions 3D configurator. The product "Method Champions" (Admin > Products, theme template
+                               "method-champions") is its main URL; the page "Method Champions" shows the same configurator with its
+                               canonical pointing at the product (theme.liquid). Price + Add to cart come from Theme settings > Method
+                               Champions > Set product (cheapest variant = no name, dearest = with name); no product = no price,
+                               "Comenzile se deschid în curând". Choices go to the cart line as properties: Culori set, Gravare + Font
+                               (only with a name, so the order email gives the engraved lead time) or Nume: Fără nume, Cod configurare,
+                               + hidden _config JSON (cart.liquid and the emails hide "_" properties)
 assets/ma-configurator.js/.css — the configurator, owner's pick "Showroom, pas cu pas" (2026-10-14): the set fills a wide stage on
-                               --photo; a floating guide asks name -> colours -> font -> done/cart (phones: a sheet at the stage bottom);
+                               --photo; a floating guide asks name ("Cu nume +40 RON | Fără nume") -> colours -> font -> done/cart (phones: a sheet at the stage bottom);
                                camera views Numele/Logo-ul/Suporturile; quiet size lines on the model (SVG overlay, toggle "Dimensiuni");
                                no per-piece colours (owner); owns its RO/EN strings, listens for ma:lang. Under it: "Ce primești"
                                (ma-cfg-part-*.webp renders + sizes)

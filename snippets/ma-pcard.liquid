@@ -45,7 +45,7 @@
       {%- if sale_pct > 0 -%}
         <span class="pcard-price">{{ v.price | money }} <s class="was">{{ v.compare_at_price | money }}</s></span>
       {%- else -%}
-        <span class="pcard-price">{{ product.price | money }}</span>
+        <span class="pcard-price">{% if product.price_varies %}<span class="from" data-i18n="products.from">de la</span> {% endif %}{{ product.price | money }}</span>
       {%- endif -%}
       <span class="btn btn-glass btn-sm" data-i18n="products.view">{{ cta | default: 'Vezi produsul' }}</span>
     </div>

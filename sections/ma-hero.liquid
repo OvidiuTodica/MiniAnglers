@@ -116,6 +116,8 @@
 {%- if split -%}
   {%- capture champ_card -%}
     {%- assign cp = settings.champions_product -%}
+    {%- assign champ_url = champ_page.url -%}
+    {%- if cp != blank and cp.available -%}{%- assign champ_url = cp.url -%}{%- endif -%}
     <article class="champ-card" data-champ data-font="{{ 'ma-engr-archivo-black-400-latin.woff2' | asset_url }}" data-font-ext="{{ 'ma-engr-archivo-black-400-latin-ext.woff2' | asset_url }}">
       <div class="champ-head">
         <span class="promo-tag champ-tag"{% if s.champ_tag == blank %} data-i18n="promo.champ_tag"{% elsif s.champ_tag_en != blank %} data-i18n-en="{{ s.champ_tag_en | escape }}"{% endif %}>{{ s.champ_tag | default: 'Nou' }}</span>
@@ -126,14 +128,14 @@
           <p class="champ-price"><span data-i18n="promo.champ_from">Setul de la</span> <b>{{ cvs.first.price | money_without_trailing_zeros }}</b></p>
         {%- endif -%}
       </div>
-      <a class="champ-shot" href="{{ champ_page.url }}" tabindex="-1" aria-hidden="true">
+      <a class="champ-shot" href="{{ champ_url }}" tabindex="-1" aria-hidden="true">
         <img src="{{ 'ma-champions-set.webp' | asset_url }}"
              srcset="{{ 'ma-champions-set-720.webp' | asset_url }} 720w, {{ 'ma-champions-set.webp' | asset_url }} 1200w"
              sizes="(max-width: 900px) calc(100vw - 36px), (max-width: 1200px) 56vw, 660px"
              width="1200" height="750" alt="" decoding="async">
         <span class="champ-etch" data-champ-etch data-zones='[{"k":"bac","q":[[0.0482,0.36055],[0.19742,0.37584],[0.21304,0.53638],[0.07166,0.52083]]},{"k":"bac","q":[[0.28246,0.38455],[0.43502,0.40019],[0.43794,0.5611],[0.29356,0.54523]]},{"k":"bac","q":[[0.52197,0.4091],[0.67799,0.4251],[0.66764,0.58637],[0.52018,0.57014]]},{"k":"bac","q":[[0.76692,0.4342],[0.92651,0.45056],[0.90229,0.61216],[0.75165,0.59559]]},{"k":"suport_waftere","q":[[0.16387,0.71437],[0.22056,0.72109],[0.21766,0.744],[0.16068,0.73717]]},{"k":"suport_gel","q":[[0.38096,0.58219],[0.56232,0.60235],[0.56091,0.62911],[0.37831,0.60857]]},{"k":"suport_waftere","q":[[0.70302,0.77831],[0.76263,0.78538],[0.76251,0.8092],[0.70259,0.80203]]}]'></span>
       </a>
-      <form class="champ-try" action="{{ champ_page.url }}" method="get">
+      <form class="champ-try" action="{{ champ_url }}" method="get">
         <label class="champ-label" for="champ-name" data-i18n="promo.champ_label">Scrie un nume și vezi-l pe set</label>
         <input class="champ-input" id="champ-name" name="nume" maxlength="20" placeholder="Numele tău" data-i18n-ph="promo.champ_ph" autocomplete="off" spellcheck="false" enterkeyhint="go" data-champ-input>
         <button class="champ-cta" type="submit">

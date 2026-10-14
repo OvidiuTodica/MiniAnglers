@@ -109,7 +109,7 @@
               {%- if sale_pct > 0 -%}
                 <div class="price">{{ v.price | money }} <s class="was">{{ v.compare_at_price | money }}</s></div>
               {%- else -%}
-                <div class="price">{{ product.price | money }}</div>
+                <div class="price">{% if product.price_varies %}<span class="from" data-i18n="products.from">de la</span> {% endif %}{{ product.price | money }}</div>
               {%- endif -%}
               <span class="add"><span data-i18n="products.view">Vezi produsul</span></span>
             </div>
