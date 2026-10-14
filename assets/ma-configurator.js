@@ -57,8 +57,6 @@ function start(root, THREE) {
       pSet: 'Setul', pNamed: 'Setul cu nume', pTotal: 'Total', pSoon: 'Comenzi în curând',
       soon: 'Comenzile se deschid în curând', ask: 'Scrie-ne',
       soonNote: 'Setul nu se poate comanda încă online. Configurația ta rămâne salvată pe acest dispozitiv.',
-      extraLink: 'O piesă în altă culoare?', qExtra: 'O piesă în altă culoare', hExtra: 'Alege piesa, apoi culorile ei. Restul setului rămâne cum e.',
-      sameAsSet: 'Ca restul setului', done: 'Gata', ownN: 'Piese în altă culoare: {n}',
       bac: 'Bac', waf: 'Suport waftere', gel: 'Suport geluri',
       cartErr: 'Nu am putut adăuga setul în coș. Încearcă din nou.',
     },
@@ -79,8 +77,6 @@ function start(root, THREE) {
       pSet: 'The set', pNamed: 'Set with name', pTotal: 'Total', pSoon: 'Orders open soon',
       soon: 'Orders open soon', ask: 'Write to us',
       soonNote: 'The set can’t be ordered online yet. Your configuration stays saved on this device.',
-      extraLink: 'One piece in another colour?', qExtra: 'One piece in another colour', hExtra: 'Pick the piece, then its colours. The rest of the set stays as it is.',
-      sameAsSet: 'Same as the set', done: 'Done', ownN: 'Pieces in another colour: {n}',
       bac: 'Tub', waf: 'Wafter holder', gel: 'Gel holder',
       cartErr: 'We couldn’t add the set to your cart. Please try again.',
     },
@@ -110,7 +106,6 @@ function start(root, THREE) {
     { id: 'gel', kind: 'suport_gel', n: 0, pos: [0, 0, 104] },
     { id: 'waf2', kind: 'suport_waftere', n: 2, pos: [186, 0, 104] },
   ];
-  const pieceName = (p) => (p.kind === 'bac' ? `${t('bac')} ${p.n}` : p.kind === 'suport_gel' ? t('gel') : `${t('waf')} ${p.n}`);
   const byId = Object.fromEntries(PIECES.map((p) => [p.id, p]));
 
   // Engraving zones measured on the real meshes (mm, piece frame: Y up, engraving face toward +Z).
@@ -138,7 +133,7 @@ function start(root, THREE) {
   const HOLDER_ORDER = { suport_waftere: 'brandTop', suport_gel: 'nameTop' };
 
   /* ---------------- state ---------------- */
-  const fresh = () => ({ base: COMBOS[0].b, engr: COMBOS[0].e, name: '', font: CFG.fonts[0].id, overrides: {} });
+  const fresh = () => ({ base: COMBOS[0].b, engr: COMBOS[0].e, name: '', font: CFG.fonts[0].id });
   let state = fresh();
   try {
     const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
@@ -146,29 +141,26 @@ function start(root, THREE) {
       const ok = (o) => o && isCombo(o.base, o.engr);
       state = Object.assign(fresh(), { name: saved.name || '', font: saved.font });
       if (ok(saved)) Object.assign(state, { base: saved.base, engr: saved.engr });
-      Object.entries(saved.overrides || {}).forEach(([id, o]) => { if (byId[id] && ok(o)) state.overrides[id] = { base: o.base, engr: o.engr }; });
     }
   } catch (e) { /* storage blocked: start fresh */ }
   let saveTimer = 0;
   const save = () => { clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { } }, 300); };
-  const colorsOf = (id) => state.overrides[id] || { base: state.base, engr: state.engr };
-  const differs = (id) => { const o = state.overrides[id]; return !!o && (o.base !== state.base || o.engr !== state.engr); };
+  // every piece has the set's colours (owner, 2026-10-14: no piece in another colour)
+  const colorsOf = () => ({ base: state.base, engr: state.engr });
   const cleanText = (s, max) => s.replace(/[^\p{L}\p{N} .\-&'’!#]/gu, '').replace(/\s{2,}/g, ' ').slice(0, max);
   // a name typed on the homepage card arrives as ?nume=
   const fromUrl = new URLSearchParams(location.search).get('nume');
   if (fromUrl) { state.name = cleanText(fromUrl, CFG.maxChars).trim(); save(); }
   const realName = () => state.name.trim();
 
-  // the guide: 0 name, 1 colours, 2 font, 3 done (+ the "one piece in another colour" page of step 3)
+  // the guide: 0 name, 1 colours, 2 font, 3 done
   const STEP_KEYS = ['sName', 'sColors', 'sFont', 'sDone'];
   let step = 0;
-  let extra = false;      // showing the per-piece colours page
-  let extraPiece = null;  // piece picked there
   let focused = null;     // piece the camera is looking at (tap on the model)
   let view = 'name';      // camera view: name / logo / holders
   const fontOff = () => !realName(); // no name, nothing to set in a font
   // while the name step is open and the field is empty, the tubs show a faint "Numele tău"
-  const ghost = () => step === 0 && !extra && !realName();
+  const ghost = () => step === 0 && !realName();
   const shownName = () => realName() || (ghost() ? t('namePh') : '');
 
   function quote() {
@@ -560,9 +552,8 @@ function start(root, THREE) {
     canvas.addEventListener('pointerleave', () => { if (hovered) { hovered = null; updateRings(); } });
   }
   function updateRings() {
-    const sel = extra ? extraPiece : focused;
     Object.values(pieces).forEach((p) => {
-      const on = p.def.id === sel, hov = p.def.id === hovered;
+      const on = p.def.id === focused, hov = p.def.id === hovered;
       p.ring.visible = on || hov;
       p.ring.material = on ? ringMat : hoverMat;
     });
@@ -619,7 +610,6 @@ function start(root, THREE) {
   }
   function focusPiece(id) {
     focused = id; userMoved = false;
-    if (extra) { extraPiece = id; renderDock(); }
     updateRings(); renderOverview();
     goTo(currentView());
   }
@@ -662,15 +652,11 @@ function start(root, THREE) {
   }
 
   // the colour pairs as one radio group of cards
-  function colorCards(group, cur, withSame) {
+  function colorCards(group, cur) {
     const cards = COMBOS.map((c) => `<label class="cfg-card">
         <input type="radio" name="${group}" value="${c.v}" data-act="${group}" ${cur && c.b === cur.base && c.e === cur.engr ? 'checked' : ''}>
         <span class="cfg-sw" style="--a:${FIL[c.b].hex};--b:${FIL[c.e].hex}" aria-hidden="true"></span>
         <span class="cfg-card-t">${esc(filName(c.b))}<small>${esc(engrText(c.e))}</small></span></label>`);
-    if (withSame) cards.unshift(`<label class="cfg-card">
-        <input type="radio" name="${group}" value="same" data-act="${group}" ${!cur ? 'checked' : ''}>
-        <span class="cfg-sw" style="--a:${FIL[state.base].hex};--b:${FIL[state.engr].hex}" aria-hidden="true"></span>
-        <span class="cfg-card-t">${esc(t('sameAsSet'))}<small>${esc(pairText(state.base, state.engr))}</small></span></label>`);
     return `<div class="cfg-cards cfg-colors" role="radiogroup" aria-label="${esc(t('qColors'))}">${cards.join('')}</div>`;
   }
 
@@ -694,22 +680,13 @@ function start(root, THREE) {
     const q = quote();
     const backBtn = `<button type="button" class="cfg-back" data-act="back" aria-label="${esc(t('back'))}">${BACK}</button>`;
     const nextBtn = `<button type="button" class="btn cfg-next" data-act="next">${esc(t('next'))}${ARROW}</button>`;
-    if (extra) {
-      const p = extraPiece ? byId[extraPiece] : null;
-      return {
-        q: t('qExtra'), h: t('hExtra'),
-        opts: `<div class="cfg-pieces">${PIECES.map((x) => `<button type="button" class="cfg-piece${differs(x.id) ? ' has-own' : ''}" data-act="piece" data-id="${x.id}" aria-pressed="${extraPiece === x.id}">${differs(x.id) ? `<span class="cfg-mini" style="--a:${FIL[colorsOf(x.id).base].hex};--b:${FIL[colorsOf(x.id).engr].hex}"></span>` : ''}${esc(pieceName(x))}</button>`).join('')}</div>
-          ${p ? colorCards('ocombo', state.overrides[p.id] || null, true) : ''}`,
-        act: `<button type="button" class="btn cfg-next" data-act="extra-done">${esc(t('done'))}</button>`,
-      };
-    }
     if (step === 0) return {
       q: t('qName'), h: t('hName'),
       opts: `<label class="cfg-sr" for="cfg-name">${esc(t('nameLabel'))}</label>
         <div class="cfg-name"><input class="cfg-name-in" id="cfg-name" data-act="name" maxlength="${CFG.maxChars}" value="${esc(state.name)}" placeholder="${esc(t('namePh'))}" autocomplete="off" spellcheck="false" enterkeyhint="next"><span class="cfg-count" data-count>${state.name.length}/${CFG.maxChars}</span></div>`,
       act: nextBtn,
     };
-    if (step === 1) return { q: t('qColors'), h: t('hColors'), opts: colorCards('combo', state, false), act: backBtn + nextBtn };
+    if (step === 1) return { q: t('qColors'), h: t('hColors'), opts: colorCards('combo', state), act: backBtn + nextBtn };
     if (step === 2) return {
       q: t('qFont'), h: t('hFont'),
       opts: `<div class="cfg-cards cfg-fonts" role="radiogroup" aria-label="${esc(t('qFont'))}">${CFG.fonts.map((f) => `<label class="cfg-card cfg-font">
@@ -718,7 +695,6 @@ function start(root, THREE) {
       act: backBtn + nextBtn,
     };
     // step 3: done
-    const own = PIECES.filter((p) => differs(p.id)).length;
     const f = FONTS[state.font];
     const cell = (label, value, go, style) => `<div class="cfg-sum-c"><span>${esc(label)}</span><b${style ? ` style="${style}"` : ''}>${esc(value)}</b>${go != null ? `<button type="button" class="cfg-link" data-act="go" data-step="${go}">${esc(t('edit'))}</button>` : ''}</div>`;
     const buy = q
@@ -727,13 +703,11 @@ function start(root, THREE) {
     return {
       q: q ? t('qDone') : t('soon'),
       h: q ? t('hDone') : t('soonNote'),
-      extraLink: true,
       opts: `<div class="cfg-sum">
           ${cell(t('sumName'), realName() || t('noName'), 0)}
           ${cell(t('sumColors'), pairText(state.base, state.engr), 1)}
           ${realName() ? cell(t('sumFont'), realName(), 2, fontStyle(f)) : ''}
         </div>
-        ${own ? `<p class="cfg-own">${esc(t('ownN').replace('{n}', own))}</p>` : ''}
         <p class="cfg-err" data-cart-err role="alert" hidden></p>`,
       act: backBtn + buy,
     };
@@ -742,24 +716,22 @@ function start(root, THREE) {
   let lastKey = '';
   function renderDock(moveFocus) {
     const b = bodyFor();
-    const key = (extra ? 'x' : '') + step;
+    const key = String(step);
     dock.innerHTML = `${stepsBar()}
       <div class="cfg-dock-body${key !== lastKey ? ' is-new' : ''}">
-        <div class="cfg-q"><h2 tabindex="-1" data-q>${esc(b.q)}</h2><p>${esc(b.h)}</p>
-          ${b.extraLink ? `<button type="button" class="cfg-link" data-act="extra">${esc(t('extraLink'))}</button>` : ''}</div>
+        <div class="cfg-q"><h2 tabindex="-1" data-q>${esc(b.q)}</h2><p>${esc(b.h)}</p></div>
         <div class="cfg-opts">${b.opts}</div>
         <div class="cfg-act">${b.act}</div>
       </div>`;
     lastKey = key;
     renderPrice();
     if (moveFocus) {
-      const first = step === 0 && !extra ? dock.querySelector('#cfg-name') : dock.querySelector('[data-q]');
+      const first = step === 0 ? dock.querySelector('#cfg-name') : dock.querySelector('[data-q]');
       if (first) first.focus({ preventScroll: true });
     }
   }
 
   function go(n) {
-    extra = false; extraPiece = null;
     step = Math.max(0, Math.min(3, n));
     if (focused) { focused = null; renderOverview(); updateRings(); }
     redrawAll(); renderDock(true);
@@ -792,10 +764,6 @@ function start(root, THREE) {
       [state.base, state.engr] = el.value.split('|');
     } else if (act === 'font') {
       state.font = el.value;
-    } else if (act === 'ocombo') {
-      if (!extraPiece) return;
-      if (el.value === 'same') delete state.overrides[extraPiece];
-      else { const [b, c] = el.value.split('|'); state.overrides[extraPiece] = { base: b, engr: c }; }
     } else return;
     save(); redrawAll();
     const sel = `input[name="${el.name}"][value="${el.value}"]`;
@@ -812,9 +780,6 @@ function start(root, THREE) {
     else if (act === 'go') go(+b.dataset.step);
     else if (act === 'view') setView(b.dataset.view);
     else if (act === 'overview') overview();
-    else if (act === 'extra') { extra = true; extraPiece = null; renderDock(true); updateRings(); }
-    else if (act === 'piece') focusPiece(b.dataset.id);
-    else if (act === 'extra-done') { extra = false; extraPiece = null; overview(); renderDock(true); }
     else if (act === 'add') addToCart(b);
   });
 
@@ -841,7 +806,7 @@ function start(root, THREE) {
         const c = colorsOf(p.id);
         return {
           id: p.id, type: p.kind, name: `${I18N.ro[p.kind === 'bac' ? 'bac' : p.kind === 'suport_gel' ? 'gel' : 'waf']}${p.kind === 'suport_gel' ? '' : ' ' + p.n}`,
-          base: fil(c.base), engraving: fil(c.engr), customColors: differs(p.id),
+          base: fil(c.base), engraving: fil(c.engr),
           layout: pieces[p.id] ? pieces[p.id].layout : null,
         };
       }),
@@ -856,8 +821,6 @@ function start(root, THREE) {
       'Nume gravat': pl.set.name || '—',
       'Font': FONTS[state.font].ro,
     };
-    const own = pl.pieces.filter((p) => p.customColors).map((p) => `${p.name}: ${p.base.name} + ${p.engraving.name}`);
-    if (own.length) props['Culori pe piese'] = own.join(', ');
     props['Cod configurare'] = pl.ref;
     props['_config'] = JSON.stringify(pl);
     return props;
