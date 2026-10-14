@@ -18,7 +18,8 @@
           <div style="flex:1">
             <div style="font-family:var(--font-display);font-weight:600;color:var(--steel-100)">{{ item.product.title }}</div>
             {%- for p in item.properties -%}
-              {%- unless p.last == blank -%}
+              {%- assign p_first_char = p.first | slice: 0 -%}
+              {%- unless p.last == blank or p_first_char == '_' -%}
                 <div style="font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-top:4px">{{ p.first }}: {{ p.last }}</div>
               {%- endunless -%}
             {%- endfor -%}

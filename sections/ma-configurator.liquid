@@ -1,0 +1,99 @@
+{%- comment -%}
+  Method Champions: the 3D configurator page (template page.method-champions, Admin >
+  Pages > the page with that template). ma-configurator.js builds the 3D stage and the
+  options panel; ma-three.js is three.js (vendored, see the top of ma-configurator.js).
+  Prices and Add to cart come from Theme settings > Method Champions > Set product:
+  its cheapest available variant = the set without a name, its dearest = the set with
+  the name engraved, so the cart charges exactly what the page shows. A product with one
+  variant charges the name through the shop's engraving add-on (Theme settings >
+  Engraving). No product (or not active) = the set shows with no price and "Orders open
+  soon" plus a link to the contact page. The customer's choices go to the cart line as
+  properties (readable ones + a hidden _config JSON for production).
+  The page's own text (Admin > Pages > Content) shows under the configurator.
+{%- endcomment -%}
+{{ 'ma-configurator.css' | asset_url | stylesheet_tag }}
+<style>
+  {%- comment -%} engraving fonts (OFL), self-hosted; latin + latin-ext so ă ș ț render {%- endcomment -%}
+  {%- assign latin = 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD' -%}
+  {%- assign latin_ext = 'U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF' -%}
+  @font-face{ font-family:'Archivo Black'; font-style:normal; font-weight:400; font-display:swap; src:url("{{ 'ma-engr-archivo-black-400-latin.woff2' | asset_url }}") format('woff2'); unicode-range:{{ latin }}; }
+  @font-face{ font-family:'Archivo Black'; font-style:normal; font-weight:400; font-display:swap; src:url("{{ 'ma-engr-archivo-black-400-latin-ext.woff2' | asset_url }}") format('woff2'); unicode-range:{{ latin_ext }}; }
+  @font-face{ font-family:'Barlow'; font-style:italic; font-weight:800; font-display:swap; src:url("{{ 'ma-engr-barlow-800-italic-latin.woff2' | asset_url }}") format('woff2'); unicode-range:{{ latin }}; }
+  @font-face{ font-family:'Barlow'; font-style:italic; font-weight:800; font-display:swap; src:url("{{ 'ma-engr-barlow-800-italic-latin-ext.woff2' | asset_url }}") format('woff2'); unicode-range:{{ latin_ext }}; }
+  @font-face{ font-family:'Oswald'; font-style:normal; font-weight:700; font-display:swap; src:url("{{ 'ma-engr-oswald-700-latin.woff2' | asset_url }}") format('woff2'); unicode-range:{{ latin }}; }
+  @font-face{ font-family:'Oswald'; font-style:normal; font-weight:700; font-display:swap; src:url("{{ 'ma-engr-oswald-700-latin-ext.woff2' | asset_url }}") format('woff2'); unicode-range:{{ latin_ext }}; }
+</style>
+
+{%- assign cp = settings.champions_product -%}
+{%- assign has_p = false -%}
+{%- if cp != blank and cp.available -%}{%- assign has_p = true -%}{%- endif -%}
+{%- if has_p -%}
+  {%- assign cvs = cp.variants | where: 'available' | sort: 'price' -%}
+  {%- assign plain = cvs.first -%}
+  {%- assign named = nil -%}
+  {%- assign addon = nil -%}
+  {%- assign name_fee = 0 -%}
+  {%- if cvs.size > 1 and cvs.last.price > plain.price -%}
+    {%- assign named = cvs.last -%}
+    {%- assign name_fee = named.price | minus: plain.price -%}
+  {%- else -%}
+    {%- assign eng = settings.engraving_product -%}
+    {%- if eng != blank and eng.available -%}
+      {%- assign addon = eng.selected_or_first_available_variant -%}
+      {%- assign name_fee = addon.price -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+{%- assign contact_url = pages['contact'].url | default: routes.root_url -%}
+
+<section class="cfg" data-ma-configurator data-three="{{ 'ma-three.js' | asset_url }}"
+         data-load-err="Configuratorul nu s-a putut încărca. Reîncarcă pagina.">
+  <script type="application/json" data-cfg>
+    {
+      "code": "MC",
+      "title": {{ cp.title | default: 'Method Champions' | json }},
+      "currency": {{ cart.currency.iso_code | json }},
+      "prices": {% if has_p %}{ "base": {{ plain.price | divided_by: 100.0 | json }}, "name": {{ name_fee | divided_by: 100.0 | json }} }{% else %}null{% endif %},
+      "cart": {% if has_p %}{ "plain": {{ plain.id | json }}, "named": {% if named %}{{ named.id | json }}{% else %}null{% endif %}, "addon": {% if addon %}{{ addon.id | json }}{% else %}null{% endif %} }{% else %}null{% endif %},
+      "cartUrl": {{ routes.cart_url | json }},
+      "contact": {{ contact_url | json }},
+      "maxChars": 20,
+      "model": {{ 'ma-cfg-set.glb' | asset_url | json }},
+      "logo": {{ 'minianglers-logo.svg' | asset_url | json }},
+      "filaments": [
+        { "id": "negru",    "ro": "Negru",    "roF": "neagră",   "en": "Black",  "hex": "#000000", "render": "#1E1F21" },
+        { "id": "gri",      "ro": "Gri",      "roF": "gri",      "en": "Grey",   "hex": "#A6A9AA" },
+        { "id": "alb",      "ro": "Alb",      "roF": "albă",     "en": "White",  "hex": "#FFFFFF", "render": "#F3F4F1" },
+        { "id": "albastru", "ro": "Albastru", "roF": "albastră", "en": "Blue",   "hex": "#0056B8" },
+        { "id": "galben",   "ro": "Galben",   "roF": "galbenă",  "en": "Yellow", "hex": "#FEC600" }
+      ],
+      "combos": [["negru", "alb"], ["negru", "galben"], ["negru", "gri"], ["albastru", "alb"], ["gri", "negru"], ["alb", "negru"]],
+      "fonts": [
+        { "id": "clasic", "ro": "Clasic", "en": "Classic", "family": "Archivo Black", "weight": 400, "style": "normal" },
+        { "id": "sport",  "ro": "Sport",  "en": "Sport",   "family": "Barlow",        "weight": 800, "style": "italic" },
+        { "id": "ingust", "ro": "Îngust", "en": "Narrow",  "family": "Oswald",        "weight": 700, "style": "normal" }
+      ]
+    }
+  </script>
+  <div class="cfg-boot" data-boot>
+    <div>
+      <h1>{{ page.title | default: 'Method Champions' }}</h1>
+      <p data-i18n="cfg.loading">Se încarcă setul în 3D…</p>
+      <noscript><p data-i18n="cfg.noscript">Configuratorul are nevoie de JavaScript ca să afișeze setul în 3D.</p></noscript>
+    </div>
+  </div>
+</section>
+<script type="module" src="{{ 'ma-configurator.js' | asset_url }}"></script>
+
+{%- if page.content != blank -%}
+  <div class="cfg-page">{{ page.content }}</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Method Champions",
+  "settings": [
+    { "type": "paragraph", "content": "The 3D configurator for the Method Champions set. The price and the Add to cart button come from Theme settings > Method Champions > Set product. The page's own text (Pages > this page > Content) shows under the configurator." }
+  ]
+}
+{% endschema %}

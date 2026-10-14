@@ -54,6 +54,10 @@ package manager, no Tailwind or any CSS framework.** Everything is
 hand-written Liquid, vanilla JS, and one stylesheet. Do not introduce build
 tooling, a `package.json`, or a framework without the owner explicitly asking
 — it would break the "edit and push" simplicity the whole workflow depends on.
+Two deliberate exceptions, both for the Method Champions configurator page only:
+`assets/ma-configurator.css` (its own stylesheet, loaded only by that section)
+and `assets/ma-three.js` (three.js, a vendored pre-built file — edit nothing in
+it; how to regenerate it is at the top of `ma-configurator.js`).
 
 ```
 layout/theme.liquid          — single layout: head/SEO, font loading, section slots, script tags
@@ -69,6 +73,17 @@ assets/ma-i18n.js            — custom RO/EN toggle (see §3)
 assets/ma-product.js         — product page logic (engraving config, variant/price updates)
 assets/ma-cart.js            — cart drawer/line-item logic
 assets/plus-jakarta-sans*.woff2 — the self-hosted brand font (see "Font loading" below)
+sections/ma-configurator.liquid + templates/page.method-champions.json
+                             — Method Champions 3D configurator page (Admin page "Method Champions" uses that template).
+                               Price + Add to cart come from Theme settings > Method Champions > Set product (cheapest
+                               variant = no name, dearest = with name); no product = no price, "Comenzile se deschid în curând".
+                               Choices go to the cart line as properties (+ hidden _config JSON; cart.liquid hides "_" properties)
+assets/ma-configurator.js/.css — the configurator (3D stage + options panel; owns its RO/EN strings, listens for ma:lang)
+assets/ma-three.js           — three.js r169 + GLTFLoader/OrbitControls/RoomEnvironment/RoundedBoxGeometry, one minified ES module
+assets/ma-cfg-set.glb        — the set's 3D models (from the owner's Bambu Studio 3MF/STL files); ma-engr-*.woff2 = engraving fonts
+assets/ma-champions.js       — homepage banner, Method Champions card: lays the typed name on the render
+                               (ma-champions-set*.webp; zone corners in data-zones) + the phone switch between the two cards.
+                               The banner splits only when Theme settings > Method Champions > Configurator page is set
 assets/favicon.svg           — the logo's black "m" mark on a white tile (+ favicon-32.png, favicon-192.png for Google Search, apple-touch-icon.png, og-image.png; all generated from minianglers-logo.svg)
 ```
 

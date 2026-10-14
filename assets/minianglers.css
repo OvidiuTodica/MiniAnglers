@@ -555,6 +555,83 @@ h1,h2,h3,h4{ font-family:var(--sans); color:var(--ink); letter-spacing:-.02em; l
   .promo-note h1{ font-size:22px; margin-top:10px; }
   .promo-note p{ font-size:14.5px; }
 }
+/* hero split: the offer (left) and Method Champions (right), when Theme settings > Method Champions
+   has a page. Both cards share one structure: picture on top (16:10), copy below, the price/name
+   row pinned to the bottom so the two buttons line up. Phones: one card at a time in a swipe row,
+   with two buttons above it to switch (ma-champions.js). */
+.hero-pick{ display:none; }
+.hero-split{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:stretch; }
+.hero-slot{ display:flex; min-width:0; }
+.hero-slot > *{ flex:1; min-width:0; }
+.is-split .offer-card{ display:flex; flex-direction:column; gap:0; padding:14px 14px 28px; }
+.is-split .offer-shot{ order:-1; aspect-ratio:16/10; border-radius:14px; }
+.is-split .offer-copy{ display:flex; flex-direction:column; flex:1; padding:22px 18px 0; }
+.is-split .offer-copy > .promo-tag{ align-self:flex-start; }
+.is-split .offer-title{ font-size:clamp(28px,2.7vw,38px); margin-top:14px; }
+.is-split .offer-sub{ font-size:15.5px; line-height:1.55; margin-top:10px; }
+.is-split .offer-price{ margin-top:auto; padding-top:20px; }
+.is-split .offer-now{ font-size:36px; }
+.is-split .offer-card .promo-cta{ align-self:flex-start; margin-top:18px; }
+.is-split .promo-card{ display:flex; align-items:flex-end; min-height:100%; padding:40px 36px; }
+
+.champ-card{ display:flex; flex-direction:column; padding:14px 14px 28px; border-radius:20px; background:var(--bg2); border:1px solid var(--line); box-shadow:var(--shadow-glass); }
+.champ-shot{ position:relative; display:block; aspect-ratio:16/10; border-radius:14px; overflow:hidden; isolation:isolate;
+  background:radial-gradient(110% 95% at 50% 22%, var(--bg2) 0%, var(--bg3) 40%, var(--bg) 78%, var(--accent-soft) 100%); }
+.champ-shot img{ position:absolute; inset:0; display:block; width:100%; height:100%; }
+.champ-etch{ position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .4s ease; }
+.champ-card.is-etched .champ-etch{ opacity:1; }
+.champ-etch canvas{ position:absolute; left:0; top:0; transform-origin:0 0; }
+.champ-copy{ display:flex; flex-direction:column; flex:1; padding:22px 18px 0; }
+.champ-tag{ align-self:flex-start; background:var(--accent-soft); color:var(--neon-deep); }
+.champ-title{ font-family:var(--sans); font-size:clamp(28px,2.7vw,38px); font-weight:800; line-height:1.04; letter-spacing:-.02em; margin-top:14px; color:var(--ink); }
+.champ-sub{ margin-top:10px; max-width:44ch; font-size:15.5px; line-height:1.55; color:var(--mute); }
+.champ-facts{ display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; list-style:none; }
+.champ-facts li{ padding:5px 11px; border-radius:999px; background:var(--bg); border:1px solid var(--line-soft); font-size:12.5px; font-weight:650; color:var(--ink); }
+.champ-try{ margin-top:auto; padding-top:20px; }
+.champ-label{ display:block; margin-bottom:8px; font-size:13.5px; font-weight:650; color:var(--ink); }
+.champ-row{ display:flex; flex-wrap:wrap; gap:8px; }
+.champ-input{ flex:1 1 150px; min-width:0; min-height:50px; padding:12px 18px; font:650 16px/1.2 var(--body); color:var(--ink);
+  background:var(--bg3); border:1px solid var(--line); border-radius:999px; transition:border-color .18s ease, background-color .18s ease, box-shadow .18s ease; }
+.champ-input::placeholder{ color:var(--mute); opacity:.8; font-weight:500; }
+.champ-input:hover{ border-color:color-mix(in srgb, var(--neon) 45%, var(--line)); }
+.champ-input:focus{ outline:none; border-color:var(--neon); background:var(--bg2); box-shadow:0 0 0 3px var(--accent-soft); }
+.champ-cta{ display:inline-flex; align-items:center; justify-content:center; gap:10px; flex:0 0 auto; min-height:50px; padding:0 22px; border:0; border-radius:999px;
+  background:var(--neon); color:#fff; font:700 15px/1 var(--sans); white-space:nowrap; cursor:pointer; box-shadow:var(--glow); transition:transform .14s ease, background-color .14s ease; }
+.champ-cta svg{ transition:transform .15s ease; }
+.champ-cta:hover{ background:var(--neon-deep); transform:translateY(-1px); }
+.champ-cta:hover svg{ transform:translateX(3px); }
+.champ-cta:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:3px; }
+.champ-cta:active{ transform:scale(.98); }
+.champ-price{ margin-top:12px; font-size:14px; color:var(--mute); }
+.champ-price b{ font-weight:800; color:var(--cyan); }
+
+@media (max-width:900px){
+  .is-split .offer-card, .champ-card{ padding:12px 12px 22px; }
+  .is-split .offer-copy, .champ-copy{ padding:18px 10px 0; }
+  .champ-cta{ flex:1 0 auto; }
+}
+@media (max-width:760px){
+  .hero-pick{ display:flex; gap:4px; margin-bottom:10px; padding:4px; background:var(--bg2); border:1px solid var(--line); border-radius:999px; box-shadow:var(--shadow-glass); }
+  .hero-pick button{ flex:1; min-width:0; min-height:44px; padding:0 10px; border:0; border-radius:999px; background:transparent; color:var(--mute);
+    font:700 14px/1.15 var(--sans); cursor:pointer; transition:background-color .18s ease, color .18s ease; }
+  .hero-pick button:hover{ color:var(--neon-deep); }
+  .hero-pick button:focus-visible{ outline:2px solid var(--neon-deep); outline-offset:2px; }
+  .hero-pick button:active{ transform:scale(.98); }
+  .hero-pick button[aria-current="true"]{ background:var(--neon); color:#fff; box-shadow:var(--glow); }
+  .hero-split{ display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; overscroll-behavior-x:contain; scrollbar-width:none;
+    margin:0 -18px; padding:0 18px; scroll-padding:0 18px; }
+  .hero-split::-webkit-scrollbar{ display:none; }
+  .hero-slot{ flex:0 0 calc(100% - 22px); scroll-snap-align:start; }
+  .is-split .offer-card, .champ-card{ border-radius:16px; }
+  .is-split .offer-shot, .champ-shot{ border-radius:12px; }
+}
+@media (max-width:560px){
+  .is-split .offer-title, .champ-title{ font-size:26px; line-height:1.12; margin-top:10px; }
+  .champ-sub{ font-size:14.5px; }
+  .champ-facts{ display:none; }
+  .is-split .offer-now{ font-size:32px; }
+  .is-split .offer-price{ padding-top:16px; }
+}
 .engrave-preview[hidden]{ display:none; }
 
 /* category tiles */

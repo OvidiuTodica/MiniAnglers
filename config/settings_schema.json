@@ -45,6 +45,15 @@
     ]
   },
   {
+    "name": "Method Champions",
+    "settings": [
+      { "type": "paragraph", "content": "The competition set with the 3D configurator. Pick the page that uses the template \"page.method-champions\" and the homepage banner splits in two: the offer on the left, Method Champions on the right. Leave the page empty to show only the offer." },
+      { "type": "page", "id": "champions_page", "label": "Configurator page" },
+      { "type": "paragraph", "content": "The set product sets the price and turns on Add to cart. Give it two variants: the cheaper one is the set without a name, the dearer one the set with the name engraved (the difference is the price of the name). Until a product is picked and active, the page shows the set with no price and \"Orders open soon\"." },
+      { "type": "product", "id": "champions_product", "label": "Set product" }
+    ]
+  },
+  {
     "name": "Shipping prices",
     "settings": [
       { "type": "paragraph", "content": "The courier prices shown on product pages, in the cart and on the Livrare page. They only change what the site shows: checkout charges what is set in Settings → Shipping and delivery, so when you change a price here, change it there too (same name, same price). Leave a courier's name empty to hide it." },
